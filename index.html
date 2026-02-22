@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KingKiosk - The Programmable Display Runtime</title>
+    <meta name="description" content="KingKiosk is the world's first Programmable Display Runtime. Turn any screen into a remotely orchestrated, multi-window display surface — controlled via MQTT, composable from 25+ widgets, running on multiple platforms.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <span class="logo-icon">K</span>
+                <span class="logo-text">KingKiosk</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="#features">Features</a>
+                <a href="#platforms">Platforms</a>
+                <a href="#widgets">Widgets</a>
+                <a href="#server">Feature Server</a>
+                <a href="#integrations">Integrations</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#docs">Documentation</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="#get-started" class="btn btn-primary btn-sm">Get Started</a>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <div class="grid-overlay"></div>
+            <div class="glow glow-1"></div>
+            <div class="glow glow-2"></div>
+            <div class="glow glow-3"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge reveal">
+                    <span class="badge-dot"></span>
+                    The World's First Programmable Display Runtime
+                </div>
+                <h1 class="hero-title reveal">
+                    Any screen. <span class="gradient-text">Anything</span><br>
+                    you can imagine.
+                </h1>
+                <p class="hero-subtitle reveal">
+                    Not digital signage. Not a kiosk. A new category. A runtime that turns any screen into
+                    a remotely programmable display surface. Send commands and compose layouts
+                    from 25+ widgets. Control everything in real-time. Multiple platforms.
+                </p>
+                <div class="hero-actions reveal">
+                    <a href="#get-started" class="btn btn-primary btn-lg">
+                        Get Started
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <a href="#features" class="btn btn-ghost btn-lg">
+                        See Features
+                    </a>
+                </div>
+                <div class="hero-stats reveal">
+                    <div class="stat">
+                        <span class="stat-number" data-count="7">0</span>
+                        <span class="stat-label">Platforms</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-number" data-count="25">0</span>
+                        <span class="stat-label">Widget Types</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-number" data-count="100">0</span>
+                        <span class="stat-label">MQTT Commands</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-number" data-count="120">0</span>
+                        <span class="stat-label">Services</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Floating device mockup -->
+            <div class="hero-visual reveal">
+                <div class="device-frame">
+                    <div class="device-screen">
+                        <div class="mock-window mock-w1">
+                            <div class="mock-titlebar"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span> Weather</div>
+                            <div class="mock-content mock-weather">
+                                <div class="mock-temp">72&deg;</div>
+                                <div class="mock-condition">Sunny</div>
+                            </div>
+                        </div>
+                        <div class="mock-window mock-w2">
+                            <div class="mock-titlebar"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span> Camera</div>
+                            <div class="mock-content mock-camera">
+                                <div class="mock-cam-feed"></div>
+                            </div>
+                        </div>
+                        <div class="mock-window mock-w3">
+                            <div class="mock-titlebar"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span> Clock</div>
+                            <div class="mock-content mock-clock">
+                                <div class="mock-time" id="mockTime">10:42</div>
+                                <div class="mock-date">Thursday, Feb 20</div>
+                            </div>
+                        </div>
+                        <div class="mock-window mock-w4">
+                            <div class="mock-titlebar"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span> Gauge</div>
+                            <div class="mock-content mock-gauge">
+                                <svg viewBox="0 0 120 80" class="gauge-svg">
+                                    <path d="M 15 70 A 50 50 0 0 1 105 70" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+                                    <path d="M 15 70 A 50 50 0 0 1 85 25" fill="none" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round" class="gauge-fill"/>
+                                    <defs><linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ef4444"/></linearGradient></defs>
+                                    <text x="60" y="62" text-anchor="middle" fill="white" font-size="18" font-weight="700">72%</text>
+                                    <text x="60" y="75" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8">CPU Usage</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- The Problem Section -->
+    <section class="section section-dark" id="problem">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">The Problem</span>
+                <h2 class="section-title">Every screen category is a dead end</h2>
+                <p class="section-subtitle">
+                    Digital signage just loops slideshows. Kiosk software locks to one app.
+                    Dashboard tools can't manage displays remotely. Smart home panels lack a real
+                    windowing system. You've been forced to choose a category. Until now.
+                </p>
+            </div>
+            <div class="problem-grid">
+                <div class="problem-card reveal">
+                    <div class="problem-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </div>
+                    <h3>One Screen, One Purpose</h3>
+                    <p>Every existing solution forces you into a category. A signage player. A kiosk browser. A dashboard. No composability. No real programmability.</p>
+                </div>
+                <div class="problem-card reveal">
+                    <div class="problem-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3>Platform Lock-in</h3>
+                    <p>Most solutions work on one platform only. Want to use iPads AND Android tablets AND Apple TVs? Good luck.</p>
+                </div>
+                <div class="problem-card reveal">
+                    <div class="problem-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    </div>
+                    <h3>Cloud Dependent</h3>
+                    <p>Subscription-based cloud services mean your displays stop working if the internet goes down. Your data lives on someone else's servers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Feature: Multi-Window -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">Core Innovation</span>
+                <h2 class="section-title">A real windowing system for every screen</h2>
+                <p class="section-subtitle">
+                    KingKiosk brings true multi-window compositing to any display surface.
+                    Create complex layouts with floating or tiled windows,
+                    each independently programmable via MQTT.
+                </p>
+            </div>
+            <div class="feature-showcase reveal">
+                <div class="feature-tabs">
+                    <button class="feature-tab active" data-tab="floating">Floating Mode</button>
+                    <button class="feature-tab" data-tab="tiling">Tiling Mode</button>
+                    <button class="feature-tab" data-tab="presets">Screen Presets</button>
+                    <button class="feature-tab" data-tab="scheduling">Scheduling</button>
+                </div>
+                <div class="feature-panels">
+                    <div class="feature-panel active" id="panel-floating">
+                        <div class="panel-visual">
+                            <div class="tiling-demo floating-demo">
+                                <div class="tile-box tile-a" style="left:5%;top:5%;width:45%;height:55%">
+                                    <span>Web Browser</span>
+                                </div>
+                                <div class="tile-box tile-b" style="left:52%;top:5%;width:43%;height:30%">
+                                    <span>Weather</span>
+                                </div>
+                                <div class="tile-box tile-c" style="left:52%;top:38%;width:43%;height:57%">
+                                    <span>Camera Feed</span>
+                                </div>
+                                <div class="tile-box tile-d" style="left:5%;top:62%;width:30%;height:33%">
+                                    <span>Clock</span>
+                                </div>
+                                <div class="tile-box tile-e" style="left:37%;top:65%;width:13%;height:30%">
+                                    <span>Gauge</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-info">
+                            <h3>Floating Windows</h3>
+                            <p>Position windows anywhere with pixel-perfect precision. Stack with z-index control, set per-window opacity for overlay effects. Drag and resize with smooth animations.</p>
+                            <ul class="feature-list">
+                                <li>Drag, resize, minimize, maximize</li>
+                                <li>Z-index layering and transparency</li>
+                                <li>Smooth animated transitions</li>
+                                <li>All controllable via MQTT</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="feature-panel" id="panel-tiling">
+                        <div class="panel-visual">
+                            <div class="tiling-demo tiling-mode">
+                                <div class="tile-box tile-a" style="left:0;top:0;width:50%;height:50%"><span>Dashboard</span></div>
+                                <div class="tile-box tile-b" style="left:50%;top:0;width:50%;height:50%"><span>Calendar</span></div>
+                                <div class="tile-box tile-c" style="left:0;top:50%;width:33.33%;height:50%"><span>Clock</span></div>
+                                <div class="tile-box tile-d" style="left:33.33%;top:50%;width:33.33%;height:50%"><span>Weather</span></div>
+                                <div class="tile-box tile-e" style="left:66.66%;top:50%;width:33.33%;height:50%"><span>Gauge</span></div>
+                            </div>
+                        </div>
+                        <div class="panel-info">
+                            <h3>i3-style Tiling</h3>
+                            <p>Automatic grid layouts where windows intelligently split available space. Add a window and the layout recalculates. No manual positioning needed.</p>
+                            <ul class="feature-list">
+                                <li>Automatic space-filling layouts</li>
+                                <li>Grid, columns, and rows</li>
+                                <li>Smart window splitting</li>
+                                <li>Keyboard and MQTT layout control</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="feature-panel" id="panel-presets">
+                        <div class="panel-visual">
+                            <div class="presets-demo">
+                                <div class="preset-card preset-active">
+                                    <div class="preset-mini"><div class="pm-a"></div><div class="pm-b"></div></div>
+                                    <span>Morning</span>
+                                </div>
+                                <div class="preset-card">
+                                    <div class="preset-mini"><div class="pm-c"></div><div class="pm-d"></div><div class="pm-e"></div></div>
+                                    <span>Work</span>
+                                </div>
+                                <div class="preset-card">
+                                    <div class="preset-mini"><div class="pm-f"></div></div>
+                                    <span>Movie</span>
+                                </div>
+                                <div class="preset-card">
+                                    <div class="preset-mini"><div class="pm-g"></div><div class="pm-h"></div><div class="pm-i"></div><div class="pm-j"></div></div>
+                                    <span>Dashboard</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-info">
+                            <h3>Screen Presets</h3>
+                            <p>Save entire layouts as named presets. Switch between "Morning Dashboard", "Movie Mode", and "Security View" with a single MQTT command.</p>
+                            <ul class="feature-list">
+                                <li>Save/recall named layouts</li>
+                                <li>One-command switching</li>
+                                <li>Fleet replication across displays</li>
+                                <li>Per-display or group-wide presets</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="feature-panel" id="panel-scheduling">
+                        <div class="panel-visual">
+                            <div class="schedule-demo">
+                                <div class="schedule-timeline">
+                                    <div class="schedule-block" style="left:0;width:25%">
+                                        <div class="schedule-label">6am</div>
+                                        <div class="schedule-bar schedule-morning">Morning</div>
+                                    </div>
+                                    <div class="schedule-block" style="left:25%;width:35%">
+                                        <div class="schedule-label">9am</div>
+                                        <div class="schedule-bar schedule-work">Work</div>
+                                    </div>
+                                    <div class="schedule-block" style="left:60%;width:20%">
+                                        <div class="schedule-label">5pm</div>
+                                        <div class="schedule-bar schedule-evening">Relax</div>
+                                    </div>
+                                    <div class="schedule-block" style="left:80%;width:20%">
+                                        <div class="schedule-label">10pm</div>
+                                        <div class="schedule-bar schedule-night">Night</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-info">
+                            <h3>Time-Based Scheduling</h3>
+                            <p>Automatically switch layouts based on time of day and day of week. Your display adapts to your routine without any manual intervention.</p>
+                            <ul class="feature-list">
+                                <li>Per-day schedule configuration</li>
+                                <li>Automatic layout transitions</li>
+                                <li>Override via MQTT anytime</li>
+                                <li>Fleet-wide schedule deployment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MQTT Architecture -->
+    <section class="section section-dark" id="mqtt">
+        <div class="container">
+            <div class="split-section">
+                <div class="split-content reveal">
+                    <span class="section-label">Architecture</span>
+                    <h2 class="section-title">MQTT-native from the ground up</h2>
+                    <p>Every widget, every setting, every pixel is controllable via MQTT.
+                       This isn't a bolt-on integration. MQTT is the nervous system
+                       of KingKiosk.</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                            <span class="code-title">mosquitto_pub</span>
+                        </div>
+                        <pre><code><span class="code-comment"># Add a clock widget to your display</span>
+mosquitto_pub -t <span class="code-string">"kingkiosk/living-room/system/cmd"</span> \
+  -m <span class="code-string">'{
+    "command": "add_window",
+    "type": "clock",
+    "id": "clock-living-room",
+    "config": {
+      "mode": "analog",
+      "show_numbers": true,
+      "theme": "dark"
+    },
+    "x": 100, "y": 100,
+    "width": 300, "height": 300
+  }'</span></code></pre>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                            <span class="code-title">Topic Structure</span>
+                        </div>
+                        <pre><code>kingkiosk/{device_id}/system/cmd      <span class="code-comment"># System control</span>
+kingkiosk/{device_id}/element/{id}/cmd <span class="code-comment"># Widget control</span>
+kingkiosk/{device_id}/status           <span class="code-comment"># Device status</span>
+kingkiosk/{device_id}/sensors/{type}   <span class="code-comment"># Telemetry</span></code></pre>
+                    </div>
+                </div>
+                <div class="split-visual reveal">
+                    <div class="mqtt-flow">
+                        <div class="mqtt-node mqtt-broker">
+                            <div class="mqtt-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4m-9.5-13.5l3.5 2m9-2l3.5-2m-16 7l3.5-2m9 2l3.5 2"/></svg>
+                            </div>
+                            <span>MQTT Broker</span>
+                        </div>
+                        <div class="mqtt-connections">
+                            <div class="mqtt-line mqtt-line-1"></div>
+                            <div class="mqtt-line mqtt-line-2"></div>
+                            <div class="mqtt-line mqtt-line-3"></div>
+                            <div class="mqtt-line mqtt-line-4"></div>
+                        </div>
+                        <div class="mqtt-devices">
+                            <div class="mqtt-device">
+                                <div class="mqtt-device-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                                </div>
+                                <span>Tablet</span>
+                            </div>
+                            <div class="mqtt-device">
+                                <div class="mqtt-device-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 16 21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                </div>
+                                <span>Apple TV</span>
+                            </div>
+                            <div class="mqtt-device">
+                                <div class="mqtt-device-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                                </div>
+                                <span>Home Assistant</span>
+                            </div>
+                            <div class="mqtt-device">
+                                <div class="mqtt-device-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                                </div>
+                                <span>Node-RED</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platforms -->
+    <section class="section" id="platforms">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">Cross-Platform</span>
+                <h2 class="section-title">One runtime. Every screen.</h2>
+                <p class="section-subtitle">
+                    Deploy on Android tablets, iPads, Apple TVs, Macs, Windows PCs, Linux boxes, and even web browsers.
+                    Same features. Same MQTT API. Same management.
+                </p>
+            </div>
+            <div class="platform-grid">
+                <div class="platform-card reveal">
+                    <div class="platform-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.342l-.975 1.846-1.47-.849c-.349-.2-.786-.2-1.134 0l-1.47.85-.976-1.847a5.001 5.001 0 110-6.684l.975 1.846 1.47-.849c.349-.2.786-.2 1.134 0l1.47.85.976-1.847A5.001 5.001 0 0112 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10a9.96 9.96 0 00-4.477-8.342z"/></svg>
+                    </div>
+                    <h3>Android</h3>
+                    <p>Full kiosk lockdown with Device Owner mode. Home launcher replacement. Foreground media service.</p>
+                    <span class="platform-badge">Full Kiosk</span>
+                </div>
+                <div class="platform-card reveal">
+                    <div class="platform-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    </div>
+                    <h3>iOS / iPadOS</h3>
+                    <p>Guided Access integration. Native WidgetKit home and lock screen widgets. Full camera/mic access.</p>
+                    <span class="platform-badge">OS Widgets</span>
+                </div>
+                <div class="platform-card platform-featured reveal">
+                    <div class="platform-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg>
+                    </div>
+                    <h3>Apple TV</h3>
+                    <p>Native Swift app with Siri Remote navigation. Full web browsing via Remote Browser. The first true windowing system on tvOS.</p>
+                    <span class="platform-badge platform-badge-special">Revolutionary</span>
+                </div>
+                <div class="platform-card reveal">
+                    <div class="platform-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+                    </div>
+                    <h3>Windows</h3>
+                    <p>MSIX packaging. Two-tier kiosk lockdown. Full InAppWebView support. Desktop window management.</p>
+                    <span class="platform-badge">Full Kiosk</span>
+                </div>
+                <div class="platform-card reveal">
+                    <div class="platform-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    </div>
+                    <h3>macOS</h3>
+                    <p>Fullscreen kiosk with dock and menu bar hiding. Desktop window management. Accessibility permissions.</p>
+                    <span class="platform-badge">Desktop</span>
+                </div>
+                <div class="platform-card reveal">
+                    <div class="platform-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.368 1.884 1.43.199.028.4.003.6-.063.156-.053.33-.127.5-.327.024.003.033.013.054.016h.003a1.174 1.174 0 00.586-.234c.377-.264.588-.689.583-1.094-.003-.252-.08-.503-.195-.703a7.4 7.4 0 01-.216-.464c-.135-.326-.263-.651-.326-.994-.012-.063-.027-.136-.03-.199-.004-.057-.004-.103-.004-.165a5.3 5.3 0 01.132-1.153 10.2 10.2 0 01.166-.655c.155-.553.263-1.076.242-1.593-.012-.315-.078-.618-.18-.869a.421.421 0 00.006-.035c.164-.263.375-.588.39-.988.017-.414-.222-.765-.487-1.063-.06-.064-.108-.12-.147-.194-.072-.113-.1-.237-.127-.393-.003-.023-.003-.049-.006-.072-.03-.168-.06-.336-.123-.485-.144-.337-.354-.568-.608-.777-.112-.094-.218-.173-.31-.248a.96.96 0 01-.135-.117 1.174 1.174 0 01-.175-.37 3.76 3.76 0 00-.267-.79c-.174-.358-.394-.706-.753-.988a1.97 1.97 0 00-.587-.284z"/></svg>
+                    </div>
+                    <h3>Linux</h3>
+                    <p>Raspberry Pi ready. InAppWebView support. Perfect for dedicated display hardware. Lightweight deployment.</p>
+                    <span class="platform-badge">Embedded</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Widgets Gallery -->
+    <section class="section section-dark" id="widgets">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">25+ Built-in Widgets</span>
+                <h2 class="section-title">Every widget you need. All MQTT-controllable.</h2>
+                <p class="section-subtitle">
+                    From clocks to cameras, gauges to games. Each widget type has a rich MQTT command set
+                    for complete remote control.
+                </p>
+            </div>
+            <div class="widget-grid">
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h4>Clock</h4><p>Analog & digital</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12a5 5 0 005 5h1a5 5 0 005-5V7a3 3 0 016 0v1"/><path d="M6 19l2 2m8-2l-2 2"/></svg></div><h4>Weather</h4><p>OpenWeather data</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h4>Web Browser</h4><p>Full InAppWebView</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></div><h4>Camera</h4><p>RTSP & WebRTC</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0110 10" stroke-dasharray="4 4"/></svg></div><h4>Gauge</h4><p>Radial, linear, semi</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><h4>Chart</h4><p>Line, bar, pie</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h4>Calendar</h4><p>MQTT-synced events</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><h4>Media Player</h4><p>Video & audio</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><h4>Carousel</h4><p>Image & video slides</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><h4>Intercom</h4><p>Live audio/video</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><h4>Canvas</h4><p>Declarative graphics</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div><h4>Animated Text</h4><p>Typewriter, neon, bounce</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><h4>Map</h4><p>OpenStreetMap</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>Alarmo</h4><p>HA security panel</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/><path d="M8 17V5l12-2v10"/></svg></div><h4>Audio Visualizer</h4><p>Real-time FFT</p></div>
+                <div class="widget-card reveal"><div class="widget-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h4>Custom Widget</h4><p>Build with HTML/JS</p></div>
+            </div>
+            <div class="text-center reveal" style="margin-top:3rem">
+                <p class="muted">Plus: YouTube, PDF Viewer, DLNA Player, MQTT Image, MQTT Button, Stopwatch/Timer, WHEP Streams, Games, and more.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Server -->
+    <section class="section" id="server">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">KingKiosk Core</span>
+                <h2 class="section-title">A powerhouse Feature Server</h2>
+                <p class="section-subtitle">
+                    Offload heavy tasks to the server. Remote browser rendering, WebRTC intercom,
+                    AI vision, TTS synthesis, camera management. All in a single binary.
+                </p>
+            </div>
+            <div class="server-features">
+                <div class="server-card reveal">
+                    <div class="server-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                    </div>
+                    <h3>Remote Browser</h3>
+                    <p>Server-side Chromium rendering streamed via WebRTC. Brings full web browsing to Apple TV and underpowered devices. Persistent sessions with cookie/localStorage per window.</p>
+                    <div class="server-tech">GPU-accelerated streaming</div>
+                </div>
+                <div class="server-card reveal">
+                    <div class="server-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                    </div>
+                    <h3>WebRTC Intercom</h3>
+                    <p>One-button broadcast from any kiosk to all others. MediaSoup SFU routes audio and video with minimal latency. Group management and push-to-talk support.</p>
+                    <div class="server-tech">Low-latency WebRTC</div>
+                </div>
+                <div class="server-card reveal">
+                    <div class="server-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <h3>AI Vision</h3>
+                    <p>Real-time object detection, facial recognition, and audio event classification. Turn any camera into an intelligent sensor that detects people, objects, doorbells, and more.</p>
+                    <div class="server-tech">Real-time on-device inference</div>
+                </div>
+                <div class="server-card reveal">
+                    <div class="server-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    </div>
+                    <h3>Speech Services</h3>
+                    <p>Piper TTS with 100+ voices in 30+ languages. Whisper STT for real-time transcription. All running locally on your server. No cloud APIs needed.</p>
+                    <div class="server-tech">100+ voices, 30+ languages</div>
+                </div>
+                <div class="server-card reveal">
+                    <div class="server-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    </div>
+                    <h3>Camera Management</h3>
+                    <p>Ingest RTSP/RTMP/HLS cameras. AI-powered alerts with recording. RTSP export to go2rtc turns tablets into Home Assistant cameras. Talkback support.</p>
+                    <div class="server-tech">Home Assistant &amp; Frigate compatible</div>
+                </div>
+            </div>
+            <div class="server-deploy reveal">
+                <h3>Deploy anywhere</h3>
+                <div class="deploy-options">
+                    <div class="deploy-option">
+                        <div class="deploy-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        </div>
+                        <span>Home Assistant Add-on</span>
+                    </div>
+                    <div class="deploy-option">
+                        <div class="deploy-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                        </div>
+                        <span>Docker Compose</span>
+                    </div>
+                    <div class="deploy-option">
+                        <div class="deploy-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                        </div>
+                        <span>Bare Metal / Systemd</span>
+                    </div>
+                    <div class="deploy-option">
+                        <div class="deploy-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg>
+                        </div>
+                        <span>GPU Accelerated</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Home Assistant Integration -->
+    <section class="section section-dark" id="integrations">
+        <div class="container">
+            <div class="split-section reverse">
+                <div class="split-content reveal">
+                    <span class="section-label">Smart Home</span>
+                    <h2 class="section-title">Deep Home Assistant integration</h2>
+                    <p>KingKiosk auto-discovers itself in Home Assistant. Your displays appear as devices
+                       with sensors, buttons, and camera entities. Zero configuration required.</p>
+                    <div class="integration-features">
+                        <div class="int-feature">
+                            <div class="int-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div>
+                                <strong>Auto-Discovery</strong>
+                                <p>Devices appear in HA automatically via MQTT Discovery</p>
+                            </div>
+                        </div>
+                        <div class="int-feature">
+                            <div class="int-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div>
+                                <strong>Sensor Entities</strong>
+                                <p>Battery, screen state, person presence, object detection</p>
+                            </div>
+                        </div>
+                        <div class="int-feature">
+                            <div class="int-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div>
+                                <strong>Camera Entity</strong>
+                                <p>Periodic screenshots visible as a camera in HA dashboards</p>
+                            </div>
+                        </div>
+                        <div class="int-feature">
+                            <div class="int-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div>
+                                <strong>RTSP Camera Export</strong>
+                                <p>Stream tablet cameras to Frigate via go2rtc</p>
+                            </div>
+                        </div>
+                        <div class="int-feature">
+                            <div class="int-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div>
+                                <strong>Alarmo Panel</strong>
+                                <p>Native security system control with per-mode PINs</p>
+                            </div>
+                        </div>
+                        <div class="int-feature">
+                            <div class="int-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div>
+                                <strong>Bidirectional Control</strong>
+                                <p>Send commands from HA automations, receive events back</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="split-visual reveal">
+                    <div class="ha-visual">
+                        <div class="ha-card">
+                            <div class="ha-header">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+                                Home Assistant
+                            </div>
+                            <div class="ha-entities">
+                                <div class="ha-entity">
+                                    <span class="ha-entity-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="5"/></svg>
+                                    </span>
+                                    <span class="ha-entity-name">Living Room Tablet</span>
+                                    <span class="ha-entity-state ha-online">Online</span>
+                                </div>
+                                <div class="ha-entity">
+                                    <span class="ha-entity-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" width="16" height="16"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v3"/></svg>
+                                    </span>
+                                    <span class="ha-entity-name">Battery Level</span>
+                                    <span class="ha-entity-state">87%</span>
+                                </div>
+                                <div class="ha-entity">
+                                    <span class="ha-entity-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </span>
+                                    <span class="ha-entity-name">Person Detected</span>
+                                    <span class="ha-entity-state ha-active">Yes</span>
+                                </div>
+                                <div class="ha-entity">
+                                    <span class="ha-entity-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" width="16" height="16"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+                                    </span>
+                                    <span class="ha-entity-name">Screen State</span>
+                                    <span class="ha-entity-state">Dashboard</span>
+                                </div>
+                                <div class="ha-entity">
+                                    <span class="ha-entity-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#f472b6" stroke-width="2" width="16" height="16"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                    </span>
+                                    <span class="ha-entity-name">Camera</span>
+                                    <span class="ha-entity-state ha-active">Streaming</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ANNICA AI Agent - Coming in a future release -->
+
+    <!-- Custom Widget SDK -->
+    <section class="section section-dark" id="sdk">
+        <div class="container">
+            <div class="split-section">
+                <div class="split-content reveal">
+                    <span class="section-label">Developer SDK</span>
+                    <h2 class="section-title">Build custom widgets with HTML and JavaScript</h2>
+                    <p>The Custom Widget SDK gives your web content full access to the KingKiosk platform.
+                       Receive MQTT commands, publish telemetry, use persistent storage.
+                       Works on every platform including Apple TV via Remote Browser.</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                            <span class="code-title">my-widget.html</span>
+                        </div>
+                        <pre><code><span class="code-comment">// Receive commands from MQTT</span>
+window.KingKiosk.onCommand(<span class="code-keyword">function</span>(cmd, payload) {
+  <span class="code-keyword">if</span> (cmd === <span class="code-string">'update_data'</span>) {
+    renderChart(payload.values);
+  }
+});
+
+<span class="code-comment">// Publish telemetry back</span>
+window.KingKiosk.publishTelemetry({
+  temperature: <span class="code-number">23.5</span>,
+  humidity: <span class="code-number">45</span>
+});
+
+<span class="code-comment">// Persistent storage</span>
+<span class="code-keyword">await</span> window.KingKiosk.storage.set(
+  <span class="code-string">'lastUpdate'</span>, Date.now()
+);</code></pre>
+                    </div>
+                </div>
+                <div class="split-visual reveal">
+                    <div class="sdk-features">
+                        <div class="sdk-feature">
+                            <h4>onCommand()</h4>
+                            <p>Receive MQTT commands targeted at your widget</p>
+                        </div>
+                        <div class="sdk-feature">
+                            <h4>sendCommand()</h4>
+                            <p>Publish events and control other widgets</p>
+                        </div>
+                        <div class="sdk-feature">
+                            <h4>publishTelemetry()</h4>
+                            <p>Share sensor readings with the platform</p>
+                        </div>
+                        <div class="sdk-feature">
+                            <h4>storage.get/set()</h4>
+                            <p>Persistent key-value storage across restarts</p>
+                        </div>
+                        <div class="sdk-feature">
+                            <h4>getWidgetInfo()</h4>
+                            <p>Get widget ID, platform, and device info</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OS Widgets -->
+    <section class="section" id="os-widgets">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">Native OS Widgets</span>
+                <h2 class="section-title">MQTT on your home screen</h2>
+                <p class="section-subtitle">
+                    Create native iOS and Android home screen widgets that update via MQTT independently
+                    of the main app. Gauges, charts, weather, buttons, and more -- right on your lock screen.
+                </p>
+            </div>
+            <div class="os-widget-demo reveal">
+                <div class="phone-frame">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="phone-time">10:42</div>
+                        <div class="phone-widgets">
+                            <div class="phone-widget pw-gauge">
+                                <div class="pw-label">Temperature</div>
+                                <div class="pw-value">72&deg;F</div>
+                            </div>
+                            <div class="phone-widget pw-button">
+                                <div class="pw-btn-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                </div>
+                                <div class="pw-label">Garage</div>
+                            </div>
+                            <div class="phone-widget pw-weather">
+                                <div class="pw-label">Outside</div>
+                                <div class="pw-value">Sunny 68&deg;</div>
+                            </div>
+                            <div class="phone-widget pw-chart">
+                                <div class="pw-label">Energy</div>
+                                <div class="pw-mini-chart">
+                                    <div class="bar" style="height:40%"></div>
+                                    <div class="bar" style="height:60%"></div>
+                                    <div class="bar" style="height:35%"></div>
+                                    <div class="bar" style="height:80%"></div>
+                                    <div class="bar" style="height:55%"></div>
+                                    <div class="bar" style="height:70%"></div>
+                                    <div class="bar" style="height:45%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="os-widget-info">
+                    <p>Create via a single MQTT command with <code>os_widget: true</code>.
+                       Widgets connect to MQTT independently via a lightweight WebSocket client.
+                       WidgetKit on iOS. Glance on Android.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security -->
+    <section class="section section-dark" id="security">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">Enterprise Security</span>
+                <h2 class="section-title">Secure by design</h2>
+            </div>
+            <div class="security-grid">
+                <div class="security-item reveal">
+                    <div class="security-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                    </div>
+                    <h4>HMAC-SHA256 Signing</h4>
+                    <p>Every MQTT command can be cryptographically signed</p>
+                </div>
+                <div class="security-item reveal">
+                    <div class="security-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h4>PIN-Protected Settings</h4>
+                    <p>Remote lock/unlock with configurable PIN codes</p>
+                </div>
+                <div class="security-item reveal">
+                    <div class="security-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                    </div>
+                    <h4>TLS/DTLS Encryption</h4>
+                    <p>MQTT over TLS, WebRTC DTLS-SRTP for all media</p>
+                </div>
+                <div class="security-item reveal">
+                    <div class="security-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <h4>Role-Based Access</h4>
+                    <p>Per-device and per-user access control policies</p>
+                </div>
+                <div class="security-item reveal">
+                    <div class="security-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/></svg>
+                    </div>
+                    <h4>100% Local</h4>
+                    <p>No cloud dependency. Your data stays on your network.</p>
+                </div>
+                <div class="security-item reveal">
+                    <div class="security-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <h4>Full Kiosk Lockdown</h4>
+                    <p>Device Owner on Android, Guided Access on iOS</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="section" id="pricing">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">Pricing</span>
+                <h2 class="section-title">Simple, transparent pricing</h2>
+                <p class="section-subtitle">
+                    Simple plans that scale with you.
+                    Every plan includes all 25+ widgets, MQTT control, and multi-platform support.
+                </p>
+            </div>
+            <div class="pricing-grid pricing-grid-4">
+                <div class="pricing-card reveal">
+                    <div class="pricing-header">
+                        <h3>Kiosk</h3>
+                        <p class="pricing-desc">Android, iOS, Mac, Windows, Linux</p>
+                    </div>
+                    <div class="pricing-price">
+                        <span class="price-currency">$</span>
+                        <span class="price-amount">19</span>
+                        <span class="price-decimal">.99</span>
+                        <span class="price-period">/mo</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>All 25+ widget types</li>
+                        <li>Full MQTT remote control</li>
+                        <li>Multi-window tiling system</li>
+                        <li>Home Assistant auto-discovery</li>
+                        <li>Screen presets &amp; scheduling</li>
+                        <li>Kiosk mode lockdown</li>
+                        <li>Native OS widgets (iOS/Android)</li>
+                        <li>Custom Widget SDK</li>
+                    </ul>
+                    <a href="#" class="btn btn-ghost btn-lg pricing-btn">Get Started</a>
+                </div>
+                <div class="pricing-card reveal">
+                    <div class="pricing-header">
+                        <h3>Feature Server</h3>
+                        <p class="pricing-desc">Supercharge your kiosk setup</p>
+                    </div>
+                    <div class="pricing-price">
+                        <span class="price-currency">$</span>
+                        <span class="price-amount">49</span>
+                        <span class="price-decimal">.99</span>
+                        <span class="price-period">/mo</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Remote Browser rendering</li>
+                        <li>WebRTC Intercom &amp; Broadcast</li>
+                        <li>TTS (100+ voices, 30+ languages)</li>
+                        <li>Speech-to-Text transcription</li>
+                        <li>RTSP Camera Export</li>
+                        <li>Camera Management</li>
+                        <li>AI Vision &amp; Facial Recognition</li>
+                    </ul>
+                    <a href="#" class="btn btn-ghost btn-lg pricing-btn">Get Started</a>
+                </div>
+                <div class="pricing-card pricing-featured reveal">
+                    <div class="pricing-popular">Best Value</div>
+                    <div class="pricing-header">
+                        <h3>Apple TV Bundle</h3>
+                        <p class="pricing-desc">Full experience on the big screen</p>
+                    </div>
+                    <div class="pricing-price">
+                        <span class="price-currency">$</span>
+                        <span class="price-amount">49</span>
+                        <span class="price-decimal">.99</span>
+                        <span class="price-period">/mo</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Native tvOS app</li>
+                        <li>Feature Server included</li>
+                        <li>Remote Browser for full web on TV</li>
+                        <li>Siri Remote navigation</li>
+                        <li>WebRTC Intercom &amp; Broadcast</li>
+                        <li>TTS, STT, AI Vision</li>
+                        <li>RTSP Camera Export</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary btn-lg pricing-btn">Get Started</a>
+                </div>
+                <div class="pricing-card reveal">
+                    <div class="pricing-header">
+                        <h3>Enterprise</h3>
+                        <p class="pricing-desc">Fleets, facilities, and organizations</p>
+                    </div>
+                    <div class="pricing-price pricing-price-custom">
+                        <span class="price-custom">Let's Talk</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Unlimited devices</li>
+                        <li>Everything in all plans</li>
+                        <li>Fleet layout replication</li>
+                        <li>HMAC command signing</li>
+                        <li>Volume licensing</li>
+                        <li>Custom integrations</li>
+                        <li>Dedicated support</li>
+                    </ul>
+                    <a href="#" class="btn btn-ghost btn-lg pricing-btn">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation -->
+    <section class="section section-dark" id="docs">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">Documentation</span>
+                <h2 class="section-title">Everything you need to get started</h2>
+                <p class="section-subtitle">
+                    Comprehensive guides for every skill level. From first install to fleet-wide MQTT orchestration.
+                </p>
+            </div>
+            <div class="problem-grid">
+                <div class="problem-card reveal">
+                    <div class="problem-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+                    </div>
+                    <h3>User Guide</h3>
+                    <p>Step-by-step setup, windowing system, screen presets, scheduling, kiosk mode, and platform-specific instructions.</p>
+                    <a href="#" class="btn btn-ghost btn-sm" style="margin-top:1rem">Read the Guide</a>
+                </div>
+                <div class="problem-card reveal">
+                    <div class="problem-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    </div>
+                    <h3>MQTT Reference</h3>
+                    <p>Complete command reference for every widget type, system command, topic structure, and signed envelope format.</p>
+                    <a href="#" class="btn btn-ghost btn-sm" style="margin-top:1rem">View Reference</a>
+                </div>
+                <div class="problem-card reveal">
+                    <div class="problem-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <h3>Widget SDK</h3>
+                    <p>Build custom widgets with HTML and JavaScript. Receive MQTT commands, publish telemetry, use persistent storage.</p>
+                    <a href="#sdk" class="btn btn-ghost btn-sm" style="margin-top:1rem">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section section-cta" id="get-started">
+        <div class="container">
+            <div class="cta-content reveal">
+                <h2 class="section-title">Ready to program your screens?</h2>
+                <p class="section-subtitle">
+                    Deploy the runtime on everything from a $50 Android tablet to an Apple TV 4K.
+                    Send it instructions via MQTT. Watch it become whatever you need.
+                    Get started in minutes.
+                </p>
+                <div class="cta-actions">
+                    <a href="#" class="btn btn-primary btn-lg">
+                        Get Started
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <a href="#pricing" class="btn btn-ghost btn-lg">View Pricing</a>
+                </div>
+                <div class="cta-platforms">
+                    <span>Available on:</span>
+                    <div class="cta-platform-icons">
+                        <span title="Android">Android</span>
+                        <span title="iOS">iOS</span>
+                        <span title="tvOS">tvOS</span>
+                        <span title="macOS">macOS</span>
+                        <span title="Windows">Windows</span>
+                        <span title="Linux">Linux</span>
+                        <span title="Web">Web</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact / Support -->
+    <section class="section section-dark" id="contact">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">Support</span>
+                <h2 class="section-title">We're here to help</h2>
+                <p class="section-subtitle">
+                    Join the community, report issues, or reach out directly.
+                </p>
+            </div>
+            <div class="problem-grid">
+                <div class="problem-card reveal">
+                    <div class="problem-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    </div>
+                    <h3>Community</h3>
+                    <p>Join our Facebook group to share ideas, get help from other users, and stay updated on new features.</p>
+                </div>
+                <div class="problem-card reveal">
+                    <div class="problem-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <h3>Email Support</h3>
+                    <p>Reach us at support@kingkiosk.com for technical questions, licensing, or enterprise inquiries.</p>
+                </div>
+                <div class="problem-card reveal">
+                    <div class="problem-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <h3>Bug Reports</h3>
+                    <p>Found an issue? Report it in our community group or email us. We take every report seriously.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <div class="nav-logo">
+                        <span class="logo-icon">K</span>
+                        <span class="logo-text">KingKiosk</span>
+                    </div>
+                    <p>The world's first Programmable Display Runtime.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4>Product</h4>
+                        <a href="#features">Features</a>
+                        <a href="#platforms">Platforms</a>
+                        <a href="#widgets">Widgets</a>
+                        <a href="#server">Feature Server</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Resources</h4>
+                        <a href="#docs">Documentation</a>
+                        <a href="#">MQTT Reference</a>
+                        <a href="#sdk">Widget SDK</a>
+                        <a href="#">User Guide</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <a href="#pricing">Pricing</a>
+                        <a href="#contact">Contact</a>
+                        <a href="#server">Feature Server</a>
+                        <a href="#integrations">Integrations</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Programmable Display Runtime. Powered by MQTT. Built for every screen.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
