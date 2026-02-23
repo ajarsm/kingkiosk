@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="pandoc">
+  <title>KingKiosk Documentation</title>
+  <link rel="stylesheet" href="kingkiosk-docs.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23f59e0b'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-weight='800' font-size='18' font-family='system-ui'>K</text></svg>">
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <a href="index.html" class="logo">
+    <span class="logo-icon">K</span>
+    <span>KingKiosk Docs</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="KINGKIOSK_USER_GUIDE.html" >User Guide</a></li>
+    <li><a href="MQTT_WIDGET_REFERENCE.html" >MQTT Reference</a></li>
+    <li><a href="CUSTOM_WIDGET_SDK.html" >Widget SDK</a></li>
+    <li><a href="https://kingkiosk.kallinnovations.com" target="_blank">Website &nearr;</a></li>
+  </ul>
+</nav>
+
+<!-- Sidebar Toggle (mobile) -->
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle navigation">
+  &#9776;
+</button>
+
+<div class="page-wrapper">
+
+  <!-- Sidebar with TOC -->
+  <aside class="sidebar">
+    <div class="toc-title">On this page</div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <main class="content">
+      <header id="title-block-header">
+        <h1 class="title">KingKiosk Documentation</h1>
+        <p class="subtitle">The World’s First Programmable Display
+Runtime</p>
+        <p class="date">Last updated: February 2026</p>
+      </header>
+<h2 id="welcome">Welcome</h2>
+<p>KingKiosk turns any screen into a remotely orchestrated, multi-window
+display surface. Control everything via MQTT — dashboards, media,
+cameras, gauges, web content, intercoms — all composable, all
+controllable in real-time.</p>
+<h2 id="documentation">Documentation</h2>
+<h3 id="user-guide"><a href="KINGKIOSK_USER_GUIDE.html">User
+Guide</a></h3>
+<p>Your complete guide to getting started with KingKiosk. Covers
+installation, setup, MQTT architecture, the windowing system, screen
+states, system commands, widgets, media playback, intercom, Home
+Assistant integration, and more.</p>
+<h3 id="mqtt-widget-reference"><a href="MQTT_WIDGET_REFERENCE.html">MQTT
+Widget Reference</a></h3>
+<p>Comprehensive technical reference for every MQTT command, widget
+type, and configuration option. Covers 25+ widget types including
+gauges, charts, carousels, animated text, clocks, weather, maps, canvas,
+calendars, games, and more.</p>
+<h3 id="custom-widget-sdk"><a href="CUSTOM_WIDGET_SDK.html">Custom
+Widget SDK</a></h3>
+<p>Build your own widgets for KingKiosk. The Custom Widget SDK provides
+a JavaScript bridge API for creating interactive third-party widgets
+that communicate bidirectionally with the KingKiosk runtime via
+MQTT.</p>
+<hr />
+<h2 id="quick-links">Quick Links</h2>
+<ul>
+<li><strong>Website:</strong> <a
+href="https://kingkiosk.kallinnovations.com">kingkiosk.kallinnovations.com</a></li>
+<li><strong>Platforms:</strong> Android, iOS, macOS, Windows, Linux,
+Web, tvOS</li>
+<li><strong>Protocol:</strong> MQTT with JSON command envelopes</li>
+<li><strong>Integration:</strong> Home Assistant auto-discovery, Feature
+Server provisioning</li>
+</ul>
+      <footer class="doc-footer">
+        <p>
+          <a href="https://kingkiosk.kallinnovations.com">KingKiosk</a>
+          &mdash; The Programmable Display Runtime &mdash;
+          &copy; Kall Innovations
+        </p>
+      </footer>
+    </main>
+  </div>
+
+</div>
+
+<!-- Back to Top -->
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  &uarr;
+</button>
+
+<script>
+// Back to Top visibility
+const btn = document.querySelector('.back-to-top');
+window.addEventListener('scroll', () => {
+  btn.classList.toggle('visible', window.scrollY > 400);
+});
+
+// Active TOC highlight on scroll
+const tocLinks = document.querySelectorAll('#TOC a');
+const headings = [];
+tocLinks.forEach(link => {
+  const id = link.getAttribute('href');
+  if (id && id.startsWith('#')) {
+    const el = document.getElementById(id.slice(1));
+    if (el) headings.push({ el, link });
+  }
+});
+
+function updateActiveTOC() {
+  let current = null;
+  const scrollY = window.scrollY + 100;
+  for (const { el, link } of headings) {
+    if (el.offsetTop <= scrollY) {
+      current = link;
+    }
+  }
+  tocLinks.forEach(l => l.classList.remove('active'));
+  if (current) current.classList.add('active');
+}
+
+window.addEventListener('scroll', updateActiveTOC, { passive: true });
+updateActiveTOC();
+
+// Close sidebar on mobile when clicking a link
+document.querySelectorAll('.sidebar a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 960) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>

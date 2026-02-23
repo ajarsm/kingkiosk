@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="pandoc">
+  <title>Custom Widget SDK</title>
+  <link rel="stylesheet" href="kingkiosk-docs.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23f59e0b'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-weight='800' font-size='18' font-family='system-ui'>K</text></svg>">
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <a href="index.html" class="logo">
+    <span class="logo-icon">K</span>
+    <span>KingKiosk Docs</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" >Home</a></li>
+    <li><a href="KINGKIOSK_USER_GUIDE.html" >User Guide</a></li>
+    <li><a href="MQTT_WIDGET_REFERENCE.html" >MQTT Reference</a></li>
+    <li><a href="CUSTOM_WIDGET_SDK.html" class="active">Widget SDK</a></li>
+    <li><a href="https://kingkiosk.kallinnovations.com" target="_blank">Website &nearr;</a></li>
+  </ul>
+</nav>
+
+<!-- Sidebar Toggle (mobile) -->
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle navigation">
+  &#9776;
+</button>
+
+<div class="page-wrapper">
+
+  <!-- Sidebar with TOC -->
+  <aside class="sidebar">
+    <div class="toc-title">On this page</div>
+    <ul>
+    <li><a href="#kingkiosk-custom-widget-sdk"
+    id="toc-kingkiosk-custom-widget-sdk"><span
+    class="toc-section-number">1</span> KingKiosk Custom Widget SDK</a>
+    <ul>
+    <li><a href="#table-of-contents" id="toc-table-of-contents"><span
+    class="toc-section-number">1.1</span> Table of Contents</a></li>
+    <li><a href="#quick-start" id="toc-quick-start"><span
+    class="toc-section-number">1.2</span> Quick Start</a>
+    <ul>
+    <li><a href="#create-your-widget-html"
+    id="toc-create-your-widget-html"><span
+    class="toc-section-number">1.2.1</span> 1. Create your widget
+    HTML</a></li>
+    <li><a href="#host-your-widget-or-use-inline-html"
+    id="toc-host-your-widget-or-use-inline-html"><span
+    class="toc-section-number">1.2.2</span> 2. Host your widget (or use
+    inline HTML)</a></li>
+    <li><a href="#add-the-widget-via-mqtt"
+    id="toc-add-the-widget-via-mqtt"><span
+    class="toc-section-number">1.2.3</span> 3. Add the widget via
+    MQTT</a></li>
+    </ul></li>
+    <li><a href="#adding-a-widget" id="toc-adding-a-widget"><span
+    class="toc-section-number">1.3</span> Adding a Widget</a>
+    <ul>
+    <li><a
+    href="#option-a-remote-browser-custom-widget-bridge-recommended-required-on-tvos"
+    id="toc-option-a-remote-browser-custom-widget-bridge-recommended-required-on-tvos"><span
+    class="toc-section-number">1.3.1</span> Option A: Remote Browser
+    custom widget bridge (recommended, required on tvOS)</a></li>
+    <li><a
+    href="#option-b-reconfigure-an-existing-local-customwebview-tile"
+    id="toc-option-b-reconfigure-an-existing-local-customwebview-tile"><span
+    class="toc-section-number">1.3.2</span> Option B: Reconfigure an
+    existing local <code>customWebView</code> tile</a></li>
+    <li><a
+    href="#local-customwebview-with-inline-html-simple-widgets-no-hosting"
+    id="toc-local-customwebview-with-inline-html-simple-widgets-no-hosting"><span
+    class="toc-section-number">1.3.3</span> Local
+    <code>customWebView</code> with inline HTML (simple widgets, no
+    hosting)</a></li>
+    <li><a
+    href="#local-customwebview-with-base64-encoded-html-special-characters-larger-widgets"
+    id="toc-local-customwebview-with-base64-encoded-html-special-characters-larger-widgets"><span
+    class="toc-section-number">1.3.4</span> Local
+    <code>customWebView</code> with base64-encoded HTML (special
+    characters, larger widgets)</a></li>
+    <li><a href="#window-configuration-options"
+    id="toc-window-configuration-options"><span
+    class="toc-section-number">1.3.5</span> Window Configuration
+    Options</a></li>
+    <li><a href="#content-size-limits"
+    id="toc-content-size-limits"><span
+    class="toc-section-number">1.3.6</span> Content Size Limits</a></li>
+    </ul></li>
+    <li><a href="#javascript-bridge-api"
+    id="toc-javascript-bridge-api"><span
+    class="toc-section-number">1.4</span> JavaScript Bridge API</a>
+    <ul>
+    <li><a href="#api-reference" id="toc-api-reference"><span
+    class="toc-section-number">1.4.1</span> API Reference</a></li>
+    </ul></li>
+    <li><a href="#receiving-commands" id="toc-receiving-commands"><span
+    class="toc-section-number">1.5</span> Receiving Commands</a>
+    <ul>
+    <li><a href="#sending-commands-to-your-widget-via-mqtt"
+    id="toc-sending-commands-to-your-widget-via-mqtt"><span
+    class="toc-section-number">1.5.1</span> Sending Commands to Your
+    Widget via MQTT</a></li>
+    <li><a href="#local-customwebview-command-path"
+    id="toc-local-customwebview-command-path"><span
+    class="toc-section-number">1.5.2</span> Local
+    <code>customWebView</code> command path</a></li>
+    <li><a href="#remote-browser-custom-widget-bridge-command-path"
+    id="toc-remote-browser-custom-widget-bridge-command-path"><span
+    class="toc-section-number">1.5.3</span> Remote Browser custom widget
+    bridge command path</a></li>
+    </ul></li>
+    <li><a href="#sending-commands" id="toc-sending-commands"><span
+    class="toc-section-number">1.6</span> Sending Commands</a>
+    <ul>
+    <li><a href="#mqtt-output" id="toc-mqtt-output"><span
+    class="toc-section-number">1.6.1</span> MQTT Output</a></li>
+    </ul></li>
+    <li><a href="#publishing-telemetry"
+    id="toc-publishing-telemetry"><span
+    class="toc-section-number">1.7</span> Publishing Telemetry</a>
+    <ul>
+    <li><a href="#mqtt-output-1" id="toc-mqtt-output-1"><span
+    class="toc-section-number">1.7.1</span> MQTT Output</a></li>
+    </ul></li>
+    <li><a href="#persistent-storage" id="toc-persistent-storage"><span
+    class="toc-section-number">1.8</span> Persistent Storage</a>
+    <ul>
+    <li><a href="#initial-storage" id="toc-initial-storage"><span
+    class="toc-section-number">1.8.1</span> Initial Storage</a></li>
+    </ul></li>
+    <li><a href="#widget-info" id="toc-widget-info"><span
+    class="toc-section-number">1.9</span> Widget Info</a></li>
+    <li><a href="#mqtt-topics" id="toc-mqtt-topics"><span
+    class="toc-section-number">1.10</span> MQTT Topics</a>
+    <ul>
+    <li><a
+    href="#receiving-commands-local-customwebview-platform---widget"
+    id="toc-receiving-commands-local-customwebview-platform---widget"><span
+    class="toc-section-number">1.10.1</span> Receiving Commands: Local
+    <code>customWebView</code> (Platform -&gt; Widget)</a></li>
+    <li><a
+    href="#receiving-commands-remote-browser-custom-widget-bridge-platform---widget"
+    id="toc-receiving-commands-remote-browser-custom-widget-bridge-platform---widget"><span
+    class="toc-section-number">1.10.2</span> Receiving Commands: Remote
+    Browser custom widget bridge (Platform -&gt; Widget)</a></li>
+    <li><a href="#widget-events-widget---platform"
+    id="toc-widget-events-widget---platform"><span
+    class="toc-section-number">1.10.3</span> Widget Events (Widget -&gt;
+    Platform)</a></li>
+    <li><a href="#widget-telemetry-widget---platform"
+    id="toc-widget-telemetry-widget---platform"><span
+    class="toc-section-number">1.10.4</span> Widget Telemetry (Widget
+    -&gt; Platform)</a></li>
+    <li><a href="#widget-state-remote-browser-bridge-retained"
+    id="toc-widget-state-remote-browser-bridge-retained"><span
+    class="toc-section-number">1.10.5</span> Widget State (remote
+    browser bridge, retained)</a></li>
+    </ul></li>
+    <li><a href="#complete-example" id="toc-complete-example"><span
+    class="toc-section-number">1.11</span> Complete Example</a></li>
+    <li><a href="#best-practices" id="toc-best-practices"><span
+    class="toc-section-number">1.12</span> Best Practices</a>
+    <ul>
+    <li><a href="#always-wait-for-the-bridge"
+    id="toc-always-wait-for-the-bridge"><span
+    class="toc-section-number">1.12.1</span> 1. Always Wait for the
+    Bridge</a></li>
+    <li><a href="#handle-missing-bridge-gracefully"
+    id="toc-handle-missing-bridge-gracefully"><span
+    class="toc-section-number">1.12.2</span> 2. Handle Missing Bridge
+    Gracefully</a></li>
+    <li><a href="#use-responsive-design"
+    id="toc-use-responsive-design"><span
+    class="toc-section-number">1.12.3</span> 3. Use Responsive
+    Design</a></li>
+    <li><a href="#minimize-network-requests"
+    id="toc-minimize-network-requests"><span
+    class="toc-section-number">1.12.4</span> 4. Minimize Network
+    Requests</a></li>
+    <li><a href="#use-throttled-telemetry"
+    id="toc-use-throttled-telemetry"><span
+    class="toc-section-number">1.12.5</span> 5. Use Throttled
+    Telemetry</a></li>
+    <li><a href="#persist-important-state"
+    id="toc-persist-important-state"><span
+    class="toc-section-number">1.12.6</span> 6. Persist Important
+    State</a></li>
+    </ul></li>
+    <li><a href="#troubleshooting" id="toc-troubleshooting"><span
+    class="toc-section-number">1.13</span> Troubleshooting</a>
+    <ul>
+    <li><a href="#widget-shows-not-configured"
+    id="toc-widget-shows-not-configured"><span
+    class="toc-section-number">1.13.1</span> Widget Shows “Not
+    Configured”</a></li>
+    <li><a href="#bridge-not-available"
+    id="toc-bridge-not-available"><span
+    class="toc-section-number">1.13.2</span> Bridge Not
+    Available</a></li>
+    <li><a href="#commands-not-received"
+    id="toc-commands-not-received"><span
+    class="toc-section-number">1.13.3</span> Commands Not
+    Received</a></li>
+    <li><a href="#telemetry-not-publishing"
+    id="toc-telemetry-not-publishing"><span
+    class="toc-section-number">1.13.4</span> Telemetry Not
+    Publishing</a></li>
+    <li><a href="#storage-not-persisting"
+    id="toc-storage-not-persisting"><span
+    class="toc-section-number">1.13.5</span> Storage Not
+    Persisting</a></li>
+    <li><a href="#debug-tips" id="toc-debug-tips"><span
+    class="toc-section-number">1.13.6</span> Debug Tips</a></li>
+    </ul></li>
+    <li><a href="#platform-support" id="toc-platform-support"><span
+    class="toc-section-number">1.14</span> Platform Support</a>
+    <ul>
+    <li><a href="#tvos-special-requirements"
+    id="toc-tvos-special-requirements"><span
+    class="toc-section-number">1.14.1</span> tvOS Special
+    Requirements</a></li>
+    </ul></li>
+    <li><a href="#need-help" id="toc-need-help"><span
+    class="toc-section-number">1.15</span> Need Help?</a></li>
+    </ul></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <main class="content">
+      <header id="title-block-header">
+        <h1 class="title">Custom Widget SDK</h1>
+        <p class="subtitle">Build Third-Party Widgets for KingKiosk</p>
+        <p class="date">Last updated: February 2026</p>
+      </header>
+<h1 data-number="1" id="kingkiosk-custom-widget-sdk"><span
+class="header-section-number">1</span> KingKiosk Custom Widget SDK</h1>
+<p>Build custom widgets for KingKiosk using standard web technologies
+(HTML, CSS, JavaScript). Widgets run either in a local
+<code>customWebView</code> tile (InAppWebView bridge) or through the
+Remote Browser custom-widget bridge, and can communicate with the
+KingKiosk platform through the <code>window.KingKiosk</code> JavaScript
+API.</p>
+<h2 data-number="1.1" id="table-of-contents"><span
+class="header-section-number">1.1</span> Table of Contents</h2>
+<ul>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#adding-a-widget">Adding a Widget</a></li>
+<li><a href="#javascript-bridge-api">JavaScript Bridge API</a></li>
+<li><a href="#receiving-commands">Receiving Commands</a></li>
+<li><a href="#sending-commands">Sending Commands</a></li>
+<li><a href="#publishing-telemetry">Publishing Telemetry</a></li>
+<li><a href="#persistent-storage">Persistent Storage</a></li>
+<li><a href="#widget-info">Widget Info</a></li>
+<li><a href="#mqtt-topics">MQTT Topics</a></li>
+<li><a href="#complete-example">Complete Example</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+<hr />
+<h2 data-number="1.2" id="quick-start"><span
+class="header-section-number">1.2</span> Quick Start</h2>
+<p>Create a simple widget in 3 steps:</p>
+<h3 data-number="1.2.1" id="create-your-widget-html"><span
+class="header-section-number">1.2.1</span> 1. Create your widget
+HTML</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> html<span class="dt">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">html</span><span class="dt">&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">head</span><span class="dt">&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> charset</span><span class="op">=</span><span class="st">&quot;UTF-8&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> name</span><span class="op">=</span><span class="st">&quot;viewport&quot;</span><span class="ot"> content</span><span class="op">=</span><span class="st">&quot;width=device-width, initial-scale=1.0&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">title</span><span class="dt">&gt;</span>My Widget<span class="dt">&lt;/</span><span class="kw">title</span><span class="dt">&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">style</span><span class="dt">&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    body {</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">margin</span><span class="ch">:</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="kw">padding</span><span class="ch">:</span> <span class="dv">20</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="kw">background</span><span class="ch">:</span> <span class="cn">#1a1a2e</span><span class="op">;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="kw">color</span><span class="ch">:</span> <span class="cn">white</span><span class="op">;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="kw">font-family</span><span class="ch">:</span> <span class="dv">-apple-system</span><span class="op">,</span> <span class="dv">BlinkMacSystemFont</span><span class="op">,</span> <span class="dv">sans-serif</span><span class="op">;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="kw">display</span><span class="ch">:</span> <span class="dv">flex</span><span class="op">;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      <span class="kw">align-items</span><span class="ch">:</span> <span class="dv">center</span><span class="op">;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>      <span class="kw">justify-content</span><span class="ch">:</span> <span class="dv">center</span><span class="op">;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>      <span class="kw">min-height</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">vh</span><span class="op">;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.value</span> {</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>      <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">72</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>      <span class="kw">font-weight</span><span class="ch">:</span> <span class="dv">bold</span><span class="op">;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">style</span><span class="dt">&gt;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">head</span><span class="dt">&gt;</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;value&quot;</span><span class="ot"> id</span><span class="op">=</span><span class="st">&quot;display&quot;</span><span class="dt">&gt;</span>--<span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Wait for the KingKiosk bridge to be ready</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="bu">window</span><span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&#39;kingkiosk-ready&#39;</span><span class="op">,</span> <span class="kw">function</span>() {</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>      <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;KingKiosk bridge ready!&#39;</span>)<span class="op">;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Listen for commands from the platform</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>      <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">onCommand</span>(<span class="kw">function</span>(command<span class="op">,</span> payload) {</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (command <span class="op">===</span> <span class="st">&#39;set_value&#39;</span>) {</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>          <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&#39;display&#39;</span>)<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> payload<span class="op">.</span><span class="at">value</span><span class="op">;</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>      })<span class="op">;</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">html</span><span class="dt">&gt;</span></span></code></pre></div>
+<h3 data-number="1.2.2" id="host-your-widget-or-use-inline-html"><span
+class="header-section-number">1.2.2</span> 2. Host your widget (or use
+inline HTML)</h3>
+<p><strong>Option A: Host on a web server</strong></p>
+<pre><code>https://your-server.com/widgets/my-widget/index.html</code></pre>
+<p><strong>Option B: Use inline HTML (no hosting required)</strong> -
+Pass the HTML directly via MQTT command</p>
+<h3 data-number="1.2.3" id="add-the-widget-via-mqtt"><span
+class="header-section-number">1.2.3</span> 3. Add the widget via
+MQTT</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;create_remote_browser&quot;</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;my_widget_1&quot;</span><span class="fu">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;My Widget&quot;</span><span class="fu">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;initial_url&quot;</span><span class="fu">:</span> <span class="st">&quot;https://your-server.com/widgets/my-widget/&quot;</span><span class="fu">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;auto_connect&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 data-number="1.3" id="adding-a-widget"><span
+class="header-section-number">1.3</span> Adding a Widget</h2>
+<p>There are two supported runtime paths today:</p>
+<h3 data-number="1.3.1"
+id="option-a-remote-browser-custom-widget-bridge-recommended-required-on-tvos"><span
+class="header-section-number">1.3.1</span> Option A: Remote Browser
+custom widget bridge (recommended, required on tvOS)</h3>
+<p>Create a remote browser window pointed at your widget URL:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;create_remote_browser&quot;</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;weather_widget_1&quot;</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Weather Widget&quot;</span><span class="fu">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;initial_url&quot;</span><span class="fu">:</span> <span class="st">&quot;https://widgets.example.com/weather/&quot;</span><span class="fu">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;auto_connect&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Optional override (usually not needed): include
+<code>server_url</code> to force a specific Feature Server endpoint.</p>
+<h3 data-number="1.3.2"
+id="option-b-reconfigure-an-existing-local-customwebview-tile"><span
+class="header-section-number">1.3.2</span> Option B: Reconfigure an
+existing local <code>customWebView</code> tile</h3>
+<p>Current dispatcher code does not expose a dedicated system command
+that creates a new local <code>customWebView</code> tile directly. If
+you already have one (for example from restored state), configure it via
+the window command topic:</p>
+<p>Topic:
+<code>kingkiosk/{device_id}/window/{window_id}/command</code></p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;configure&quot;</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;url&quot;</span><span class="fu">:</span> <span class="st">&quot;https://widgets.example.com/weather/&quot;</span><span class="fu">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Weather&quot;</span><span class="fu">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;storage&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;city&quot;</span><span class="fu">:</span> <span class="st">&quot;San Francisco&quot;</span><span class="fu">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;units&quot;</span><span class="fu">:</span> <span class="st">&quot;fahrenheit&quot;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 data-number="1.3.3"
+id="local-customwebview-with-inline-html-simple-widgets-no-hosting"><span
+class="header-section-number">1.3.3</span> Local
+<code>customWebView</code> with inline HTML (simple widgets, no
+hosting)</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;configure&quot;</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;html&quot;</span><span class="fu">:</span> <span class="st">&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&lt;h1 id=&#39;count&#39;&gt;0&lt;/h1&gt;&lt;script&gt;window.addEventListener(&#39;kingkiosk-ready&#39;,()=&gt;{window.KingKiosk.onCommand((cmd,p)=&gt;{if(cmd===&#39;increment&#39;)document.getElementById(&#39;count&#39;).textContent=parseInt(document.getElementById(&#39;count&#39;).textContent)+1;});});&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 data-number="1.3.4"
+id="local-customwebview-with-base64-encoded-html-special-characters-larger-widgets"><span
+class="header-section-number">1.3.4</span> Local
+<code>customWebView</code> with base64-encoded HTML (special characters,
+larger widgets)</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;configure&quot;</span><span class="fu">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;html_base64&quot;</span><span class="fu">:</span> <span class="st">&quot;PCFET0NUWVBFIGh0bWw+PGh0bWw+PGJvZHk+PGgxPkhlbGxvIFdvcmxkPC9oMT48L2JvZHk+PC9odG1sPg==&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 data-number="1.3.5" id="window-configuration-options"><span
+class="header-section-number">1.3.5</span> Window Configuration
+Options</h3>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 23%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>window_id</code></td>
+<td><code>create_remote_browser</code></td>
+<td>Required remote browser window ID.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>create_remote_browser</code></td>
+<td>Display name for remote browser window.</td>
+</tr>
+<tr>
+<td><code>initial_url</code></td>
+<td><code>create_remote_browser</code></td>
+<td>URL to load in remote browser session.</td>
+</tr>
+<tr>
+<td><code>server_url</code></td>
+<td><code>create_remote_browser</code></td>
+<td>Optional Feature Server override (deprecated as required
+input).</td>
+</tr>
+<tr>
+<td><code>action</code></td>
+<td>window command topic</td>
+<td>Use <code>"configure"</code> to reconfigure a local
+<code>customWebView</code> tile.</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>local <code>configure</code> action</td>
+<td>URL to load (mutually exclusive with
+<code>html</code>/<code>html_base64</code>).</td>
+</tr>
+<tr>
+<td><code>html</code></td>
+<td>local <code>configure</code> action</td>
+<td>Raw HTML content.</td>
+</tr>
+<tr>
+<td><code>html_base64</code></td>
+<td>local <code>configure</code> action</td>
+<td>Base64-encoded HTML content.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>local <code>configure</code> action</td>
+<td>Optional title override.</td>
+</tr>
+<tr>
+<td><code>storage</code></td>
+<td>local <code>configure</code> action</td>
+<td>Initial key-value storage map for the widget runtime.</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="1.3.6" id="content-size-limits"><span
+class="header-section-number">1.3.6</span> Content Size Limits</h3>
+<p>When using inline HTML or base64-encoded content for local
+<code>customWebView</code>, be aware of MQTT message size limits:</p>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 42%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr>
+<th>Content Method</th>
+<th>Recommended Max</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URL</strong></td>
+<td>Unlimited</td>
+<td>Widget hosted externally, only URL sent via MQTT</td>
+</tr>
+<tr>
+<td><strong>Inline HTML</strong></td>
+<td>500KB</td>
+<td>JSON escaping adds overhead</td>
+</tr>
+<tr>
+<td><strong>Base64 HTML</strong></td>
+<td>375KB original</td>
+<td>Becomes ~500KB after encoding (+33%)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>MQTT Broker Limits:</strong> - MQTT protocol maximum: 256MB
+per message - Most production brokers: 256KB - 1MB default - AWS IoT
+Core: 128KB limit - Mosquitto default: 256MB (often configured
+lower)</p>
+<p><strong>Recommendations:</strong> - For simple widgets (&lt; 50KB):
+Use inline <code>html</code> for convenience - For medium widgets (50KB
+- 375KB): Use <code>html_base64</code> to avoid JSON escaping issues -
+For complex widgets (&gt; 375KB): Use <code>url</code> and host your
+widget externally</p>
+<p><strong>Base64 Encoding Example:</strong></p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode your widget HTML</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> my-widget.html <span class="kw">|</span> <span class="fu">base64</span> <span class="op">&gt;</span> my-widget-base64.txt</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Check size (should be &lt; 500KB after encoding)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">wc</span> <span class="at">-c</span> my-widget-base64.txt</span></code></pre></div>
+<hr />
+<h2 data-number="1.4" id="javascript-bridge-api"><span
+class="header-section-number">1.4</span> JavaScript Bridge API</h2>
+<p>The KingKiosk platform injects a <code>window.KingKiosk</code> object
+into your widget. Wait for the <code>kingkiosk-ready</code> event before
+using it.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&#39;kingkiosk-ready&#39;</span><span class="op">,</span> <span class="kw">function</span>() {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Bridge is now available</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;KingKiosk API ready&#39;</span>)<span class="op">;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h3 data-number="1.4.1" id="api-reference"><span
+class="header-section-number">1.4.1</span> API Reference</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KingKiosk.onCommand(callback)</code></td>
+<td>Register to receive commands</td>
+</tr>
+<tr>
+<td><code>KingKiosk.sendCommand(cmd, payload)</code></td>
+<td>Send command to platform</td>
+</tr>
+<tr>
+<td><code>KingKiosk.publishTelemetry(data)</code></td>
+<td>Publish telemetry data</td>
+</tr>
+<tr>
+<td><code>KingKiosk.storage.get(key)</code></td>
+<td>Get stored value (async)</td>
+</tr>
+<tr>
+<td><code>KingKiosk.storage.set(key, value)</code></td>
+<td>Store a value</td>
+</tr>
+<tr>
+<td><code>KingKiosk.storage.getAll()</code></td>
+<td>Get all stored values (async)</td>
+</tr>
+<tr>
+<td><code>KingKiosk.getWidgetInfo()</code></td>
+<td>Get widget metadata (async)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 data-number="1.5" id="receiving-commands"><span
+class="header-section-number">1.5</span> Receiving Commands</h2>
+<p>Register a callback to receive commands sent from the KingKiosk
+platform or MQTT.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">onCommand</span>(<span class="kw">function</span>(command<span class="op">,</span> payload) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;Received:&#39;</span><span class="op">,</span> command<span class="op">,</span> payload)<span class="op">;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span> (command) {</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&#39;set_value&#39;</span><span class="op">:</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">updateDisplay</span>(payload<span class="op">.</span><span class="at">value</span>)<span class="op">;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&#39;set_color&#39;</span><span class="op">:</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="bu">document</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">backgroundColor</span> <span class="op">=</span> payload<span class="op">.</span><span class="at">color</span><span class="op">;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&#39;refresh&#39;</span><span class="op">:</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">fetchLatestData</span>()<span class="op">;</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">default</span><span class="op">:</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>      <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;Unknown command:&#39;</span><span class="op">,</span> command)<span class="op">;</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h3 data-number="1.5.1"
+id="sending-commands-to-your-widget-via-mqtt"><span
+class="header-section-number">1.5.1</span> Sending Commands to Your
+Widget via MQTT</h3>
+<h3 data-number="1.5.2" id="local-customwebview-command-path"><span
+class="header-section-number">1.5.2</span> Local
+<code>customWebView</code> command path</h3>
+<p>Topic:
+<code>kingkiosk/{device_id}/window/{window_id}/command</code></p>
+<p>Use either explicit <code>widget_command</code>:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;widget_command&quot;</span><span class="fu">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;set_value&quot;</span><span class="fu">,</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">42</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Or send any custom action directly (unknown actions are forwarded to
+the widget callback):</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;set_temperature&quot;</span><span class="fu">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;celsius&quot;</span><span class="fu">:</span> <span class="fl">22.5</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Note: local <code>customWebView</code> commands are dispatched only
+after the widget registers a callback with
+<code>KingKiosk.onCommand(...)</code>.</p>
+<h3 data-number="1.5.3"
+id="remote-browser-custom-widget-bridge-command-path"><span
+class="header-section-number">1.5.3</span> Remote Browser custom widget
+bridge command path</h3>
+<p>Topic:
+<code>kingkiosk/{device_id}/element/{remote_browser_window_id}/cmd</code></p>
+<p>Use <code>command: "widget_command"</code> and one of the supported
+payload shapes:</p>
+<p>Shape A:</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;widget_command&quot;</span><span class="fu">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;widget_command&quot;</span><span class="fu">:</span> <span class="st">&quot;set_value&quot;</span><span class="fu">,</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">42</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Shape B:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;widget_command&quot;</span><span class="fu">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;set_value&quot;</span><span class="fu">,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">42</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 data-number="1.6" id="sending-commands"><span
+class="header-section-number">1.6</span> Sending Commands</h2>
+<p>Send commands from your widget to the KingKiosk platform. These are
+published to MQTT for external systems to consume.</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Simple command</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">sendCommand</span>(<span class="st">&#39;button_pressed&#39;</span><span class="op">,</span> { <span class="dt">buttonId</span><span class="op">:</span> <span class="st">&#39;start&#39;</span> })<span class="op">;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Command with data</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">sendCommand</span>(<span class="st">&#39;form_submitted&#39;</span><span class="op">,</span> {</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">name</span><span class="op">:</span> <span class="st">&#39;John Doe&#39;</span><span class="op">,</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">email</span><span class="op">:</span> <span class="st">&#39;john@example.com&#39;</span><span class="op">,</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">timestamp</span><span class="op">:</span> <span class="bu">Date</span><span class="op">.</span><span class="fu">now</span>()</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Emit an integration/event command for external consumers</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">sendCommand</span>(<span class="st">&#39;navigate&#39;</span><span class="op">,</span> { <span class="dt">url</span><span class="op">:</span> <span class="st">&#39;/settings&#39;</span> })<span class="op">;</span></span></code></pre></div>
+<h3 data-number="1.6.1" id="mqtt-output"><span
+class="header-section-number">1.6.1</span> MQTT Output</h3>
+<p>Commands are published to:</p>
+<pre><code>kingkiosk/{device_id}/widget/{widget_id}/event</code></pre>
+<p>Payload format:</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;custom_command&quot;</span><span class="fu">,</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;widget_id&quot;</span><span class="fu">:</span> <span class="st">&quot;widget_abc123&quot;</span><span class="fu">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;button_pressed&quot;</span><span class="fu">,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;buttonId&quot;</span><span class="fu">:</span> <span class="st">&quot;start&quot;</span> <span class="fu">},</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="dv">1705432100000</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 data-number="1.7" id="publishing-telemetry"><span
+class="header-section-number">1.7</span> Publishing Telemetry</h2>
+<p>Publish sensor data, metrics, or any telemetry from your widget.</p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Simple value</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">publishTelemetry</span>({ <span class="dt">temperature</span><span class="op">:</span> <span class="fl">72.5</span> })<span class="op">;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Multiple metrics</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">publishTelemetry</span>({</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">cpu_usage</span><span class="op">:</span> <span class="fl">45.2</span><span class="op">,</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">memory_used</span><span class="op">:</span> <span class="dv">8192</span><span class="op">,</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">disk_free</span><span class="op">:</span> <span class="dv">50000</span><span class="op">,</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">uptime_seconds</span><span class="op">:</span> <span class="dv">86400</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Periodic telemetry</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="pp">setInterval</span>(<span class="kw">function</span>() {</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">publishTelemetry</span>({</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">heartbeat</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">timestamp</span><span class="op">:</span> <span class="bu">Date</span><span class="op">.</span><span class="fu">now</span>()</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>}<span class="op">,</span> <span class="dv">30000</span>)<span class="op">;</span></span></code></pre></div>
+<h3 data-number="1.7.1" id="mqtt-output-1"><span
+class="header-section-number">1.7.1</span> MQTT Output</h3>
+<p>Telemetry is published to:</p>
+<pre><code>kingkiosk/{device_id}/widget/{widget_id}/telemetry</code></pre>
+<p>Payload format:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;widget_id&quot;</span><span class="fu">:</span> <span class="st">&quot;widget_abc123&quot;</span><span class="fu">,</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;temperature&quot;</span><span class="fu">:</span> <span class="fl">72.5</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="dv">1705432100000</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 data-number="1.8" id="persistent-storage"><span
+class="header-section-number">1.8</span> Persistent Storage</h2>
+<p>Store and retrieve data using <code>KingKiosk.storage</code>.</p>
+<ul>
+<li>Local <code>customWebView</code>: storage is kept in the controller
+runtime while the tile exists.</li>
+<li>Remote Browser custom widget bridge: storage is persisted via app
+storage keys (<code>custom_widget_bridge_storage_v1:*</code>) and
+restored across app restarts.</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Store a value</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">set</span>(<span class="st">&#39;theme&#39;</span><span class="op">,</span> <span class="st">&#39;dark&#39;</span>)<span class="op">;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">set</span>(<span class="st">&#39;lastUpdate&#39;</span><span class="op">,</span> <span class="bu">Date</span><span class="op">.</span><span class="fu">now</span>())<span class="op">;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">set</span>(<span class="st">&#39;settings&#39;</span><span class="op">,</span> { <span class="dt">volume</span><span class="op">:</span> <span class="dv">80</span><span class="op">,</span> <span class="dt">muted</span><span class="op">:</span> <span class="kw">false</span> })<span class="op">;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Retrieve a value (async)</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> theme <span class="op">=</span> <span class="cf">await</span> <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">get</span>(<span class="st">&#39;theme&#39;</span>)<span class="op">;</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;Current theme:&#39;</span><span class="op">,</span> theme)<span class="op">;</span> <span class="co">// &#39;dark&#39;</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Get all stored values</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> allData <span class="op">=</span> <span class="cf">await</span> <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">getAll</span>()<span class="op">;</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;All storage:&#39;</span><span class="op">,</span> allData)<span class="op">;</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co">// { theme: &#39;dark&#39;, lastUpdate: 1705432100000, settings: { volume: 80, muted: false } }</span></span></code></pre></div>
+<h3 data-number="1.8.1" id="initial-storage"><span
+class="header-section-number">1.8.1</span> Initial Storage</h3>
+<p>Pre-populate storage when adding the widget:</p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;configure&quot;</span><span class="fu">,</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;url&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/widget/&quot;</span><span class="fu">,</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;storage&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;apiKey&quot;</span><span class="fu">:</span> <span class="st">&quot;your-api-key&quot;</span><span class="fu">,</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;refreshInterval&quot;</span><span class="fu">:</span> <span class="dv">60000</span><span class="fu">,</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;theme&quot;</span><span class="fu">:</span> <span class="st">&quot;dark&quot;</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 data-number="1.9" id="widget-info"><span
+class="header-section-number">1.9</span> Widget Info</h2>
+<p>Get information about the widget and platform.</p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> info <span class="op">=</span> <span class="cf">await</span> <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">getWidgetInfo</span>()<span class="op">;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(info)<span class="op">;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">// {</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">//   widgetId: &quot;widget_abc123&quot;,</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">//   platform: &quot;macos&quot;  // or &quot;android&quot;, &quot;ios&quot;, &quot;windows&quot;, &quot;linux&quot;, &quot;web&quot;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">// }</span></span></code></pre></div>
+<p>Use this to adapt your widget for different platforms:</p>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> info <span class="op">=</span> <span class="cf">await</span> <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">getWidgetInfo</span>()<span class="op">;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (info<span class="op">.</span><span class="at">platform</span> <span class="op">===</span> <span class="st">&#39;ios&#39;</span> <span class="op">||</span> info<span class="op">.</span><span class="at">platform</span> <span class="op">===</span> <span class="st">&#39;android&#39;</span>) {</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Touch-optimized interface</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">document</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="at">classList</span><span class="op">.</span><span class="fu">add</span>(<span class="st">&#39;touch-mode&#39;</span>)<span class="op">;</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Desktop-like layout</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="bu">document</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="at">classList</span><span class="op">.</span><span class="fu">add</span>(<span class="st">&#39;desktop-mode&#39;</span>)<span class="op">;</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 data-number="1.10" id="mqtt-topics"><span
+class="header-section-number">1.10</span> MQTT Topics</h2>
+<h3 data-number="1.10.1"
+id="receiving-commands-local-customwebview-platform---widget"><span
+class="header-section-number">1.10.1</span> Receiving Commands: Local
+<code>customWebView</code> (Platform -&gt; Widget)</h3>
+<p><strong>Topic:</strong>
+<code>kingkiosk/{device_id}/window/{window_id}/command</code></p>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;set_value&quot;</span><span class="fu">,</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">100</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 data-number="1.10.2"
+id="receiving-commands-remote-browser-custom-widget-bridge-platform---widget"><span
+class="header-section-number">1.10.2</span> Receiving Commands: Remote
+Browser custom widget bridge (Platform -&gt; Widget)</h3>
+<p><strong>Topic:</strong>
+<code>kingkiosk/{device_id}/element/{remote_browser_window_id}/cmd</code></p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;widget_command&quot;</span><span class="fu">,</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;widget_command&quot;</span><span class="fu">:</span> <span class="st">&quot;set_value&quot;</span><span class="fu">,</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">100</span> <span class="fu">}</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 data-number="1.10.3" id="widget-events-widget---platform"><span
+class="header-section-number">1.10.3</span> Widget Events (Widget -&gt;
+Platform)</h3>
+<p><strong>Topic:</strong>
+<code>kingkiosk/{device_id}/widget/{widget_id}/event</code></p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;custom_command&quot;</span><span class="fu">,</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;widget_id&quot;</span><span class="fu">:</span> <span class="st">&quot;my_widget&quot;</span><span class="fu">,</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;user_action&quot;</span><span class="fu">,</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;clicked&quot;</span> <span class="fu">},</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="dv">1705432100000</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 data-number="1.10.4" id="widget-telemetry-widget---platform"><span
+class="header-section-number">1.10.4</span> Widget Telemetry (Widget
+-&gt; Platform)</h3>
+<p><strong>Topic:</strong>
+<code>kingkiosk/{device_id}/widget/{widget_id}/telemetry</code></p>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;widget_id&quot;</span><span class="fu">:</span> <span class="st">&quot;my_widget&quot;</span><span class="fu">,</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;sensor_value&quot;</span><span class="fu">:</span> <span class="dv">42</span> <span class="fu">},</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="dv">1705432100000</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 data-number="1.10.5"
+id="widget-state-remote-browser-bridge-retained"><span
+class="header-section-number">1.10.5</span> Widget State (remote browser
+bridge, retained)</h3>
+<p><strong>Topic:</strong>
+<code>kingkiosk/{device_id}/widget/{widget_id}/state</code></p>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;widget_id&quot;</span><span class="fu">:</span> <span class="st">&quot;my_widget&quot;</span><span class="fu">,</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;custom_webview&quot;</span><span class="fu">,</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;has_command_handler&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;storage&quot;</span><span class="fu">:</span> <span class="fu">{},</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="dv">1705432100000</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 data-number="1.11" id="complete-example"><span
+class="header-section-number">1.11</span> Complete Example</h2>
+<p>A full-featured widget demonstrating all API features:</p>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> html<span class="dt">&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">html</span><span class="dt">&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">head</span><span class="dt">&gt;</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> charset</span><span class="op">=</span><span class="st">&quot;UTF-8&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> name</span><span class="op">=</span><span class="st">&quot;viewport&quot;</span><span class="ot"> content</span><span class="op">=</span><span class="st">&quot;width=device-width, initial-scale=1.0&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">title</span><span class="dt">&gt;</span>Smart Thermostat Widget<span class="dt">&lt;/</span><span class="kw">title</span><span class="dt">&gt;</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">style</span><span class="dt">&gt;</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span> { <span class="kw">box-sizing</span><span class="ch">:</span> <span class="dv">border-box</span><span class="op">;</span> <span class="kw">margin</span><span class="ch">:</span> <span class="dv">0</span><span class="op">;</span> <span class="kw">padding</span><span class="ch">:</span> <span class="dv">0</span><span class="op">;</span> }</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    body {</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>      <span class="kw">font-family</span><span class="ch">:</span> <span class="dv">-apple-system</span><span class="op">,</span> <span class="dv">BlinkMacSystemFont</span><span class="op">,</span> <span class="st">&#39;Segoe UI&#39;</span><span class="op">,</span> <span class="dv">Roboto</span><span class="op">,</span> <span class="dv">sans-serif</span><span class="op">;</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>      <span class="kw">background</span><span class="ch">:</span> <span class="fu">linear-gradient(</span><span class="dv">135</span><span class="dt">deg</span><span class="op">,</span> <span class="cn">#1a1a2e</span> <span class="dv">0</span><span class="dt">%</span><span class="op">,</span> <span class="cn">#16213e</span> <span class="dv">100</span><span class="dt">%</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>      <span class="kw">color</span><span class="ch">:</span> <span class="cn">white</span><span class="op">;</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>      <span class="kw">min-height</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">vh</span><span class="op">;</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>      <span class="kw">display</span><span class="ch">:</span> <span class="dv">flex</span><span class="op">;</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>      <span class="kw">flex-direction</span><span class="ch">:</span> <span class="dv">column</span><span class="op">;</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>      <span class="kw">align-items</span><span class="ch">:</span> <span class="dv">center</span><span class="op">;</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>      <span class="kw">justify-content</span><span class="ch">:</span> <span class="dv">center</span><span class="op">;</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>      <span class="kw">padding</span><span class="ch">:</span> <span class="dv">20</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.thermostat</span> {</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>      <span class="kw">text-align</span><span class="ch">:</span> <span class="dv">center</span><span class="op">;</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.temperature</span> {</span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>      <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">96</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>      <span class="kw">font-weight</span><span class="ch">:</span> <span class="dv">200</span><span class="op">;</span></span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>      <span class="kw">line-height</span><span class="ch">:</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.temperature</span> <span class="fu">.unit</span> {</span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a>      <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">36</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a>      <span class="kw">vertical-align</span><span class="ch">:</span> <span class="dv">top</span><span class="op">;</span></span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.label</span> {</span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a>      <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">14</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a>      <span class="kw">text-transform</span><span class="ch">:</span> <span class="dv">uppercase</span><span class="op">;</span></span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a>      <span class="kw">letter-spacing</span><span class="ch">:</span> <span class="dv">2</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a>      <span class="kw">opacity</span><span class="ch">:</span> <span class="dv">0.7</span><span class="op">;</span></span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a>      <span class="kw">margin-top</span><span class="ch">:</span> <span class="dv">8</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.controls</span> {</span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a>      <span class="kw">display</span><span class="ch">:</span> <span class="dv">flex</span><span class="op">;</span></span>
+<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a>      <span class="kw">gap</span><span class="ch">:</span> <span class="dv">20</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a>      <span class="kw">margin-top</span><span class="ch">:</span> <span class="dv">40</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.btn</span> {</span>
+<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a>      <span class="kw">width</span><span class="ch">:</span> <span class="dv">60</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-53"><a href="#cb30-53" aria-hidden="true" tabindex="-1"></a>      <span class="kw">height</span><span class="ch">:</span> <span class="dv">60</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-54"><a href="#cb30-54" aria-hidden="true" tabindex="-1"></a>      <span class="kw">border-radius</span><span class="ch">:</span> <span class="dv">50</span><span class="dt">%</span><span class="op">;</span></span>
+<span id="cb30-55"><a href="#cb30-55" aria-hidden="true" tabindex="-1"></a>      <span class="kw">border</span><span class="ch">:</span> <span class="dv">2</span><span class="dt">px</span> <span class="dv">solid</span> <span class="fu">rgba(</span><span class="dv">255</span><span class="op">,</span><span class="dv">255</span><span class="op">,</span><span class="dv">255</span><span class="op">,</span><span class="dv">0.3</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb30-56"><a href="#cb30-56" aria-hidden="true" tabindex="-1"></a>      <span class="kw">background</span><span class="ch">:</span> <span class="fu">rgba(</span><span class="dv">255</span><span class="op">,</span><span class="dv">255</span><span class="op">,</span><span class="dv">255</span><span class="op">,</span><span class="dv">0.1</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb30-57"><a href="#cb30-57" aria-hidden="true" tabindex="-1"></a>      <span class="kw">color</span><span class="ch">:</span> <span class="cn">white</span><span class="op">;</span></span>
+<span id="cb30-58"><a href="#cb30-58" aria-hidden="true" tabindex="-1"></a>      <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">24</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-59"><a href="#cb30-59" aria-hidden="true" tabindex="-1"></a>      <span class="kw">cursor</span><span class="ch">:</span> <span class="dv">pointer</span><span class="op">;</span></span>
+<span id="cb30-60"><a href="#cb30-60" aria-hidden="true" tabindex="-1"></a>      <span class="kw">transition</span><span class="ch">:</span> <span class="dv">all</span> <span class="dv">0.2</span><span class="dt">s</span><span class="op">;</span></span>
+<span id="cb30-61"><a href="#cb30-61" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-62"><a href="#cb30-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-63"><a href="#cb30-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.btn</span><span class="in">:hover</span> {</span>
+<span id="cb30-64"><a href="#cb30-64" aria-hidden="true" tabindex="-1"></a>      <span class="kw">background</span><span class="ch">:</span> <span class="fu">rgba(</span><span class="dv">255</span><span class="op">,</span><span class="dv">255</span><span class="op">,</span><span class="dv">255</span><span class="op">,</span><span class="dv">0.2</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb30-65"><a href="#cb30-65" aria-hidden="true" tabindex="-1"></a>      <span class="kw">transform</span><span class="ch">:</span> <span class="fu">scale(</span><span class="dv">1.1</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb30-66"><a href="#cb30-66" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-67"><a href="#cb30-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-68"><a href="#cb30-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.btn</span><span class="in">:active</span> {</span>
+<span id="cb30-69"><a href="#cb30-69" aria-hidden="true" tabindex="-1"></a>      <span class="kw">transform</span><span class="ch">:</span> <span class="fu">scale(</span><span class="dv">0.95</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb30-70"><a href="#cb30-70" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-71"><a href="#cb30-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-72"><a href="#cb30-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.status</span> {</span>
+<span id="cb30-73"><a href="#cb30-73" aria-hidden="true" tabindex="-1"></a>      <span class="kw">margin-top</span><span class="ch">:</span> <span class="dv">30</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-74"><a href="#cb30-74" aria-hidden="true" tabindex="-1"></a>      <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">12</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-75"><a href="#cb30-75" aria-hidden="true" tabindex="-1"></a>      <span class="kw">opacity</span><span class="ch">:</span> <span class="dv">0.5</span><span class="op">;</span></span>
+<span id="cb30-76"><a href="#cb30-76" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-77"><a href="#cb30-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-78"><a href="#cb30-78" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.mode</span> {</span>
+<span id="cb30-79"><a href="#cb30-79" aria-hidden="true" tabindex="-1"></a>      <span class="kw">margin-top</span><span class="ch">:</span> <span class="dv">20</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-80"><a href="#cb30-80" aria-hidden="true" tabindex="-1"></a>      <span class="kw">padding</span><span class="ch">:</span> <span class="dv">8</span><span class="dt">px</span> <span class="dv">16</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-81"><a href="#cb30-81" aria-hidden="true" tabindex="-1"></a>      <span class="kw">background</span><span class="ch">:</span> <span class="fu">rgba(</span><span class="dv">255</span><span class="op">,</span><span class="dv">255</span><span class="op">,</span><span class="dv">255</span><span class="op">,</span><span class="dv">0.1</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb30-82"><a href="#cb30-82" aria-hidden="true" tabindex="-1"></a>      <span class="kw">border-radius</span><span class="ch">:</span> <span class="dv">20</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-83"><a href="#cb30-83" aria-hidden="true" tabindex="-1"></a>      <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">12</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-84"><a href="#cb30-84" aria-hidden="true" tabindex="-1"></a>      <span class="kw">text-transform</span><span class="ch">:</span> <span class="dv">uppercase</span><span class="op">;</span></span>
+<span id="cb30-85"><a href="#cb30-85" aria-hidden="true" tabindex="-1"></a>      <span class="kw">letter-spacing</span><span class="ch">:</span> <span class="dv">1</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb30-86"><a href="#cb30-86" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-87"><a href="#cb30-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-88"><a href="#cb30-88" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.mode.heating</span> { <span class="kw">background</span><span class="ch">:</span> <span class="fu">rgba(</span><span class="dv">255</span><span class="op">,</span><span class="dv">100</span><span class="op">,</span><span class="dv">100</span><span class="op">,</span><span class="dv">0.3</span><span class="fu">)</span><span class="op">;</span> }</span>
+<span id="cb30-89"><a href="#cb30-89" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.mode.cooling</span> { <span class="kw">background</span><span class="ch">:</span> <span class="fu">rgba(</span><span class="dv">100</span><span class="op">,</span><span class="dv">100</span><span class="op">,</span><span class="dv">255</span><span class="op">,</span><span class="dv">0.3</span><span class="fu">)</span><span class="op">;</span> }</span>
+<span id="cb30-90"><a href="#cb30-90" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.mode.off</span> { <span class="kw">background</span><span class="ch">:</span> <span class="fu">rgba(</span><span class="dv">100</span><span class="op">,</span><span class="dv">100</span><span class="op">,</span><span class="dv">100</span><span class="op">,</span><span class="dv">0.3</span><span class="fu">)</span><span class="op">;</span> }</span>
+<span id="cb30-91"><a href="#cb30-91" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">style</span><span class="dt">&gt;</span></span>
+<span id="cb30-92"><a href="#cb30-92" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">head</span><span class="dt">&gt;</span></span>
+<span id="cb30-93"><a href="#cb30-93" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb30-94"><a href="#cb30-94" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;thermostat&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb30-95"><a href="#cb30-95" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;temperature&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb30-96"><a href="#cb30-96" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> id</span><span class="op">=</span><span class="st">&quot;temp&quot;</span><span class="dt">&gt;</span>--<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;&lt;</span><span class="kw">span</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;unit&quot;</span><span class="dt">&gt;</span>°F<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span>
+<span id="cb30-97"><a href="#cb30-97" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb30-98"><a href="#cb30-98" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;label&quot;</span><span class="dt">&gt;</span>Target Temperature<span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb30-99"><a href="#cb30-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-100"><a href="#cb30-100" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;controls&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb30-101"><a href="#cb30-101" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&lt;</span><span class="kw">button</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;btn&quot;</span><span class="ot"> id</span><span class="op">=</span><span class="st">&quot;btnDown&quot;</span><span class="dt">&gt;</span>−<span class="dt">&lt;/</span><span class="kw">button</span><span class="dt">&gt;</span></span>
+<span id="cb30-102"><a href="#cb30-102" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&lt;</span><span class="kw">button</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;btn&quot;</span><span class="ot"> id</span><span class="op">=</span><span class="st">&quot;btnUp&quot;</span><span class="dt">&gt;</span>+<span class="dt">&lt;/</span><span class="kw">button</span><span class="dt">&gt;</span></span>
+<span id="cb30-103"><a href="#cb30-103" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb30-104"><a href="#cb30-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-105"><a href="#cb30-105" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;mode&quot;</span><span class="ot"> id</span><span class="op">=</span><span class="st">&quot;mode&quot;</span><span class="dt">&gt;</span>OFF<span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb30-106"><a href="#cb30-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-107"><a href="#cb30-107" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;status&quot;</span><span class="ot"> id</span><span class="op">=</span><span class="st">&quot;status&quot;</span><span class="dt">&gt;</span>Connecting...<span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb30-108"><a href="#cb30-108" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb30-109"><a href="#cb30-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-110"><a href="#cb30-110" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb30-111"><a href="#cb30-111" aria-hidden="true" tabindex="-1"></a>    <span class="co">// State</span></span>
+<span id="cb30-112"><a href="#cb30-112" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> targetTemp <span class="op">=</span> <span class="dv">72</span><span class="op">;</span></span>
+<span id="cb30-113"><a href="#cb30-113" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> mode <span class="op">=</span> <span class="st">&#39;off&#39;</span><span class="op">;</span></span>
+<span id="cb30-114"><a href="#cb30-114" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> widgetId <span class="op">=</span> <span class="st">&#39;unknown&#39;</span><span class="op">;</span></span>
+<span id="cb30-115"><a href="#cb30-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-116"><a href="#cb30-116" aria-hidden="true" tabindex="-1"></a>    <span class="co">// DOM elements</span></span>
+<span id="cb30-117"><a href="#cb30-117" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> tempDisplay <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&#39;temp&#39;</span>)<span class="op">;</span></span>
+<span id="cb30-118"><a href="#cb30-118" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> modeDisplay <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&#39;mode&#39;</span>)<span class="op">;</span></span>
+<span id="cb30-119"><a href="#cb30-119" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> statusDisplay <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&#39;status&#39;</span>)<span class="op">;</span></span>
+<span id="cb30-120"><a href="#cb30-120" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> btnUp <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&#39;btnUp&#39;</span>)<span class="op">;</span></span>
+<span id="cb30-121"><a href="#cb30-121" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> btnDown <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&#39;btnDown&#39;</span>)<span class="op">;</span></span>
+<span id="cb30-122"><a href="#cb30-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-123"><a href="#cb30-123" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Update display</span></span>
+<span id="cb30-124"><a href="#cb30-124" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> <span class="fu">updateDisplay</span>() {</span>
+<span id="cb30-125"><a href="#cb30-125" aria-hidden="true" tabindex="-1"></a>      tempDisplay<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> targetTemp<span class="op">;</span></span>
+<span id="cb30-126"><a href="#cb30-126" aria-hidden="true" tabindex="-1"></a>      modeDisplay<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> mode<span class="op">.</span><span class="fu">toUpperCase</span>()<span class="op">;</span></span>
+<span id="cb30-127"><a href="#cb30-127" aria-hidden="true" tabindex="-1"></a>      modeDisplay<span class="op">.</span><span class="at">className</span> <span class="op">=</span> <span class="st">&#39;mode &#39;</span> <span class="op">+</span> mode<span class="op">;</span></span>
+<span id="cb30-128"><a href="#cb30-128" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-129"><a href="#cb30-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-130"><a href="#cb30-130" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Send telemetry</span></span>
+<span id="cb30-131"><a href="#cb30-131" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> <span class="fu">sendTelemetry</span>() {</span>
+<span id="cb30-132"><a href="#cb30-132" aria-hidden="true" tabindex="-1"></a>      <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">publishTelemetry</span>({</span>
+<span id="cb30-133"><a href="#cb30-133" aria-hidden="true" tabindex="-1"></a>        <span class="dt">target_temperature</span><span class="op">:</span> targetTemp<span class="op">,</span></span>
+<span id="cb30-134"><a href="#cb30-134" aria-hidden="true" tabindex="-1"></a>        <span class="dt">mode</span><span class="op">:</span> mode<span class="op">,</span></span>
+<span id="cb30-135"><a href="#cb30-135" aria-hidden="true" tabindex="-1"></a>        <span class="dt">timestamp</span><span class="op">:</span> <span class="bu">Date</span><span class="op">.</span><span class="fu">now</span>()</span>
+<span id="cb30-136"><a href="#cb30-136" aria-hidden="true" tabindex="-1"></a>      })<span class="op">;</span></span>
+<span id="cb30-137"><a href="#cb30-137" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-138"><a href="#cb30-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-139"><a href="#cb30-139" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Initialize when bridge is ready</span></span>
+<span id="cb30-140"><a href="#cb30-140" aria-hidden="true" tabindex="-1"></a>    <span class="bu">window</span><span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&#39;kingkiosk-ready&#39;</span><span class="op">,</span> <span class="kw">async</span> <span class="kw">function</span>() {</span>
+<span id="cb30-141"><a href="#cb30-141" aria-hidden="true" tabindex="-1"></a>      statusDisplay<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> <span class="st">&#39;Connected&#39;</span><span class="op">;</span></span>
+<span id="cb30-142"><a href="#cb30-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-143"><a href="#cb30-143" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Get widget info</span></span>
+<span id="cb30-144"><a href="#cb30-144" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> info <span class="op">=</span> <span class="cf">await</span> <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">getWidgetInfo</span>()<span class="op">;</span></span>
+<span id="cb30-145"><a href="#cb30-145" aria-hidden="true" tabindex="-1"></a>      widgetId <span class="op">=</span> info<span class="op">.</span><span class="at">widgetId</span><span class="op">;</span></span>
+<span id="cb30-146"><a href="#cb30-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-147"><a href="#cb30-147" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Load saved state</span></span>
+<span id="cb30-148"><a href="#cb30-148" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> savedTemp <span class="op">=</span> <span class="cf">await</span> <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">get</span>(<span class="st">&#39;targetTemp&#39;</span>)<span class="op">;</span></span>
+<span id="cb30-149"><a href="#cb30-149" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> savedMode <span class="op">=</span> <span class="cf">await</span> <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">get</span>(<span class="st">&#39;mode&#39;</span>)<span class="op">;</span></span>
+<span id="cb30-150"><a href="#cb30-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-151"><a href="#cb30-151" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (savedTemp) targetTemp <span class="op">=</span> savedTemp<span class="op">;</span></span>
+<span id="cb30-152"><a href="#cb30-152" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (savedMode) mode <span class="op">=</span> savedMode<span class="op">;</span></span>
+<span id="cb30-153"><a href="#cb30-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-154"><a href="#cb30-154" aria-hidden="true" tabindex="-1"></a>      <span class="fu">updateDisplay</span>()<span class="op">;</span></span>
+<span id="cb30-155"><a href="#cb30-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-156"><a href="#cb30-156" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Register command handler</span></span>
+<span id="cb30-157"><a href="#cb30-157" aria-hidden="true" tabindex="-1"></a>      <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">onCommand</span>(<span class="kw">function</span>(command<span class="op">,</span> payload) {</span>
+<span id="cb30-158"><a href="#cb30-158" aria-hidden="true" tabindex="-1"></a>        <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;Command received:&#39;</span><span class="op">,</span> command<span class="op">,</span> payload)<span class="op">;</span></span>
+<span id="cb30-159"><a href="#cb30-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-160"><a href="#cb30-160" aria-hidden="true" tabindex="-1"></a>        <span class="cf">switch</span> (command) {</span>
+<span id="cb30-161"><a href="#cb30-161" aria-hidden="true" tabindex="-1"></a>          <span class="cf">case</span> <span class="st">&#39;set_temperature&#39;</span><span class="op">:</span></span>
+<span id="cb30-162"><a href="#cb30-162" aria-hidden="true" tabindex="-1"></a>            targetTemp <span class="op">=</span> payload<span class="op">.</span><span class="at">temperature</span><span class="op">;</span></span>
+<span id="cb30-163"><a href="#cb30-163" aria-hidden="true" tabindex="-1"></a>            <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">set</span>(<span class="st">&#39;targetTemp&#39;</span><span class="op">,</span> targetTemp)<span class="op">;</span></span>
+<span id="cb30-164"><a href="#cb30-164" aria-hidden="true" tabindex="-1"></a>            <span class="fu">updateDisplay</span>()<span class="op">;</span></span>
+<span id="cb30-165"><a href="#cb30-165" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sendTelemetry</span>()<span class="op">;</span></span>
+<span id="cb30-166"><a href="#cb30-166" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb30-167"><a href="#cb30-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-168"><a href="#cb30-168" aria-hidden="true" tabindex="-1"></a>          <span class="cf">case</span> <span class="st">&#39;set_mode&#39;</span><span class="op">:</span></span>
+<span id="cb30-169"><a href="#cb30-169" aria-hidden="true" tabindex="-1"></a>            mode <span class="op">=</span> payload<span class="op">.</span><span class="at">mode</span><span class="op">;</span></span>
+<span id="cb30-170"><a href="#cb30-170" aria-hidden="true" tabindex="-1"></a>            <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">set</span>(<span class="st">&#39;mode&#39;</span><span class="op">,</span> mode)<span class="op">;</span></span>
+<span id="cb30-171"><a href="#cb30-171" aria-hidden="true" tabindex="-1"></a>            <span class="fu">updateDisplay</span>()<span class="op">;</span></span>
+<span id="cb30-172"><a href="#cb30-172" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sendTelemetry</span>()<span class="op">;</span></span>
+<span id="cb30-173"><a href="#cb30-173" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb30-174"><a href="#cb30-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-175"><a href="#cb30-175" aria-hidden="true" tabindex="-1"></a>          <span class="cf">case</span> <span class="st">&#39;increment&#39;</span><span class="op">:</span></span>
+<span id="cb30-176"><a href="#cb30-176" aria-hidden="true" tabindex="-1"></a>            targetTemp<span class="op">++;</span></span>
+<span id="cb30-177"><a href="#cb30-177" aria-hidden="true" tabindex="-1"></a>            <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">set</span>(<span class="st">&#39;targetTemp&#39;</span><span class="op">,</span> targetTemp)<span class="op">;</span></span>
+<span id="cb30-178"><a href="#cb30-178" aria-hidden="true" tabindex="-1"></a>            <span class="fu">updateDisplay</span>()<span class="op">;</span></span>
+<span id="cb30-179"><a href="#cb30-179" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sendTelemetry</span>()<span class="op">;</span></span>
+<span id="cb30-180"><a href="#cb30-180" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb30-181"><a href="#cb30-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-182"><a href="#cb30-182" aria-hidden="true" tabindex="-1"></a>          <span class="cf">case</span> <span class="st">&#39;decrement&#39;</span><span class="op">:</span></span>
+<span id="cb30-183"><a href="#cb30-183" aria-hidden="true" tabindex="-1"></a>            targetTemp<span class="op">--;</span></span>
+<span id="cb30-184"><a href="#cb30-184" aria-hidden="true" tabindex="-1"></a>            <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">set</span>(<span class="st">&#39;targetTemp&#39;</span><span class="op">,</span> targetTemp)<span class="op">;</span></span>
+<span id="cb30-185"><a href="#cb30-185" aria-hidden="true" tabindex="-1"></a>            <span class="fu">updateDisplay</span>()<span class="op">;</span></span>
+<span id="cb30-186"><a href="#cb30-186" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sendTelemetry</span>()<span class="op">;</span></span>
+<span id="cb30-187"><a href="#cb30-187" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb30-188"><a href="#cb30-188" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb30-189"><a href="#cb30-189" aria-hidden="true" tabindex="-1"></a>      })<span class="op">;</span></span>
+<span id="cb30-190"><a href="#cb30-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-191"><a href="#cb30-191" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Send initial telemetry</span></span>
+<span id="cb30-192"><a href="#cb30-192" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sendTelemetry</span>()<span class="op">;</span></span>
+<span id="cb30-193"><a href="#cb30-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-194"><a href="#cb30-194" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Periodic telemetry (every 30 seconds)</span></span>
+<span id="cb30-195"><a href="#cb30-195" aria-hidden="true" tabindex="-1"></a>      <span class="pp">setInterval</span>(sendTelemetry<span class="op">,</span> <span class="dv">30000</span>)<span class="op">;</span></span>
+<span id="cb30-196"><a href="#cb30-196" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb30-197"><a href="#cb30-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-198"><a href="#cb30-198" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Button handlers</span></span>
+<span id="cb30-199"><a href="#cb30-199" aria-hidden="true" tabindex="-1"></a>    btnUp<span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&#39;click&#39;</span><span class="op">,</span> <span class="kw">function</span>() {</span>
+<span id="cb30-200"><a href="#cb30-200" aria-hidden="true" tabindex="-1"></a>      targetTemp<span class="op">++;</span></span>
+<span id="cb30-201"><a href="#cb30-201" aria-hidden="true" tabindex="-1"></a>      <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">set</span>(<span class="st">&#39;targetTemp&#39;</span><span class="op">,</span> targetTemp)<span class="op">;</span></span>
+<span id="cb30-202"><a href="#cb30-202" aria-hidden="true" tabindex="-1"></a>      <span class="fu">updateDisplay</span>()<span class="op">;</span></span>
+<span id="cb30-203"><a href="#cb30-203" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sendTelemetry</span>()<span class="op">;</span></span>
+<span id="cb30-204"><a href="#cb30-204" aria-hidden="true" tabindex="-1"></a>      <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">sendCommand</span>(<span class="st">&#39;temperature_changed&#39;</span><span class="op">,</span> {</span>
+<span id="cb30-205"><a href="#cb30-205" aria-hidden="true" tabindex="-1"></a>        <span class="dt">temperature</span><span class="op">:</span> targetTemp<span class="op">,</span></span>
+<span id="cb30-206"><a href="#cb30-206" aria-hidden="true" tabindex="-1"></a>        <span class="dt">direction</span><span class="op">:</span> <span class="st">&#39;up&#39;</span></span>
+<span id="cb30-207"><a href="#cb30-207" aria-hidden="true" tabindex="-1"></a>      })<span class="op">;</span></span>
+<span id="cb30-208"><a href="#cb30-208" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb30-209"><a href="#cb30-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-210"><a href="#cb30-210" aria-hidden="true" tabindex="-1"></a>    btnDown<span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&#39;click&#39;</span><span class="op">,</span> <span class="kw">function</span>() {</span>
+<span id="cb30-211"><a href="#cb30-211" aria-hidden="true" tabindex="-1"></a>      targetTemp<span class="op">--;</span></span>
+<span id="cb30-212"><a href="#cb30-212" aria-hidden="true" tabindex="-1"></a>      <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">set</span>(<span class="st">&#39;targetTemp&#39;</span><span class="op">,</span> targetTemp)<span class="op">;</span></span>
+<span id="cb30-213"><a href="#cb30-213" aria-hidden="true" tabindex="-1"></a>      <span class="fu">updateDisplay</span>()<span class="op">;</span></span>
+<span id="cb30-214"><a href="#cb30-214" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sendTelemetry</span>()<span class="op">;</span></span>
+<span id="cb30-215"><a href="#cb30-215" aria-hidden="true" tabindex="-1"></a>      <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">sendCommand</span>(<span class="st">&#39;temperature_changed&#39;</span><span class="op">,</span> {</span>
+<span id="cb30-216"><a href="#cb30-216" aria-hidden="true" tabindex="-1"></a>        <span class="dt">temperature</span><span class="op">:</span> targetTemp<span class="op">,</span></span>
+<span id="cb30-217"><a href="#cb30-217" aria-hidden="true" tabindex="-1"></a>        <span class="dt">direction</span><span class="op">:</span> <span class="st">&#39;down&#39;</span></span>
+<span id="cb30-218"><a href="#cb30-218" aria-hidden="true" tabindex="-1"></a>      })<span class="op">;</span></span>
+<span id="cb30-219"><a href="#cb30-219" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb30-220"><a href="#cb30-220" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb30-221"><a href="#cb30-221" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb30-222"><a href="#cb30-222" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">html</span><span class="dt">&gt;</span></span></code></pre></div>
+<hr />
+<h2 data-number="1.12" id="best-practices"><span
+class="header-section-number">1.12</span> Best Practices</h2>
+<h3 data-number="1.12.1" id="always-wait-for-the-bridge"><span
+class="header-section-number">1.12.1</span> 1. Always Wait for the
+Bridge</h3>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Good</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&#39;kingkiosk-ready&#39;</span><span class="op">,</span> <span class="kw">function</span>() {</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">onCommand</span>(<span class="op">...</span>)<span class="op">;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Bad - bridge may not be ready</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">onCommand</span>(<span class="op">...</span>)<span class="op">;</span></span></code></pre></div>
+<h3 data-number="1.12.2" id="handle-missing-bridge-gracefully"><span
+class="header-section-number">1.12.2</span> 2. Handle Missing Bridge
+Gracefully</h3>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">initWidget</span>() {</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span>) {</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Running in KingKiosk</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setupBridgeHandlers</span>()<span class="op">;</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Running standalone (for testing)</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;Running without KingKiosk bridge&#39;</span>)<span class="op">;</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setupMockData</span>()<span class="op">;</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&#39;kingkiosk-ready&#39;</span><span class="op">,</span> initWidget)<span class="op">;</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="co">// Fallback for standalone testing</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="pp">setTimeout</span>(<span class="kw">function</span>() {</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span><span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span>) <span class="fu">initWidget</span>()<span class="op">;</span></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>}<span class="op">,</span> <span class="dv">1000</span>)<span class="op">;</span></span></code></pre></div>
+<h3 data-number="1.12.3" id="use-responsive-design"><span
+class="header-section-number">1.12.3</span> 3. Use Responsive
+Design</h3>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Support different window sizes */</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>body {</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">min-height</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">vh</span><span class="op">;</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">display</span><span class="ch">:</span> <span class="dv">flex</span><span class="op">;</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">align-items</span><span class="ch">:</span> <span class="dv">center</span><span class="op">;</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">justify-content</span><span class="ch">:</span> <span class="dv">center</span><span class="op">;</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co">/* Adapt to platform */</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="fu">.tv-mode</span> <span class="fu">.text</span> { <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">2</span><span class="dt">em</span><span class="op">;</span> }</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="fu">.touch-mode</span> <span class="fu">.button</span> { <span class="kw">min-height</span><span class="ch">:</span> <span class="dv">44</span><span class="dt">px</span><span class="op">;</span> }</span></code></pre></div>
+<h3 data-number="1.12.4" id="minimize-network-requests"><span
+class="header-section-number">1.12.4</span> 4. Minimize Network
+Requests</h3>
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Cache data locally</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> cache <span class="op">=</span> {}<span class="op">;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">getData</span>(key) {</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>cache[key]) {</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    cache[key] <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetchFromApi</span>(key)<span class="op">;</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> cache[key]<span class="op">;</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 data-number="1.12.5" id="use-throttled-telemetry"><span
+class="header-section-number">1.12.5</span> 5. Use Throttled
+Telemetry</h3>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Don&#39;t spam telemetry</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> telemetryTimer <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">queueTelemetry</span>(data) {</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (telemetryTimer) <span class="pp">clearTimeout</span>(telemetryTimer)<span class="op">;</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  telemetryTimer <span class="op">=</span> <span class="pp">setTimeout</span>(<span class="kw">function</span>() {</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">publishTelemetry</span>(data)<span class="op">;</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span> <span class="dv">1000</span>)<span class="op">;</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 data-number="1.12.6" id="persist-important-state"><span
+class="header-section-number">1.12.6</span> 6. Persist Important
+State</h3>
+<div class="sourceCode" id="cb36"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Save state on every change</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">updateTemperature</span>(newTemp) {</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  temperature <span class="op">=</span> newTemp<span class="op">;</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">set</span>(<span class="st">&#39;temperature&#39;</span><span class="op">,</span> temperature)<span class="op">;</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">updateDisplay</span>()<span class="op">;</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 data-number="1.13" id="troubleshooting"><span
+class="header-section-number">1.13</span> Troubleshooting</h2>
+<h3 data-number="1.13.1" id="widget-shows-not-configured"><span
+class="header-section-number">1.13.1</span> Widget Shows “Not
+Configured”</h3>
+<ul>
+<li>Ensure you provided <code>url</code>, <code>html</code>, or
+<code>html_base64</code></li>
+<li>Check that URL is accessible (CORS may block some URLs)</li>
+</ul>
+<h3 data-number="1.13.2" id="bridge-not-available"><span
+class="header-section-number">1.13.2</span> Bridge Not Available</h3>
+<ul>
+<li>Wait for <code>kingkiosk-ready</code> event</li>
+<li>Check browser console for errors</li>
+<li>Verify the widget is loaded in KingKiosk (not standalone
+browser)</li>
+</ul>
+<h3 data-number="1.13.3" id="commands-not-received"><span
+class="header-section-number">1.13.3</span> Commands Not Received</h3>
+<ul>
+<li>Local <code>customWebView</code>: verify topic
+<code>kingkiosk/{device_id}/window/{window_id}/command</code> and
+payload includes <code>"action"</code></li>
+<li>Remote Browser bridge: verify topic
+<code>kingkiosk/{device_id}/element/{remote_browser_window_id}/cmd</code>
+and payload uses <code>"command": "widget_command"</code></li>
+<li>Ensure widget registered handler with <code>onCommand()</code></li>
+</ul>
+<h3 data-number="1.13.4" id="telemetry-not-publishing"><span
+class="header-section-number">1.13.4</span> Telemetry Not
+Publishing</h3>
+<ul>
+<li>Check MQTT connection status</li>
+<li>Verify device name is set</li>
+<li>Look for errors in KingKiosk logs</li>
+</ul>
+<h3 data-number="1.13.5" id="storage-not-persisting"><span
+class="header-section-number">1.13.5</span> Storage Not Persisting</h3>
+<ul>
+<li>Local <code>customWebView</code>: storage is runtime-scoped to the
+active tile/controller</li>
+<li>Remote Browser bridge: storage persists via app storage
+(<code>custom_widget_bridge_storage_v1:*</code>)</li>
+<li>Verify you’re calling <code>storage.set()</code> correctly</li>
+<li>Check that widget ID hasn’t changed</li>
+</ul>
+<h3 data-number="1.13.6" id="debug-tips"><span
+class="header-section-number">1.13.6</span> Debug Tips</h3>
+<div class="sourceCode" id="cb37"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Enable verbose logging</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&#39;kingkiosk-ready&#39;</span><span class="op">,</span> <span class="kw">async</span> <span class="kw">function</span>() {</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;Bridge ready, widget ID:&#39;</span><span class="op">,</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    (<span class="cf">await</span> <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">getWidgetInfo</span>())<span class="op">.</span><span class="at">widgetId</span>)<span class="op">;</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="fu">onCommand</span>(<span class="kw">function</span>(cmd<span class="op">,</span> payload) {</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;[CMD]&#39;</span><span class="op">,</span> cmd<span class="op">,</span> <span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(payload))<span class="op">;</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Monitor all storage</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="pp">setInterval</span>(<span class="kw">async</span> <span class="kw">function</span>() {</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> all <span class="op">=</span> <span class="cf">await</span> <span class="bu">window</span><span class="op">.</span><span class="at">KingKiosk</span><span class="op">.</span><span class="at">storage</span><span class="op">.</span><span class="fu">getAll</span>()<span class="op">;</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;[STORAGE]&#39;</span><span class="op">,</span> all)<span class="op">;</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>}<span class="op">,</span> <span class="dv">5000</span>)<span class="op">;</span></span></code></pre></div>
+<hr />
+<h2 data-number="1.14" id="platform-support"><span
+class="header-section-number">1.14</span> Platform Support</h2>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 29%" />
+<col style="width: 48%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Local <code>customWebView</code></th>
+<th>Remote Browser custom widget bridge</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macOS</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Either path works.</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Either path works.</td>
+</tr>
+<tr>
+<td>tvOS</td>
+<td>No</td>
+<td>Yes</td>
+<td>tvOS uses Remote Browser path.</td>
+</tr>
+<tr>
+<td>Android</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Either path works.</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Either path works.</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Either path works.</td>
+</tr>
+<tr>
+<td>Web</td>
+<td>Yes</td>
+<td>Depends on WebRTC/bridge support</td>
+<td>Verify in your target browser/runtime.</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="1.14.1" id="tvos-special-requirements"><span
+class="header-section-number">1.14.1</span> tvOS Special
+Requirements</h3>
+<p><strong>tvOS has no local <code>customWebView</code> tile
+runtime</strong> - it uses Remote Browser sessions.</p>
+<p>Use a remote browser command (same command surface used on other
+platforms when desired):</p>
+<div class="sourceCode" id="cb38"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;create_remote_browser&quot;</span><span class="fu">,</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;my_widget_tv&quot;</span><span class="fu">,</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;My Widget&quot;</span><span class="fu">,</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;initial_url&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/widget/&quot;</span><span class="fu">,</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;auto_connect&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><code>server_url</code> is optional; if omitted, the app uses
+configured Feature Server settings.</p>
+<p>On tvOS (Remote Browser path), the custom widget bridge supports: -
+<code>KingKiosk.onCommand()</code> -
+<code>KingKiosk.sendCommand()</code> -
+<code>KingKiosk.publishTelemetry()</code> -
+<code>KingKiosk.storage.get/set/getAll()</code> -
+<code>KingKiosk.getWidgetInfo()</code></p>
+<p>For MQTT commands into widgets on tvOS, use the element command topic
+with <code>command: "widget_command"</code> (see sections above).</p>
+<hr />
+<h2 data-number="1.15" id="need-help"><span
+class="header-section-number">1.15</span> Need Help?</h2>
+<ul>
+<li>Check the <a href="./MQTT_WIDGET_REFERENCE.md">MQTT Widget
+Reference</a> for more details</li>
+<li>Review the <a href="../examples/widgets/">example widgets</a>
+directory</li>
+<li>Open an issue on GitHub for bugs or feature requests</li>
+</ul>
+      <footer class="doc-footer">
+        <p>
+          <a href="https://kingkiosk.kallinnovations.com">KingKiosk</a>
+          &mdash; The Programmable Display Runtime &mdash;
+          &copy; Kall Innovations
+        </p>
+      </footer>
+    </main>
+  </div>
+
+</div>
+
+<!-- Back to Top -->
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  &uarr;
+</button>
+
+<script>
+// Back to Top visibility
+const btn = document.querySelector('.back-to-top');
+window.addEventListener('scroll', () => {
+  btn.classList.toggle('visible', window.scrollY > 400);
+});
+
+// Active TOC highlight on scroll
+const tocLinks = document.querySelectorAll('#TOC a');
+const headings = [];
+tocLinks.forEach(link => {
+  const id = link.getAttribute('href');
+  if (id && id.startsWith('#')) {
+    const el = document.getElementById(id.slice(1));
+    if (el) headings.push({ el, link });
+  }
+});
+
+function updateActiveTOC() {
+  let current = null;
+  const scrollY = window.scrollY + 100;
+  for (const { el, link } of headings) {
+    if (el.offsetTop <= scrollY) {
+      current = link;
+    }
+  }
+  tocLinks.forEach(l => l.classList.remove('active'));
+  if (current) current.classList.add('active');
+}
+
+window.addEventListener('scroll', updateActiveTOC, { passive: true });
+updateActiveTOC();
+
+// Close sidebar on mobile when clicking a link
+document.querySelectorAll('.sidebar a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 960) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
