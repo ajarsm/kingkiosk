@@ -3217,17 +3217,18 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb189-1"><a href
 <code>set_background_opacity</code></p>
 <h3 data-number="1.8.21" id="led-light-panel"><span
 class="header-section-number">1.8.21</span> LED Light Panel</h3>
-<p>Turn any King Kiosk screen into a virtual Nanoleaf. The LED Light
-Panel widget renders a grid of illuminated shapes — squares, triangles,
-or hexagons — that you can program with color animations, scrolling
-text, or pixel-level control. Shapes tessellate naturally (hexagons form
-a honeycomb, triangles interlock) and you can toggle between a clean
-flat look and a 3D wall-mounted effect with shadows and glow.</p>
+<p>Turn any King Kiosk screen into a virtual LED light wall. The LED
+Light Panel widget renders a grid of illuminated shapes — squares,
+triangles, or hexagons — that you can program with color animations,
+scrolling text, or pixel-level control. Shapes tessellate naturally
+(hexagons form a honeycomb, triangles interlock) and you can toggle
+between a clean flat look and a 3D wall-mounted effect with shadows and
+glow.</p>
 <p>Three shapes are available: - <strong>Squares</strong> — clean
 pixel-grid aesthetic, great for text and pixel art -
 <strong>Triangles</strong> — tessellated up/down pattern, striking
-geometric look - <strong>Hexagons</strong> — honeycomb layout, closest
-to the real Nanoleaf experience</p>
+geometric look - <strong>Hexagons</strong> — honeycomb layout, the
+classic modular light panel look</p>
 <p>Two rendering modes: - <strong>Flat</strong> — simple filled shapes
 with subtle borders (best performance) - <strong>3D Wall</strong> — drop
 shadows, face gradients, and colored glow on bright cells</p>
@@ -3253,7 +3254,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb190-1"><a href
 <div class="sourceCode" id="cb191"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb191-1"><a href="#cb191-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb191-2"><a href="#cb191-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;preset&quot;</span><span class="fu">,</span></span>
-<span id="cb191-3"><a href="#cb191-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target&quot;</span><span class="fu">:</span> <span class="st">&quot;mood-wall&quot;</span><span class="fu">,</span></span>
+<span id="cb191-3"><a href="#cb191-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;mood-wall&quot;</span><span class="fu">,</span></span>
 <span id="cb191-4"><a href="#cb191-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;breathing&quot;</span><span class="fu">,</span></span>
 <span id="cb191-5"><a href="#cb191-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;color&quot;</span><span class="fu">:</span> <span class="st">&quot;#FF6600&quot;</span><span class="fu">,</span></span>
 <span id="cb191-6"><a href="#cb191-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;speed&quot;</span><span class="fu">:</span> <span class="fl">0.5</span></span>
@@ -3282,7 +3283,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb192-1"><a href
 <div class="sourceCode" id="cb193"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb193-1"><a href="#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb193-2"><a href="#cb193-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;set_text&quot;</span><span class="fu">,</span></span>
-<span id="cb193-3"><a href="#cb193-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target&quot;</span><span class="fu">:</span> <span class="st">&quot;lobby-sign&quot;</span><span class="fu">,</span></span>
+<span id="cb193-3"><a href="#cb193-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;lobby-sign&quot;</span><span class="fu">,</span></span>
 <span id="cb193-4"><a href="#cb193-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;text&quot;</span><span class="fu">:</span> <span class="st">&quot;WELCOME TO ACME CORP&quot;</span><span class="fu">,</span></span>
 <span id="cb193-5"><a href="#cb193-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;color&quot;</span><span class="fu">:</span> <span class="st">&quot;#00FF00&quot;</span><span class="fu">,</span></span>
 <span id="cb193-6"><a href="#cb193-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;bg&quot;</span><span class="fu">:</span> <span class="st">&quot;#001100&quot;</span><span class="fu">,</span></span>
@@ -3312,7 +3313,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb194-1"><a href
 <div class="sourceCode" id="cb195"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb195-1"><a href="#cb195-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb195-2"><a href="#cb195-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;run_script&quot;</span><span class="fu">,</span></span>
-<span id="cb195-3"><a href="#cb195-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target&quot;</span><span class="fu">:</span> <span class="st">&quot;art-panel&quot;</span><span class="fu">,</span></span>
+<span id="cb195-3"><a href="#cb195-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;art-panel&quot;</span><span class="fu">,</span></span>
 <span id="cb195-4"><a href="#cb195-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;script&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
 <span id="cb195-5"><a href="#cb195-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;fps&quot;</span><span class="fu">:</span> <span class="dv">30</span><span class="fu">,</span></span>
 <span id="cb195-6"><a href="#cb195-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;loop&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
@@ -3340,7 +3341,7 @@ individual cells or the entire buffer:</p>
 <div class="sourceCode" id="cb196"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb196-1"><a href="#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb196-2"><a href="#cb196-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;set_cells&quot;</span><span class="fu">,</span></span>
-<span id="cb196-3"><a href="#cb196-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target&quot;</span><span class="fu">:</span> <span class="st">&quot;mood-wall&quot;</span><span class="fu">,</span></span>
+<span id="cb196-3"><a href="#cb196-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;mood-wall&quot;</span><span class="fu">,</span></span>
 <span id="cb196-4"><a href="#cb196-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;cells&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
 <span id="cb196-5"><a href="#cb196-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;0&quot;</span><span class="fu">:</span> <span class="st">&quot;#FF0000&quot;</span><span class="fu">,</span></span>
 <span id="cb196-6"><a href="#cb196-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;1&quot;</span><span class="fu">:</span> <span class="st">&quot;#FF4400&quot;</span><span class="fu">,</span></span>
@@ -3353,7 +3354,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb196-1"><a href
 <div class="sourceCode" id="cb197"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb197-1"><a href="#cb197-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb197-2"><a href="#cb197-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;fill_gradient&quot;</span><span class="fu">,</span></span>
-<span id="cb197-3"><a href="#cb197-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target&quot;</span><span class="fu">:</span> <span class="st">&quot;mood-wall&quot;</span><span class="fu">,</span></span>
+<span id="cb197-3"><a href="#cb197-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;mood-wall&quot;</span><span class="fu">,</span></span>
 <span id="cb197-4"><a href="#cb197-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;start&quot;</span><span class="fu">:</span> <span class="st">&quot;#0000FF&quot;</span><span class="fu">,</span></span>
 <span id="cb197-5"><a href="#cb197-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;end&quot;</span><span class="fu">:</span> <span class="st">&quot;#FF0000&quot;</span><span class="fu">,</span></span>
 <span id="cb197-6"><a href="#cb197-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;direction&quot;</span><span class="fu">:</span> <span class="st">&quot;horizontal&quot;</span></span>
@@ -3362,7 +3363,7 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb197-1"><a href
 <div class="sourceCode" id="cb198"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb198-1"><a href="#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb198-2"><a href="#cb198-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;configure&quot;</span><span class="fu">,</span></span>
-<span id="cb198-3"><a href="#cb198-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target&quot;</span><span class="fu">:</span> <span class="st">&quot;mood-wall&quot;</span><span class="fu">,</span></span>
+<span id="cb198-3"><a href="#cb198-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;mood-wall&quot;</span><span class="fu">,</span></span>
 <span id="cb198-4"><a href="#cb198-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;shape&quot;</span><span class="fu">:</span> <span class="st">&quot;triangle&quot;</span><span class="fu">,</span></span>
 <span id="cb198-5"><a href="#cb198-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;render_mode&quot;</span><span class="fu">:</span> <span class="st">&quot;flat&quot;</span><span class="fu">,</span></span>
 <span id="cb198-6"><a href="#cb198-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;rows&quot;</span><span class="fu">:</span> <span class="dv">12</span><span class="fu">,</span></span>
