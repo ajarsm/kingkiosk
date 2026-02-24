@@ -997,6 +997,17 @@ window.KingKiosk.publishTelemetry({
                     Comprehensive guides for every skill level. From first install to fleet-wide MQTT orchestration.
                 </p>
             </div>
+
+            <!-- Doc Search -->
+            <div class="doc-search-wrap reveal">
+                <div class="doc-search">
+                    <svg class="doc-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="docSearchInput" class="doc-search-input" placeholder="Search docs... try &quot;add_window&quot;, &quot;carousel&quot;, &quot;kiosk mode&quot;, &quot;Apple TV&quot;" autocomplete="off" spellcheck="false">
+                    <kbd class="doc-search-kbd" id="docSearchKbd">/</kbd>
+                </div>
+                <div class="doc-search-results" id="docSearchResults"></div>
+            </div>
+
             <div class="problem-grid">
                 <div class="problem-card reveal">
                     <div class="problem-icon">
@@ -1004,7 +1015,7 @@ window.KingKiosk.publishTelemetry({
                     </div>
                     <h3>User Guide</h3>
                     <p>Step-by-step setup, windowing system, screen presets, scheduling, kiosk mode, and platform-specific instructions.</p>
-                    <a href="docs/KINGKIOSK_USER_GUIDE.pdf" target="_blank" class="btn btn-ghost btn-sm" style="margin-top:1rem">Read the Guide</a>
+                    <a href="https://ajarsm.github.io/kingkiosk/docs/KINGKIOSK_USER_GUIDE.html" target="_blank" class="btn btn-ghost btn-sm" style="margin-top:1rem">Read the Guide</a>
                 </div>
                 <div class="problem-card reveal">
                     <div class="problem-icon">
@@ -1012,7 +1023,7 @@ window.KingKiosk.publishTelemetry({
                     </div>
                     <h3>MQTT Reference</h3>
                     <p>Complete command reference for every widget type, system command, topic structure, and signed envelope format.</p>
-                    <a href="docs/MQTT_WIDGET_REFERENCE.pdf" target="_blank" class="btn btn-ghost btn-sm" style="margin-top:1rem">View Reference</a>
+                    <a href="https://ajarsm.github.io/kingkiosk/docs/MQTT_WIDGET_REFERENCE.html" target="_blank" class="btn btn-ghost btn-sm" style="margin-top:1rem">View Reference</a>
                 </div>
                 <div class="problem-card reveal">
                     <div class="problem-icon">
@@ -1020,7 +1031,7 @@ window.KingKiosk.publishTelemetry({
                     </div>
                     <h3>Widget SDK</h3>
                     <p>Build custom widgets with HTML and JavaScript. Receive MQTT commands, publish telemetry, use persistent storage.</p>
-                    <a href="docs/CUSTOM_WIDGET_SDK.pdf" target="_blank" class="btn btn-ghost btn-sm" style="margin-top:1rem">Learn More</a>
+                    <a href="https://ajarsm.github.io/kingkiosk/docs/CUSTOM_WIDGET_SDK.html" target="_blank" class="btn btn-ghost btn-sm" style="margin-top:1rem">Learn More</a>
                 </div>
             </div>
         </div>
@@ -1117,9 +1128,9 @@ window.KingKiosk.publishTelemetry({
                     <div class="footer-col">
                         <h4>Resources</h4>
                         <a href="#docs">Documentation</a>
-                        <a href="docs/MQTT_WIDGET_REFERENCE.pdf" target="_blank">MQTT Reference</a>
-                        <a href="docs/CUSTOM_WIDGET_SDK.pdf" target="_blank">Widget SDK</a>
-                        <a href="docs/KINGKIOSK_USER_GUIDE.pdf" target="_blank">User Guide</a>
+                        <a href="https://ajarsm.github.io/kingkiosk/docs/MQTT_WIDGET_REFERENCE.html" target="_blank">MQTT Reference</a>
+                        <a href="https://ajarsm.github.io/kingkiosk/docs/CUSTOM_WIDGET_SDK.html" target="_blank">Widget SDK</a>
+                        <a href="https://ajarsm.github.io/kingkiosk/docs/KINGKIOSK_USER_GUIDE.html" target="_blank">User Guide</a>
                     </div>
                     <div class="footer-col">
                         <h4>Company</h4>
