@@ -249,6 +249,10 @@
     class="toc-section-number">1.13.18</span> Games</a></li>
     <li><a href="#mqtt-image-tile" id="toc-mqtt-image-tile"><span
     class="toc-section-number">1.13.19</span> MQTT Image Tile</a></li>
+    <li><a href="#led-panel-programmable-light-display"
+    id="toc-led-panel-programmable-light-display"><span
+    class="toc-section-number">1.13.20</span> LED Panel (Programmable
+    Light Display)</a></li>
     </ul></li>
     <li><a href="#integration-examples"
     id="toc-integration-examples"><span
@@ -293,6 +297,32 @@
     id="toc-publish-events-optional"><span
     class="toc-section-number">1.16.6</span> 6. Publish Events
     (Optional)</a></li>
+    </ul></li>
+    <li><a href="#appendix-a-led-panel-scripting-engine-reference"
+    id="toc-appendix-a-led-panel-scripting-engine-reference"><span
+    class="toc-section-number">1.17</span> Appendix A: LED Panel
+    Scripting Engine Reference</a>
+    <ul>
+    <li><a href="#how-it-works" id="toc-how-it-works"><span
+    class="toc-section-number">1.17.1</span> How It Works</a></li>
+    <li><a href="#script-json-format" id="toc-script-json-format"><span
+    class="toc-section-number">1.17.2</span> Script JSON Format</a></li>
+    <li><a href="#the-hsl-color-model"
+    id="toc-the-hsl-color-model"><span
+    class="toc-section-number">1.17.3</span> The HSL Color
+    Model</a></li>
+    <li><a href="#expression-syntax" id="toc-expression-syntax"><span
+    class="toc-section-number">1.17.4</span> Expression Syntax</a></li>
+    <li><a href="#built-in-variables" id="toc-built-in-variables"><span
+    class="toc-section-number">1.17.5</span> Built-in Variables</a></li>
+    <li><a href="#built-in-functions" id="toc-built-in-functions"><span
+    class="toc-section-number">1.17.6</span> Built-in Functions</a></li>
+    <li><a href="#recipes-and-examples"
+    id="toc-recipes-and-examples"><span
+    class="toc-section-number">1.17.7</span> Recipes and
+    Examples</a></li>
+    <li><a href="#performance-tips" id="toc-performance-tips"><span
+    class="toc-section-number">1.17.8</span> Performance Tips</a></li>
     </ul></li>
     </ul></li>
     </ul>
@@ -11767,6 +11797,842 @@ auto-detect large base64 payloads and treat them as
 <code>data:image/png;base64,...</code>.</li>
 </ul>
 <hr />
+<h3 data-number="1.13.20"
+id="led-panel-programmable-light-display"><span
+class="header-section-number">1.13.20</span> LED Panel (Programmable
+Light Display)</h3>
+<p>A virtual Nanoleaf-style programmable light panel. Renders a grid of
+illuminated shapes (squares, triangles, hexagons) that can be driven by
+built-in preset animations, per-cell MQTT color control, a JSON
+expression scripting engine, or scrolling pixel-font text.</p>
+<p>Widget type: <code>ledPanel</code></p>
+<h4 data-number="1.13.20.1" id="system-commands-1"><span
+class="header-section-number">1.13.20.1</span> System Commands</h4>
+<h5 data-number="1.13.20.1.1" id="create_led_panel"><span
+class="header-section-number">1.13.20.1.1</span>
+<code>create_led_panel</code></h5>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 22%" />
+<col style="width: 33%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>window_id</code></td>
+<td>string</td>
+<td>auto-generated</td>
+<td>Unique window identifier.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td><code>"LED Panel"</code></td>
+<td>Display name.</td>
+</tr>
+<tr>
+<td><code>shape</code></td>
+<td>string</td>
+<td><code>"hexagon"</code></td>
+<td>Cell shape: <code>square</code>, <code>triangle</code>,
+<code>hexagon</code>.</td>
+</tr>
+<tr>
+<td><code>rows</code></td>
+<td>int</td>
+<td><code>8</code></td>
+<td>Number of rows (1-100).</td>
+</tr>
+<tr>
+<td><code>cols</code></td>
+<td>int</td>
+<td><code>12</code></td>
+<td>Number of columns (1-100).</td>
+</tr>
+<tr>
+<td><code>gap</code></td>
+<td>number</td>
+<td><code>2</code></td>
+<td>Gap between cells in pixels (0-20).</td>
+</tr>
+<tr>
+<td><code>render_mode</code></td>
+<td>string</td>
+<td><code>"flat"</code></td>
+<td><code>flat</code> (2D) or <code>wall3d</code> (3D with
+shadows/glow).</td>
+</tr>
+<tr>
+<td><code>brightness</code></td>
+<td>number</td>
+<td><code>1.0</code></td>
+<td>Global brightness multiplier (0.0-1.0).</td>
+</tr>
+<tr>
+<td><code>preset</code></td>
+<td>string</td>
+<td>-</td>
+<td>Optional preset to start immediately.</td>
+</tr>
+<tr>
+<td><code>preset_speed</code></td>
+<td>number</td>
+<td><code>1.0</code></td>
+<td>Speed multiplier for the initial preset.</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>string</td>
+<td>-</td>
+<td>Optional text to display immediately.</td>
+</tr>
+<tr>
+<td><code>scroll</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Whether initial text should scroll.</td>
+</tr>
+<tr>
+<td><code>scroll_speed</code></td>
+<td>number</td>
+<td><code>50</code></td>
+<td>Scroll speed for initial text.</td>
+</tr>
+<tr>
+<td><code>opacity</code></td>
+<td>number</td>
+<td><code>1.0</code></td>
+<td>Window opacity.</td>
+</tr>
+<tr>
+<td><code>x</code>, <code>y</code></td>
+<td>number</td>
+<td>-</td>
+<td>Optional window position.</td>
+</tr>
+<tr>
+<td><code>width</code>, <code>height</code></td>
+<td>number</td>
+<td><code>400</code>x<code>300</code></td>
+<td>Optional window size.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.1.2" id="configure_led_panel"><span
+class="header-section-number">1.13.20.1.2</span>
+<code>configure_led_panel</code></h5>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>window_id</code></td>
+<td>string</td>
+<td>Required. Target panel.</td>
+</tr>
+<tr>
+<td>Any key from <code>create_led_panel</code></td>
+<td>-</td>
+<td>Forwarded to panel controller.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.1.3" id="delete_led_panel"><span
+class="header-section-number">1.13.20.1.3</span>
+<code>delete_led_panel</code></h5>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>window_id</code></td>
+<td>string</td>
+<td>Required. Panel to remove.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.1.4" id="list_led_panels"><span
+class="header-section-number">1.13.20.1.4</span>
+<code>list_led_panels</code></h5>
+<p>No parameters. Returns a list of all active LED panel tiles on the
+device.</p>
+<hr />
+<h4 data-number="1.13.20.2" id="element-commands-8"><span
+class="header-section-number">1.13.20.2</span> Element Commands</h4>
+<p>Sent to
+<code>kingkiosk/{device_id}/element/{panel_id}/cmd</code>.</p>
+<h5 data-number="1.13.20.2.1" id="set_cells"><span
+class="header-section-number">1.13.20.2.1</span>
+<code>set_cells</code></h5>
+<p>Set individual cell colors by index.</p>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 33%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cells</code></td>
+<td>object</td>
+<td>Map of cell index (string) to color. Example:
+<code>{"0": "#FF0000", "5": "#00FF00"}</code>.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.2.2" id="set_all"><span
+class="header-section-number">1.13.20.2.2</span>
+<code>set_all</code></h5>
+<p>Fill all cells with a single color.</p>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 33%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>color</code></td>
+<td>string/int</td>
+<td>Color value. Accepts <code>#RGB</code>, <code>#RRGGBB</code>,
+<code>#AARRGGBB</code>, or int ARGB.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.2.3" id="set_row"><span
+class="header-section-number">1.13.20.2.3</span>
+<code>set_row</code></h5>
+<p>Set all cells in a row to one color.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>row</code></td>
+<td>int</td>
+<td>Required. Zero-based row index.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td>string/int</td>
+<td>Required. Color value.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.2.4" id="set_column"><span
+class="header-section-number">1.13.20.2.4</span>
+<code>set_column</code></h5>
+<p>Set all cells in a column to one color.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>col</code></td>
+<td>int</td>
+<td>Required. Zero-based column index.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td>string/int</td>
+<td>Required. Color value.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.2.5" id="set_buffer"><span
+class="header-section-number">1.13.20.2.5</span>
+<code>set_buffer</code></h5>
+<p>Set the entire cell color buffer at once.</p>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 33%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>colors</code></td>
+<td>array</td>
+<td>Array of color strings, one per cell in linear order
+(row-major).</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.2.6" id="fill_gradient"><span
+class="header-section-number">1.13.20.2.6</span>
+<code>fill_gradient</code></h5>
+<p>Apply a gradient fill across the panel.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>start</code></td>
+<td>string/int</td>
+<td>Required. Start color.</td>
+</tr>
+<tr>
+<td><code>end</code></td>
+<td>string/int</td>
+<td>Required. End color.</td>
+</tr>
+<tr>
+<td><code>direction</code></td>
+<td>string</td>
+<td><code>"horizontal"</code> (default) or <code>"vertical"</code>.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.2.7" id="preset"><span
+class="header-section-number">1.13.20.2.7</span>
+<code>preset</code></h5>
+<p>Start a built-in animation preset.</p>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 22%" />
+<col style="width: 33%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td><code>"rainbow_wave"</code></td>
+<td>Preset name (see list below).</td>
+</tr>
+<tr>
+<td><code>speed</code></td>
+<td>number</td>
+<td><code>1.0</code></td>
+<td>Speed multiplier.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td>string/int</td>
+<td>-</td>
+<td>Optional base color for presets that use one (solid, breathing,
+color_chase, wave).</td>
+</tr>
+</tbody>
+</table>
+<p>Available presets:</p>
+<table>
+<thead>
+<tr>
+<th>Preset</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rainbow_wave</code></td>
+<td>Hue cycles across cells with spatial phase offset.</td>
+</tr>
+<tr>
+<td><code>breathing</code></td>
+<td>All cells pulse brightness in sync.</td>
+</tr>
+<tr>
+<td><code>color_chase</code></td>
+<td>A highlight chases around the perimeter.</td>
+</tr>
+<tr>
+<td><code>sparkle</code></td>
+<td>Random cells flash white briefly.</td>
+</tr>
+<tr>
+<td><code>fire</code></td>
+<td>Warm orange/red flicker simulation.</td>
+</tr>
+<tr>
+<td><code>matrix</code></td>
+<td>Green falling-code columns.</td>
+</tr>
+<tr>
+<td><code>gradient_rotate</code></td>
+<td>Slowly rotating angular gradient.</td>
+</tr>
+<tr>
+<td><code>solid</code></td>
+<td>Static single color (uses <code>color</code> parameter).</td>
+</tr>
+<tr>
+<td><code>random</code></td>
+<td>Random colors per cell, re-randomized at interval.</td>
+</tr>
+<tr>
+<td><code>wave</code></td>
+<td>Sine wave brightness pattern sweeping across grid.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.2.8" id="stop"><span
+class="header-section-number">1.13.20.2.8</span> <code>stop</code></h5>
+<p>Stop the current animation. Cell colors are preserved.</p>
+<p>No parameters.</p>
+<h5 data-number="1.13.20.2.9" id="clear"><span
+class="header-section-number">1.13.20.2.9</span> <code>clear</code></h5>
+<p>Stop the current animation and set all cells to black (off).</p>
+<p>No parameters.</p>
+<h5 data-number="1.13.20.2.10" id="set_text"><span
+class="header-section-number">1.13.20.2.10</span>
+<code>set_text</code></h5>
+<p>Display text using the built-in 5x7 pixel bitmap font.</p>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 22%" />
+<col style="width: 33%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Text to display. Supports A-Z, 0-9, common punctuation.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td>string/int</td>
+<td><code>"#FFFFFF"</code></td>
+<td>Text (foreground) color.</td>
+</tr>
+<tr>
+<td><code>bg</code></td>
+<td>string/int</td>
+<td><code>"#000000"</code></td>
+<td>Background color.</td>
+</tr>
+<tr>
+<td><code>scroll</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Enable scrolling marquee.</td>
+</tr>
+<tr>
+<td><code>speed</code></td>
+<td>number</td>
+<td><code>50</code></td>
+<td>Scroll speed (pixels per second).</td>
+</tr>
+<tr>
+<td><code>direction</code></td>
+<td>string</td>
+<td><code>"left"</code></td>
+<td>Scroll direction: <code>left</code>, <code>right</code>,
+<code>up</code>, <code>down</code>.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.2.11" id="set_brightness"><span
+class="header-section-number">1.13.20.2.11</span>
+<code>set_brightness</code></h5>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>value</code></td>
+<td>number</td>
+<td>Brightness multiplier (0.0 = off, 1.0 = full).</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.2.12" id="run_script"><span
+class="header-section-number">1.13.20.2.12</span>
+<code>run_script</code></h5>
+<p>Run a JSON expression-based animation script.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>script</code></td>
+<td>object</td>
+<td>Script definition (see script format below).</td>
+</tr>
+</tbody>
+</table>
+<p>Script format:</p>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 22%" />
+<col style="width: 33%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fps</code></td>
+<td>int</td>
+<td><code>30</code></td>
+<td>Target frames per second.</td>
+</tr>
+<tr>
+<td><code>loop</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Loop when duration expires.</td>
+</tr>
+<tr>
+<td><code>duration</code></td>
+<td>number</td>
+<td><code>null</code></td>
+<td>Duration in seconds. <code>null</code> = infinite.</td>
+</tr>
+<tr>
+<td><code>variables</code></td>
+<td>object</td>
+<td><code>{}</code></td>
+<td>User-defined variables available in expressions.</td>
+</tr>
+<tr>
+<td><code>per_cell</code></td>
+<td>object</td>
+<td>(required)</td>
+<td>HSL expressions evaluated per cell per frame.</td>
+</tr>
+<tr>
+<td><code>per_cell.h</code></td>
+<td>string</td>
+<td><code>"0"</code></td>
+<td>Hue expression (0-360).</td>
+</tr>
+<tr>
+<td><code>per_cell.s</code></td>
+<td>string</td>
+<td><code>"1"</code></td>
+<td>Saturation expression (0.0-1.0).</td>
+</tr>
+<tr>
+<td><code>per_cell.l</code></td>
+<td>string</td>
+<td><code>"0.5"</code></td>
+<td>Lightness expression (0.0-1.0).</td>
+</tr>
+</tbody>
+</table>
+<p>Built-in variables available in expressions:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t</code></td>
+<td>Elapsed time in seconds.</td>
+</tr>
+<tr>
+<td><code>frame</code></td>
+<td>Frame number since script start.</td>
+</tr>
+<tr>
+<td><code>cell_x</code></td>
+<td>Cell column index (0-based).</td>
+</tr>
+<tr>
+<td><code>cell_y</code></td>
+<td>Cell row index (0-based).</td>
+</tr>
+<tr>
+<td><code>cell_index</code></td>
+<td>Linear cell index (row-major).</td>
+</tr>
+<tr>
+<td><code>total_cells</code></td>
+<td>Total number of cells in the grid.</td>
+</tr>
+<tr>
+<td><code>total_rows</code></td>
+<td>Number of rows.</td>
+</tr>
+<tr>
+<td><code>total_cols</code></td>
+<td>Number of columns.</td>
+</tr>
+<tr>
+<td><code>cell_dist_center</code></td>
+<td>Normalized distance from grid center (0.0-1.0).</td>
+</tr>
+<tr>
+<td><code>cell_angle</code></td>
+<td>Angle from grid center in radians.</td>
+</tr>
+<tr>
+<td><code>PI</code></td>
+<td>3.14159…</td>
+</tr>
+<tr>
+<td>User variables</td>
+<td>Any key defined in <code>variables</code> block.</td>
+</tr>
+</tbody>
+</table>
+<p>Built-in functions: <code>sin</code>, <code>cos</code>,
+<code>tan</code>, <code>asin</code>, <code>acos</code>,
+<code>atan</code>, <code>atan2</code>, <code>abs</code>,
+<code>floor</code>, <code>ceil</code>, <code>round</code>,
+<code>sqrt</code>, <code>pow</code>, <code>log</code>, <code>exp</code>,
+<code>min</code>, <code>max</code>, <code>clamp</code>,
+<code>lerp</code>, <code>fmod</code>, <code>mod</code>,
+<code>step</code>, <code>smoothstep</code>, <code>noise</code> (2D
+simplex), <code>random</code>, <code>sign</code>, <code>fract</code>,
+<code>if(cond, a, b)</code>.</p>
+<p>Operators: <code>+</code>, <code>-</code>, <code>*</code>,
+<code>/</code>, <code>%</code>, <code>^</code> (power), <code>**</code>
+(power), <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
+<code>&gt;=</code>, <code>==</code>, <code>!=</code>,
+<code>&amp;&amp;</code>, <code>||</code>, <code>? :</code>
+(ternary).</p>
+<h5 data-number="1.13.20.2.13" id="configure"><span
+class="header-section-number">1.13.20.2.13</span>
+<code>configure</code></h5>
+<p>Reconfigure the panel at runtime.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>shape</code></td>
+<td>string</td>
+<td><code>square</code>, <code>triangle</code>,
+<code>hexagon</code>.</td>
+</tr>
+<tr>
+<td><code>rows</code></td>
+<td>int</td>
+<td>Number of rows (1-100).</td>
+</tr>
+<tr>
+<td><code>cols</code></td>
+<td>int</td>
+<td>Number of columns (1-100).</td>
+</tr>
+<tr>
+<td><code>gap</code></td>
+<td>number</td>
+<td>Gap in pixels (0-20).</td>
+</tr>
+<tr>
+<td><code>render_mode</code></td>
+<td>string</td>
+<td><code>flat</code> or <code>wall3d</code>.</td>
+</tr>
+<tr>
+<td><code>brightness</code></td>
+<td>number</td>
+<td>Global brightness (0.0-1.0).</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.20.2.14" id="define_glyph"><span
+class="header-section-number">1.13.20.2.14</span>
+<code>define_glyph</code></h5>
+<p>Define a custom pixel-font glyph for text rendering.</p>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 33%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>char</code></td>
+<td>string</td>
+<td>Single character to define (e.g., <code>"★"</code>).</td>
+</tr>
+<tr>
+<td><code>bitmap</code></td>
+<td>array</td>
+<td>2D array of 0/1 values. Each inner array is a row. Standard size: 5
+wide x 7 tall.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 data-number="1.13.20.3" id="element-state-1"><span
+class="header-section-number">1.13.20.3</span> Element State</h4>
+<p>Published to
+<code>kingkiosk/{device_id}/element/{panel_id}/state</code>
+(retained).</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>Always <code>"ledPanel"</code>.</td>
+</tr>
+<tr>
+<td><code>widget_id</code></td>
+<td>string</td>
+<td>Panel window ID.</td>
+</tr>
+<tr>
+<td><code>shape</code></td>
+<td>string</td>
+<td>Current shape.</td>
+</tr>
+<tr>
+<td><code>rows</code></td>
+<td>int</td>
+<td>Current row count.</td>
+</tr>
+<tr>
+<td><code>cols</code></td>
+<td>int</td>
+<td>Current column count.</td>
+</tr>
+<tr>
+<td><code>gap</code></td>
+<td>number</td>
+<td>Current gap.</td>
+</tr>
+<tr>
+<td><code>render_mode</code></td>
+<td>string</td>
+<td>Current render mode.</td>
+</tr>
+<tr>
+<td><code>brightness</code></td>
+<td>number</td>
+<td>Current brightness.</td>
+</tr>
+<tr>
+<td><code>active_preset</code></td>
+<td>string/null</td>
+<td>Name of running preset, or null.</td>
+</tr>
+<tr>
+<td><code>scroll_text</code></td>
+<td>string</td>
+<td>Currently displayed text.</td>
+</tr>
+<tr>
+<td><code>is_scrolling</code></td>
+<td>bool</td>
+<td>Whether text is scrolling.</td>
+</tr>
+<tr>
+<td><code>total_cells</code></td>
+<td>int</td>
+<td>Total cell count in grid.</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 data-number="1.14" id="integration-examples"><span
 class="header-section-number">1.14</span> Integration Examples</h2>
 <h3 data-number="1.14.1"
@@ -11912,6 +12778,831 @@ class="sourceCode dart"><code class="sourceCode dart"><span id="cb71-1"><a href=
 <span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>publishSimpleEvent(<span class="st">&#39;clicked&#39;</span>);</span>
 <span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>publishError(<span class="st">&#39;Something went wrong&#39;</span><span class="op">,</span> <span class="st">&#39;ERR_CODE&#39;</span>);</span>
 <span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>publishStateChange(<span class="st">&#39;idle&#39;</span><span class="op">,</span> <span class="st">&#39;playing&#39;</span>);</span></code></pre></div>
+<hr />
+<h2 data-number="1.17"
+id="appendix-a-led-panel-scripting-engine-reference"><span
+class="header-section-number">1.17</span> Appendix A: LED Panel
+Scripting Engine Reference</h2>
+<p>The LED Panel scripting engine is a lightweight expression evaluator
+that computes each cell’s color on every animation frame. Scripts are
+defined as JSON and sent via the <code>run_script</code> element
+command. Each cell’s color is specified in <strong>HSL</strong> (Hue,
+Saturation, Lightness) by evaluating three mathematical expressions per
+cell per frame.</p>
+<h3 data-number="1.17.1" id="how-it-works"><span
+class="header-section-number">1.17.1</span> How It Works</h3>
+<ol type="1">
+<li>You send a JSON script object via MQTT.</li>
+<li>The engine <strong>parses</strong> the three HSL expressions once
+(compile step).</li>
+<li>On every frame (at the configured <code>fps</code>), for every cell
+in the grid, the engine:
+<ul>
+<li>Sets the built-in variables (<code>t</code>, <code>cell_x</code>,
+<code>cell_y</code>, etc.) to that cell’s values.</li>
+<li><strong>Evaluates</strong> each expression (<code>h</code>,
+<code>s</code>, <code>l</code>) to produce a number.</li>
+<li>Converts the three numbers into a color:
+<code>HSLColor(hue, saturation, lightness)</code>.</li>
+</ul></li>
+<li>The resulting color map is rendered by the painter.</li>
+</ol>
+<p>Because expressions are parsed once and evaluated numerically,
+performance is excellent even on large grids.</p>
+<h3 data-number="1.17.2" id="script-json-format"><span
+class="header-section-number">1.17.2</span> Script JSON Format</h3>
+<div class="sourceCode" id="cb72"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;fps&quot;</span><span class="fu">:</span> <span class="dv">30</span><span class="fu">,</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;loop&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;duration&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;speed&quot;</span><span class="fu">:</span> <span class="fl">2.0</span><span class="fu">,</span></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;hue_offset&quot;</span><span class="fu">:</span> <span class="dv">120</span></span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;(cell_x * 10 + t * speed + hue_offset) % 360&quot;</span><span class="fu">,</span></span>
+<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
+<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.4 + 0.1 * sin(cell_dist_center * 6.28 - t * 3)&quot;</span></span>
+<span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 17%" />
+<col style="width: 25%" />
+<col style="width: 37%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fps</code></td>
+<td>int</td>
+<td><code>30</code></td>
+<td>Target frames per second. Higher values are smoother but use more
+CPU. 15-30 is usually sufficient.</td>
+</tr>
+<tr>
+<td><code>loop</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>When <code>duration</code> expires, restart from <code>t = 0</code>
+if true, otherwise stop.</td>
+</tr>
+<tr>
+<td><code>duration</code></td>
+<td>number or null</td>
+<td><code>null</code></td>
+<td>Script duration in seconds. <code>null</code> means run forever
+until stopped.</td>
+</tr>
+<tr>
+<td><code>variables</code></td>
+<td>object</td>
+<td><code>{}</code></td>
+<td>User-defined named constants available in all expressions. Values
+must be numbers.</td>
+</tr>
+<tr>
+<td><code>per_cell</code></td>
+<td>object</td>
+<td><em>(required)</em></td>
+<td>Contains the three HSL expression strings.</td>
+</tr>
+<tr>
+<td><code>per_cell.h</code></td>
+<td>string</td>
+<td><code>"0"</code></td>
+<td><strong>Hue</strong> expression. Result is taken modulo 360. Range:
+0 = red, 60 = yellow, 120 = green, 180 = cyan, 240 = blue, 300 =
+magenta.</td>
+</tr>
+<tr>
+<td><code>per_cell.s</code></td>
+<td>string</td>
+<td><code>"1"</code></td>
+<td><strong>Saturation</strong> expression. Clamped to 0.0-1.0. 0 =
+grayscale, 1 = fully saturated.</td>
+</tr>
+<tr>
+<td><code>per_cell.l</code></td>
+<td>string</td>
+<td><code>"0.5"</code></td>
+<td><strong>Lightness</strong> expression. Clamped to 0.0-1.0. 0 =
+black, 0.5 = full color, 1 = white.</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="1.17.3" id="the-hsl-color-model"><span
+class="header-section-number">1.17.3</span> The HSL Color Model</h3>
+<p>HSL is used instead of RGB because it maps naturally to the way
+people think about light panels:</p>
+<ul>
+<li><strong>Hue</strong> (0-360) is the color wheel position. Arithmetic
+on hue creates smooth color transitions — just add an offset or multiply
+by time.</li>
+<li><strong>Saturation</strong> (0-1) controls how vivid the color is.
+Useful for fading to gray.</li>
+<li><strong>Lightness</strong> (0-1) controls brightness. 0 is
+off/black, 0.5 is full color, 1 is white. This directly maps to “how
+bright is this cell?”</li>
+</ul>
+<p>The engine automatically wraps negative hue values (e.g.,
+<code>-30</code> becomes <code>330</code>) and clamps saturation and
+lightness to valid ranges.</p>
+<h3 data-number="1.17.4" id="expression-syntax"><span
+class="header-section-number">1.17.4</span> Expression Syntax</h3>
+<p>Expressions follow standard mathematical notation. They are parsed
+using a recursive-descent parser with the following precedence (highest
+to lowest):</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 37%" />
+<col style="width: 25%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr>
+<th>Precedence</th>
+<th>Operators / Constructs</th>
+<th>Associativity</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 (highest)</td>
+<td>Parentheses, function calls</td>
+<td>—</td>
+<td><code>sin(t)</code>, <code>(a + b)</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Unary <code>-</code>, <code>+</code></td>
+<td>Right</td>
+<td><code>-cell_x</code>, <code>+1</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Power <code>^</code>, <code>**</code></td>
+<td>Right</td>
+<td><code>2 ^ 3</code> = 8</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Multiply <code>*</code>, divide <code>/</code>, modulo
+<code>%</code></td>
+<td>Left</td>
+<td><code>t * 2</code>, <code>h % 360</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Add <code>+</code>, subtract <code>-</code></td>
+<td>Left</td>
+<td><code>a + b - c</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Comparison <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
+<code>&gt;=</code>, <code>==</code>, <code>!=</code></td>
+<td>Left</td>
+<td><code>cell_x &gt; 5</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Logical AND <code>&amp;&amp;</code></td>
+<td>Left</td>
+<td><code>cell_x &gt; 0 &amp;&amp; cell_y &gt; 0</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Logical OR <code>||</code></td>
+<td>Left</td>
+<td><code>a &gt; 0 || b &gt; 0</code></td>
+</tr>
+<tr>
+<td>9 (lowest)</td>
+<td>Ternary <code>? :</code></td>
+<td>Right</td>
+<td><code>t &gt; 5 ? 1.0 : 0.0</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Truthiness:</strong> In logical and ternary operations,
+<code>0.0</code> is false and any non-zero value is true. Comparison
+operators return <code>1.0</code> for true and <code>0.0</code> for
+false.</p>
+<p><strong>Number literals:</strong> Integers (<code>42</code>),
+decimals (<code>3.14</code>), and scientific notation
+(<code>1.5e3</code>, <code>2e-4</code>) are supported.</p>
+<h3 data-number="1.17.5" id="built-in-variables"><span
+class="header-section-number">1.17.5</span> Built-in Variables</h3>
+<p>These variables are automatically set by the engine before evaluating
+each cell on each frame.</p>
+<h4 data-number="1.17.5.1" id="time-variables"><span
+class="header-section-number">1.17.5.1</span> Time Variables</h4>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 20%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t</code></td>
+<td>float</td>
+<td>Elapsed time in seconds since the script started. This is your
+primary animation driver. Resets to 0 when a looping script
+restarts.</td>
+</tr>
+<tr>
+<td><code>frame</code></td>
+<td>float</td>
+<td>Frame number since script start (0, 1, 2, …). Useful for
+frame-counting effects.</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="1.17.5.2"
+id="grid-variables-constant-for-the-life-of-the-script"><span
+class="header-section-number">1.17.5.2</span> Grid Variables (constant
+for the life of the script)</h4>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 20%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>total_cells</code></td>
+<td>float</td>
+<td>Total number of cells in the grid.</td>
+</tr>
+<tr>
+<td><code>total_rows</code></td>
+<td>float</td>
+<td>Number of rows in the grid.</td>
+</tr>
+<tr>
+<td><code>total_cols</code></td>
+<td>float</td>
+<td>Number of columns in the grid. For triangle grids, this is the
+number of triangles per row (<code>cols * 2 - 1</code>).</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="1.17.5.3"
+id="per-cell-variables-change-for-each-cell"><span
+class="header-section-number">1.17.5.3</span> Per-Cell Variables (change
+for each cell)</h4>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 20%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cell_x</code></td>
+<td>float</td>
+<td>Column index of the current cell (0-based).</td>
+</tr>
+<tr>
+<td><code>cell_y</code></td>
+<td>float</td>
+<td>Row index of the current cell (0-based).</td>
+</tr>
+<tr>
+<td><code>cell_index</code></td>
+<td>float</td>
+<td>Linear index of the current cell in row-major order (0, 1, 2,
+…).</td>
+</tr>
+<tr>
+<td><code>cell_dist_center</code></td>
+<td>float</td>
+<td>Normalized Euclidean distance from the cell to the grid center.
+Ranges from 0.0 (center cell) to 1.0 (corner cell). Useful for radial
+effects.</td>
+</tr>
+<tr>
+<td><code>cell_angle</code></td>
+<td>float</td>
+<td>Angle in radians from the grid center to the cell, measured using
+<code>atan2(row - centerRow, col - centerCol)</code>. Useful for spiral
+and angular effects.</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="1.17.5.4" id="constants"><span
+class="header-section-number">1.17.5.4</span> Constants</h4>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PI</code></td>
+<td>3.14159…</td>
+<td>Mathematical constant pi.</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="1.17.5.5" id="user-variables"><span
+class="header-section-number">1.17.5.5</span> User Variables</h4>
+<p>Any key defined in the script’s <code>variables</code> block is
+available as a named variable. User variables are set before built-in
+variables, so built-in names take precedence if there’s a collision.</p>
+<h3 data-number="1.17.6" id="built-in-functions"><span
+class="header-section-number">1.17.6</span> Built-in Functions</h3>
+<h4 data-number="1.17.6.1" id="trigonometric"><span
+class="header-section-number">1.17.6.1</span> Trigonometric</h4>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 32%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sin(x)</code></td>
+<td>1 arg</td>
+<td>Sine. Input in radians. Returns -1 to 1.</td>
+</tr>
+<tr>
+<td><code>cos(x)</code></td>
+<td>1 arg</td>
+<td>Cosine. Input in radians. Returns -1 to 1.</td>
+</tr>
+<tr>
+<td><code>tan(x)</code></td>
+<td>1 arg</td>
+<td>Tangent. Input in radians.</td>
+</tr>
+<tr>
+<td><code>asin(x)</code></td>
+<td>1 arg</td>
+<td>Arc sine. Input clamped to [-1, 1]. Returns radians.</td>
+</tr>
+<tr>
+<td><code>acos(x)</code></td>
+<td>1 arg</td>
+<td>Arc cosine. Input clamped to [-1, 1]. Returns radians.</td>
+</tr>
+<tr>
+<td><code>atan(x)</code></td>
+<td>1 arg</td>
+<td>Arc tangent. Returns radians.</td>
+</tr>
+<tr>
+<td><code>atan2(y, x)</code></td>
+<td>2 args</td>
+<td>Two-argument arc tangent. Returns radians (-PI to PI).</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="1.17.6.2" id="rounding-and-sign"><span
+class="header-section-number">1.17.6.2</span> Rounding and Sign</h4>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 32%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>floor(x)</code></td>
+<td>1 arg</td>
+<td>Round down to nearest integer.</td>
+</tr>
+<tr>
+<td><code>ceil(x)</code></td>
+<td>1 arg</td>
+<td>Round up to nearest integer.</td>
+</tr>
+<tr>
+<td><code>round(x)</code></td>
+<td>1 arg</td>
+<td>Round to nearest integer (half-up).</td>
+</tr>
+<tr>
+<td><code>abs(x)</code></td>
+<td>1 arg</td>
+<td>Absolute value.</td>
+</tr>
+<tr>
+<td><code>sign(x)</code></td>
+<td>1 arg</td>
+<td>Returns -1, 0, or 1.</td>
+</tr>
+<tr>
+<td><code>fract(x)</code></td>
+<td>1 arg</td>
+<td>Fractional part: <code>x - floor(x)</code>. Always in [0, 1).</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="1.17.6.3" id="exponential-and-power"><span
+class="header-section-number">1.17.6.3</span> Exponential and Power</h4>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 32%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sqrt(x)</code></td>
+<td>1 arg</td>
+<td>Square root. Uses <code>abs(x)</code> to avoid NaN.</td>
+</tr>
+<tr>
+<td><code>pow(x, y)</code></td>
+<td>2 args</td>
+<td><code>x</code> raised to the power <code>y</code>.</td>
+</tr>
+<tr>
+<td><code>log(x)</code></td>
+<td>1 arg</td>
+<td>Natural logarithm. Returns 0 for non-positive input.</td>
+</tr>
+<tr>
+<td><code>exp(x)</code></td>
+<td>1 arg</td>
+<td><code>e</code> raised to the power <code>x</code>.</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="1.17.6.4" id="clamping-and-interpolation"><span
+class="header-section-number">1.17.6.4</span> Clamping and
+Interpolation</h4>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 32%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>min(a, b)</code></td>
+<td>2 args</td>
+<td>Smaller of <code>a</code> and <code>b</code>.</td>
+</tr>
+<tr>
+<td><code>max(a, b)</code></td>
+<td>2 args</td>
+<td>Larger of <code>a</code> and <code>b</code>.</td>
+</tr>
+<tr>
+<td><code>clamp(x, lo, hi)</code></td>
+<td>3 args</td>
+<td>Constrain <code>x</code> to the range <code>[lo, hi]</code>.</td>
+</tr>
+<tr>
+<td><code>lerp(a, b, t)</code></td>
+<td>3 args</td>
+<td>Linear interpolation: <code>a + (b - a) * t</code>. When
+<code>t</code> = 0 returns <code>a</code>, when <code>t</code> = 1
+returns <code>b</code>.</td>
+</tr>
+<tr>
+<td><code>step(edge, x)</code></td>
+<td>2 args</td>
+<td>Returns 1.0 if <code>x &gt;= edge</code>, else 0.0. Hard
+threshold.</td>
+</tr>
+<tr>
+<td><code>smoothstep(edge0, edge1, x)</code></td>
+<td>3 args</td>
+<td>Hermite interpolation between 0 and 1 when <code>x</code> is between
+<code>edge0</code> and <code>edge1</code>. Produces an S-curve
+transition.</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="1.17.6.5" id="modular-arithmetic"><span
+class="header-section-number">1.17.6.5</span> Modular Arithmetic</h4>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 32%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fmod(x, y)</code></td>
+<td>2 args</td>
+<td>Floating-point remainder of <code>x / y</code>. Same as
+<code>%</code> operator. Returns 0 if <code>y</code> is 0.</td>
+</tr>
+<tr>
+<td><code>mod(x, y)</code></td>
+<td>2 args</td>
+<td>Alias for <code>fmod</code>.</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="1.17.6.6" id="noise-and-randomness"><span
+class="header-section-number">1.17.6.6</span> Noise and Randomness</h4>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 32%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>noise(x, y)</code></td>
+<td>2 args</td>
+<td>2D simplex noise. Returns values in approximately [-1, 1]. Smooth,
+continuous, and deterministic for the same inputs. Ideal for organic,
+natural-looking effects.</td>
+</tr>
+<tr>
+<td><code>random()</code></td>
+<td>0 args</td>
+<td>Random number in [0, 1). Different value each call.
+Non-deterministic — use <code>noise()</code> for repeatable
+patterns.</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="1.17.6.7" id="conditional"><span
+class="header-section-number">1.17.6.7</span> Conditional</h4>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 32%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Function</th>
+<th>Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>if(cond, a, b)</code></td>
+<td>3 args</td>
+<td>If <code>cond</code> is non-zero, returns <code>a</code>, else
+returns <code>b</code>. Equivalent to the ternary operator
+<code>cond ? a : b</code>. Note: unlike the ternary operator, both
+branches are always evaluated.</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="1.17.7" id="recipes-and-examples"><span
+class="header-section-number">1.17.7</span> Recipes and Examples</h3>
+<h4 data-number="1.17.7.1" id="rainbow-wave"><span
+class="header-section-number">1.17.7.1</span> 1. Rainbow Wave</h4>
+<p>A classic hue sweep across the grid, scrolling over time.</p>
+<div class="sourceCode" id="cb73"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;(cell_x * 20 + cell_y * 15 + t * 40) % 360&quot;</span><span class="fu">,</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0&quot;</span><span class="fu">,</span></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.5&quot;</span></span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>The <code>cell_x * 20</code> creates horizontal color variation,
+<code>cell_y * 15</code> adds diagonal tilt, and <code>t * 40</code>
+makes it move. Increase the multipliers for tighter color bands.</p>
+<h4 data-number="1.17.7.2" id="pulsing-concentric-rings"><span
+class="header-section-number">1.17.7.2</span> 2. Pulsing Concentric
+Rings</h4>
+<p>Rings of light expand outward from the center.</p>
+<div class="sourceCode" id="cb74"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;ring_count&quot;</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span> <span class="dt">&quot;speed&quot;</span><span class="fu">:</span> <span class="dv">2</span> <span class="fu">},</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;200&quot;</span><span class="fu">,</span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.8&quot;</span><span class="fu">,</span></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.15 + 0.35 * (0.5 + 0.5 * sin(cell_dist_center * ring_count * 6.28 - t * speed))&quot;</span></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><code>cell_dist_center * ring_count * 6.28</code> creates multiple
+sine wave rings. Subtracting <code>t * speed</code> makes them expand
+outward. Change <code>ring_count</code> to control density.</p>
+<h4 data-number="1.17.7.3" id="fire-effect"><span
+class="header-section-number">1.17.7.3</span> 3. Fire Effect</h4>
+<p>Warm colors flickering upward using noise.</p>
+<div class="sourceCode" id="cb75"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;10 + 25 * noise(cell_x * 0.5, t * 2)&quot;</span><span class="fu">,</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0&quot;</span><span class="fu">,</span></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;clamp(0.6 * (1 - cell_y / total_rows) + 0.15 * noise(cell_x * 0.8, cell_y * 0.5 + t * 3), 0.02, 0.7)&quot;</span></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Hue varies between orange and red using noise. Lightness decreases
+from bottom to top (fire rises), with noise adding flicker.
+<code>clamp</code> prevents it from going fully black or white.</p>
+<h4 data-number="1.17.7.4" id="color-zones-threshold-based"><span
+class="header-section-number">1.17.7.4</span> 4. Color Zones
+(Threshold-Based)</h4>
+<p>Color cells based on their position — useful for status panels.</p>
+<div class="sourceCode" id="cb76"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;cell_x &lt; total_cols * 0.33 ? 0 : cell_x &lt; total_cols * 0.66 ? 60 : 120&quot;</span><span class="fu">,</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.45 + 0.05 * sin(t * 2)&quot;</span></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Left third is red (hue 0), middle is yellow (60), right is green
+(120). The lightness gently pulses. Replace the thresholds with
+sensor-driven user variables for a live status board.</p>
+<h4 data-number="1.17.7.5" id="spiral"><span
+class="header-section-number">1.17.7.5</span> 5. Spiral</h4>
+<p>A color spiral rotating from the center.</p>
+<div class="sourceCode" id="cb77"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;(cell_angle / PI * 180 + cell_dist_center * 360 + t * 60) % 360&quot;</span><span class="fu">,</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.85&quot;</span><span class="fu">,</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.3 + 0.2 * cell_dist_center&quot;</span></span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><code>cell_angle</code> provides the angular component,
+<code>cell_dist_center</code> adds radial twist, and <code>t * 60</code>
+makes it rotate. Cells further from center are slightly brighter.</p>
+<h4 data-number="1.17.7.6" id="lava-lamp-smooth-organic-blobs"><span
+class="header-section-number">1.17.7.6</span> 6. Lava Lamp (Smooth
+Organic Blobs)</h4>
+<div class="sourceCode" id="cb78"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;noise(cell_x * 0.15, cell_y * 0.15 + t * 0.3) * 60 + 280&quot;</span><span class="fu">,</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.3 + 0.25 * smoothstep(-0.2, 0.5, noise(cell_x * 0.2 + t * 0.1, cell_y * 0.2 + t * 0.15))&quot;</span></span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Two layers of simplex noise at different scales create slowly
+drifting blobs. <code>smoothstep</code> sharpens the blob edges. Hue
+stays in the purple/magenta range (280 +/- 60).</p>
+<h4 data-number="1.17.7.7" id="strobe-flash-to-beat"><span
+class="header-section-number">1.17.7.7</span> 7. Strobe / Flash to
+Beat</h4>
+<p>Flash all cells on a timed interval (e.g., every 0.5 seconds).</p>
+<div class="sourceCode" id="cb79"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;bpm&quot;</span><span class="fu">:</span> <span class="dv">120</span> <span class="fu">},</span></span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;0&quot;</span><span class="fu">,</span></span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0&quot;</span><span class="fu">,</span></span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;fract(t * bpm / 60) &lt; 0.15 ? 1.0 : 0.02&quot;</span></span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><code>t * bpm / 60</code> counts beats. <code>fract()</code> gives
+position within the current beat (0-1). The first 15% of each beat is a
+bright white flash, then dark. Adjust <code>0.15</code> for
+longer/shorter flashes.</p>
+<h4 data-number="1.17.7.8" id="matrix-digital-rain-per-column"><span
+class="header-section-number">1.17.7.8</span> 8. Matrix / Digital Rain
+Per Column</h4>
+<div class="sourceCode" id="cb80"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;120&quot;</span><span class="fu">,</span></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0&quot;</span><span class="fu">,</span></span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;clamp(0.5 - abs(cell_y - fmod(t * 4 + cell_x * 3.7, total_rows + 4)) * 0.15, 0.01, 0.5)&quot;</span></span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Each column has a “raindrop” position calculated from time and a
+per-column phase offset (<code>cell_x * 3.7</code>). Lightness falls off
+around the drop position using <code>abs()</code>. Green hue (120) for
+the classic Matrix look.</p>
+<h4 data-number="1.17.7.9"
+id="smooth-color-cycling-with-brightness-wave"><span
+class="header-section-number">1.17.7.9</span> 9. Smooth Color Cycling
+with Brightness Wave</h4>
+<div class="sourceCode" id="cb81"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;t * 20&quot;</span><span class="fu">,</span></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.25 + 0.25 * sin(cell_x * 0.5 + cell_y * 0.3 + t * 1.5)&quot;</span></span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>All cells share the same slowly changing hue, but lightness varies
+spatially as a diagonal sine wave. Simple yet visually rich.</p>
+<h4 data-number="1.17.7.10" id="binary-clock-advanced"><span
+class="header-section-number">1.17.7.10</span> 10. Binary Clock
+(Advanced)</h4>
+<p>Display hours and minutes as binary columns (conceptual — requires at
+least 6 columns and 4 rows).</p>
+<div class="sourceCode" id="cb82"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;on_hue&quot;</span><span class="fu">:</span> <span class="dv">200</span><span class="fu">,</span> <span class="dt">&quot;off_l&quot;</span><span class="fu">:</span> <span class="fl">0.05</span> <span class="fu">},</span></span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;on_hue&quot;</span><span class="fu">,</span></span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.8&quot;</span><span class="fu">,</span></span>
+<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;fmod(floor(fmod(t / 60, 60) / pow(2, 3 - cell_y)), 2) &gt; 0.5 &amp;&amp; cell_x &lt; 6 ? 0.5 : off_l&quot;</span></span>
+<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb82-8"><a href="#cb82-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>This uses <code>t / 60</code> as a minute counter, divides by powers
+of 2 per row to extract binary digits, and checks each bit. Each column
+represents a digit, each row a bit position.</p>
+<h3 data-number="1.17.8" id="performance-tips"><span
+class="header-section-number">1.17.8</span> Performance Tips</h3>
+<ul>
+<li><strong>Keep <code>fps</code> at 30 or below.</strong> 60fps looks
+no different on most LED panel grids and doubles the CPU cost.</li>
+<li><strong><code>noise()</code> is the most expensive
+function.</strong> One noise call per cell per frame is fine. Avoid
+stacking 3+ noise calls in a single expression on large grids (500+
+cells).</li>
+<li><strong>Constant expressions are free.</strong>
+<code>"s": "0.9"</code> is parsed once and evaluates to a constant — no
+per-cell cost.</li>
+<li><strong>Ternary expressions short-circuit.</strong>
+<code>cell_x &gt; 5 ? expensive_expr : 0</code> still evaluates
+<code>expensive_expr</code> for every cell (unlike the <code>? :</code>
+operator in most programming languages). Use <code>if(cond, a, b)</code>
+— it has the same behavior. Structure your grid size to minimize
+unnecessary computation.</li>
+<li><strong>For very large grids (1000+ cells)</strong>, consider
+reducing <code>fps</code> to 15 and simplifying expressions. The engine
+processes all cells sequentially on the main thread.</li>
+</ul>
       <footer class="doc-footer">
         <p>
           <a href="https://kingkiosk.kallinnovations.com">KingKiosk</a>
