@@ -16,6 +16,14 @@
     <span class="logo-icon">K</span>
     <span>KingKiosk Docs</span>
   </a>
+  <div class="nav-search-wrap">
+    <div class="nav-search" id="navSearch">
+      <svg class="nav-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="navSearchInput" class="nav-search-input" placeholder="Search docs..." autocomplete="off" spellcheck="false">
+      <kbd class="nav-search-kbd">/</kbd>
+    </div>
+    <div class="nav-search-results" id="navSearchResults"></div>
+  </div>
   <ul class="nav-links">
     <li><a href="index.html" >Home</a></li>
     <li><a href="KINGKIOSK_USER_GUIDE.html" class="active">User Guide</a></li>
@@ -6289,6 +6297,245 @@ document.querySelectorAll('.sidebar a').forEach(a => {
     }
   });
 });
+
+// === Doc Nav Search ===
+(function initNavSearch() {
+  const input = document.getElementById('navSearchInput');
+  const resultsEl = document.getElementById('navSearchResults');
+  const kbdEl = document.querySelector('.nav-search-kbd');
+  if (!input || !resultsEl) return;
+
+  // Build search index from page headings + cross-doc links
+  const index = [];
+
+  // Current page headings (h2, h3, h4)
+  const currentPage = location.pathname.split('/').pop() || 'index.html';
+  const pageNames = {
+    'index.html': 'Home',
+    'KINGKIOSK_USER_GUIDE.html': 'User Guide',
+    'MQTT_WIDGET_REFERENCE.html': 'MQTT Reference',
+    'CUSTOM_WIDGET_SDK.html': 'Widget SDK'
+  };
+  const currentPageName = pageNames[currentPage] || 'Docs';
+
+  document.querySelectorAll('h2, h3, h4').forEach(h => {
+    if (!h.id) return;
+    const num = h.querySelector('.header-section-number');
+    const text = h.textContent.replace(/^\d+[\.\d]*\s*/, '').trim();
+    if (!text) return;
+    index.push({
+      title: text,
+      doc: currentPageName,
+      url: '#' + h.id,
+      isLocal: true
+    });
+  });
+
+  // Cross-doc pages (always available)
+  const docs = [
+    { title: 'User Guide', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html', isLocal: false },
+    { title: 'MQTT Widget Reference', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html', isLocal: false },
+    { title: 'Custom Widget SDK', doc: 'Widget SDK', url: 'CUSTOM_WIDGET_SDK.html', isLocal: false },
+    { title: 'Documentation Home', doc: 'Home', url: 'index.html', isLocal: false }
+  ];
+  // Add cross-doc entries (skip current page)
+  docs.forEach(d => {
+    if (d.url !== currentPage) index.push(d);
+  });
+
+  // Common cross-doc topics for quick access
+  const crossTopics = [
+    { title: 'Getting Started', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'add_window', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'remove_window', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'arrange_windows', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Carousel', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Gauge Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Chart Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'WebView', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Media Player', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Intercom', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Camera Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Clock Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Weather Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Canvas Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Animated Text', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'LED Panel', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'YouTube Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Calendar Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Map Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Kiosk Mode', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Home Assistant', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Screen Presets', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Scheduling', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'MQTT Connection', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Topic Structure', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Command Envelope', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'window.KingKiosk API', doc: 'Widget SDK', url: 'CUSTOM_WIDGET_SDK.html' },
+    { title: 'onCommand()', doc: 'Widget SDK', url: 'CUSTOM_WIDGET_SDK.html' },
+    { title: 'sendCommand()', doc: 'Widget SDK', url: 'CUSTOM_WIDGET_SDK.html' },
+    { title: 'publishTelemetry()', doc: 'Widget SDK', url: 'CUSTOM_WIDGET_SDK.html' },
+    { title: 'TTS / Text-to-Speech', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Screenshot', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Notification', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Apple TV / tvOS', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Android Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'iOS Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Windows Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'macOS Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Linux Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+  ];
+  crossTopics.forEach(t => {
+    if (t.url !== currentPage) {
+      index.push({ title: t.title, doc: t.doc, url: t.url, isLocal: false });
+    }
+  });
+
+  let activeIdx = -1;
+  let filtered = [];
+  let isOpen = false;
+
+  function search(query) {
+    const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    if (!words.length) return [];
+    const scored = [];
+    const seen = new Set();
+    for (const item of index) {
+      const hay = item.title.toLowerCase();
+      let match = true;
+      let score = 0;
+      for (const w of words) {
+        if (!hay.includes(w)) { match = false; break; }
+        if (hay.startsWith(w)) score += 10;
+        score += 5;
+      }
+      if (!match) continue;
+      // Boost local (same-page) results
+      if (item.isLocal) score += 3;
+      const key = item.title + '|' + item.url;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      scored.push({ item, score });
+    }
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, 15).map(s => s.item);
+  }
+
+  function highlight(text, query) {
+    const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let result = text;
+    for (const w of words) {
+      const escaped = w.replace(/[.*+?^{}()|[\]\\]/g, '\\' + String.fromCharCode(36) + '&');
+      const re = new RegExp('(' + escaped + ')', 'gi');
+      result = result.replace(re, '<mark>' + String.fromCharCode(36) + '1</mark>');
+    }
+    return result;
+  }
+
+  function render(items, query) {
+    if (!items.length) {
+      resultsEl.innerHTML = '<div class="nav-search-empty">No results found</div>';
+      resultsEl.classList.add('open');
+      isOpen = true;
+      return;
+    }
+    // Group: This Page vs Other Docs
+    const local = items.filter(i => i.isLocal);
+    const other = items.filter(i => !i.isLocal);
+    let html = '';
+    if (local.length) {
+      html += '<div class="nav-search-group"><div class="nav-search-group-label">This Page</div>';
+      local.forEach(item => {
+        const idx = filtered.indexOf(item);
+        html += '<a href="' + item.url + '" class="nav-search-item' + (idx === activeIdx ? ' active' : '') + '" data-idx="' + idx + '">'
+          + '<div class="nav-search-item-title">' + highlight(item.title, query) + '</div>'
+          + '</a>';
+      });
+      html += '</div>';
+    }
+    if (other.length) {
+      html += '<div class="nav-search-group"><div class="nav-search-group-label">Other Docs</div>';
+      other.forEach(item => {
+        const idx = filtered.indexOf(item);
+        html += '<a href="' + item.url + '" class="nav-search-item' + (idx === activeIdx ? ' active' : '') + '" data-idx="' + idx + '">'
+          + '<div class="nav-search-item-title">' + highlight(item.title, query) + '</div>'
+          + '<div class="nav-search-item-doc">' + item.doc + '</div>'
+          + '</a>';
+      });
+      html += '</div>';
+    }
+    resultsEl.innerHTML = html;
+    resultsEl.classList.add('open');
+    isOpen = true;
+  }
+
+  function close() {
+    resultsEl.classList.remove('open');
+    resultsEl.innerHTML = '';
+    isOpen = false;
+    activeIdx = -1;
+  }
+
+  function updateActive() {
+    resultsEl.querySelectorAll('.nav-search-item').forEach(el => {
+      el.classList.toggle('active', parseInt(el.dataset.idx) === activeIdx);
+    });
+    const act = resultsEl.querySelector('.nav-search-item.active');
+    if (act) act.scrollIntoView({ block: 'nearest' });
+  }
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    if (!q) { close(); return; }
+    filtered = search(q);
+    activeIdx = -1;
+    render(filtered, q);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (!isOpen) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIdx = Math.min(activeIdx + 1, filtered.length - 1);
+      updateActive();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIdx = Math.max(activeIdx - 1, -1);
+      updateActive();
+    } else if (e.key === 'Enter' && activeIdx >= 0 && filtered[activeIdx]) {
+      e.preventDefault();
+      const entry = filtered[activeIdx];
+      if (entry.isLocal) {
+        const el = document.getElementById(entry.url.slice(1));
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.href = entry.url;
+      }
+      close();
+      input.blur();
+    } else if (e.key === 'Escape') {
+      close();
+      input.blur();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-search-wrap')) close();
+  });
+
+  // "/" keyboard shortcut
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      e.preventDefault();
+      input.focus();
+    }
+  });
+
+  input.addEventListener('focus', () => { if (kbdEl) kbdEl.style.opacity = '0'; });
+  input.addEventListener('blur', () => { if (kbdEl && !input.value) kbdEl.style.opacity = '1'; });
+})();
 </script>
 
 </body>
