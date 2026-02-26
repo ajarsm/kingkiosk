@@ -98,14 +98,8 @@ body {
 .top-nav .logo-icon {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 800;
-  font-size: 0.85rem;
+  border-radius: 7px;
+  object-fit: cover;
 }
 
 .top-nav .nav-links {

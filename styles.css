@@ -147,16 +147,10 @@ code { font-family: 'JetBrains Mono', monospace; }
     font-size: 1.1rem;
 }
 .logo-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 32px;
     height: 32px;
-    background: linear-gradient(135deg, var(--accent), var(--gradient-2));
-    border-radius: 8px;
-    font-weight: 800;
-    font-size: 1rem;
-    color: #fff;
+    border-radius: 7px;
+    object-fit: cover;
 }
 .nav-links {
     display: flex;

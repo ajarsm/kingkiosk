@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <clipPath id="h-clip">
+    <path d="M88,262 L88,230 Q88,100 110,100 Q148,220 185,160 Q220,230 256,55 Q292,230 327,160 Q364,220 402,100 Q424,100 424,230 L424,262 Z"/>
+  </clipPath>
+  <linearGradient id="h-c1" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#00E5FF"/>
+    <stop offset="100%" stop-color="#00ACC1"/>
+  </linearGradient>
+  <linearGradient id="h-c2" x1="100%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#00838F"/>
+    <stop offset="100%" stop-color="#006064"/>
+  </linearGradient>
+</defs>
+<!-- Icon scaled down to fit 180px height -->
+<g transform="translate(0,0) scale(0.352)">
+  <!-- Signal arcs -->
+  <g fill="none" stroke="#00BCD4" stroke-linecap="round">
+    <path d="M135,340 A80,80 0 0,1 135,180" stroke-width="5" opacity="0.3"/>
+    <path d="M118,380 A118,118 0 0,1 118,145" stroke-width="4" opacity="0.18"/>
+    <path d="M377,340 A80,80 0 0,0 377,180" stroke-width="5" opacity="0.3"/>
+    <path d="M394,380 A118,118 0 0,0 394,145" stroke-width="4" opacity="0.18"/>
+  </g>
+  <g clip-path="url(#h-clip)">
+    <rect x="60" y="30" width="400" height="240" fill="#0A1628"/>
+    <rect x="90" y="50" width="170" height="88" rx="3" fill="#FFE44D"/>
+    <rect x="265" y="50" width="153" height="88" rx="3" fill="#F5A623"/>
+    <rect x="90" y="143" width="82" height="55" rx="3" fill="#E6930E"/>
+    <rect x="177" y="143" width="92" height="55" rx="3" fill="#FFD54F"/>
+    <rect x="274" y="143" width="60" height="55" rx="3" fill="#F5A623"/>
+    <rect x="339" y="143" width="79" height="55" rx="3" fill="#D4881F"/>
+    <rect x="90" y="203" width="135" height="55" rx="3" fill="#D4881F"/>
+    <rect x="230" y="203" width="105" height="55" rx="3" fill="#FFE44D"/>
+    <rect x="340" y="203" width="78" height="55" rx="3" fill="#E6930E"/>
+  </g>
+  <circle cx="110" cy="104" r="8" fill="#FF6B35"/>
+  <circle cx="185" cy="163" r="6" fill="#FF6B35"/>
+  <circle cx="256" cy="59" r="10" fill="#FF6B35"/>
+  <circle cx="327" cy="163" r="6" fill="#FF6B35"/>
+  <circle cx="402" cy="104" r="8" fill="#FF6B35"/>
+  <rect x="80" y="274" width="352" height="176" rx="18" fill="#0F1D32"/>
+  <rect x="92" y="286" width="192" height="156" rx="10" fill="url(#h-c1)"/>
+  <rect x="292" y="286" width="130" height="70" rx="10" fill="url(#h-c2)"/>
+  <rect x="292" y="364" width="58" height="78" rx="8" fill="url(#h-c1)" opacity="0.85"/>
+  <rect x="358" y="364" width="64" height="78" rx="8" fill="url(#h-c2)"/>
+</g>
+<text x="210" y="85" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="56" fill="#F5A623" letter-spacing="-1">KING</text>
+<text x="370" y="85" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="56" fill="#F8FAFC" letter-spacing="-1">KIOSK</text>
+<text x="212" y="118" font-family="Inter,system-ui,sans-serif" font-weight="400" font-size="18" fill="#64748B" letter-spacing="4">THE DISPLAY RUNTIME</text>
+</svg>
