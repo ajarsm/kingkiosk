@@ -234,7 +234,14 @@ Your Kiosk: Screen View and Graph View</a></li>
 Screen</a></li>
 <li><a href="#editing-whats-already-on-screen">Editing What’s Already on
 Screen</a></li>
-<li><a href="#the-widget-builder">The Widget Builder</a></li>
+<li><a href="#the-widget-builder">The Widget Builder</a>
+<ul>
+<li><a href="#step-1--choose-a-widget-type">Step 1 — Choose a Widget
+Type</a></li>
+<li><a href="#step-2--configure">Step 2 — Configure</a></li>
+<li><a href="#step-3--preview-and-deploy">Step 3 — Preview and
+Deploy</a></li>
+</ul></li>
 <li><a href="#the-command-center">The Command Center</a></li>
 <li><a href="#saving-and-restoring-layouts">Saving and Restoring
 Layouts</a></li>
@@ -640,44 +647,361 @@ panel footer, or use quick actions like Bring to Front, Maximize, or
 Close.</p>
 <h3 data-number="1.4.6" id="the-widget-builder"><span
 class="header-section-number">1.4.6</span> The Widget Builder</h3>
-<p>The Widget Builder is a guided wizard for creating widgets with a
-live preview on the actual kiosk hardware. It is the best way to set up
-data-driven widgets like gauges, charts, and MQTT buttons. Open it from
-the action chip bar on the kiosk detail screen.</p>
-<p><strong>Step 1 — Choose a widget type.</strong> You see a visual grid
-of categories. Pick the one you want: gauge, chart, button, clock,
-weather, map, animated text, and more.</p>
-<p><strong>Step 2 — Configure it.</strong> The form adapts to the widget
-type you chose: - For data-driven widgets (gauges, charts, buttons): if
-you have Home Assistant entities available, an <strong>Entity
-Picker</strong> appears at the top. Select a HA entity and the builder
-auto-populates the MQTT topic, value range, and unit based on the
-entity’s attributes. A domain filter (sensor, light, climate, etc.)
-helps narrow the list. - Type-specific fields follow: colors, styles,
-thresholds, data sources, and so on. - At the bottom, set the
-<strong>window geometry</strong>: where on screen the widget should
-appear (X, Y), how large it should be (Width, Height), and its
-opacity.</p>
-<p><strong>Step 3 — Preview and deploy.</strong> This is where it gets
-powerful: - <strong>Live Preview</strong> — Pick a kiosk device from the
-dropdown and click “Start Preview.” The widget is pushed to the real
-device in real time. As you tweak settings in Step 2, the changes
-auto-update on the kiosk after a short pause. You can watch the actual
-hardware while you tune colors, sizes, and data bindings until it looks
-exactly right. Click “Stop Preview” when you are done. -
-<strong>Templates</strong> — Save your configuration as a named template
-for reuse. Load templates from a picker to recreate widgets you have
-built before. - <strong>Deploy</strong> — Choose a target device (or
-toggle “Deploy to all online devices” for batch deployment) and click
-“Deploy Widget.” The widget is created on the target kiosk(s).</p>
-<p><strong>Example — Creating a temperature gauge bound to a Home
-Assistant sensor:</strong> 1. Open the Widget Builder from a kiosk
-detail screen. 2. Choose “Gauge.” 3. In the entity picker, filter by
-“sensor” and select your temperature sensor. The MQTT topic, min/max,
-and unit auto-fill. 4. Adjust the gauge style, colors, and position. 5.
-Start a live preview to see it on the kiosk. Tweak until it looks right.
-6. Save as a template named “Room Temperature Gauge.” 7. Deploy to the
-target device.</p>
+<p>The Widget Builder is a 3-step wizard for creating widgets visually,
+with live preview on actual kiosk hardware. It is the most powerful way
+to build data-driven displays — gauges, charts, buttons, weather panels,
+clocks, and more — because you can see exactly what the widget will look
+like on the real screen while you configure it.</p>
+<p>Open it from the <strong>Widget Builder</strong> chip in the action
+bar on any kiosk detail screen. It opens as a full-screen dark interface
+with frosted-glass panels and a step indicator at the top.</p>
+<p>You can also navigate between steps at any time by clicking the step
+chips in the header (“1 Type”, “2 Configure”, “3 Preview &amp; Deploy”),
+or press <strong>Escape</strong> to go back a step.</p>
+<h4 data-number="1.4.6.1" id="step-1-choose-a-widget-type"><span
+class="header-section-number">1.4.6.1</span> Step 1 — Choose a Widget
+Type</h4>
+<p>You see a responsive grid of widget type cards, each with a title,
+description, and icon. Tap the one you want and the builder advances to
+Step 2 automatically.</p>
+<p>The types are organized into four categories:</p>
+<p><strong>Data-Driven</strong> — These widgets bind to MQTT topics (or
+Home Assistant entities) and display live data. When you select one of
+these, the Entity Picker appears in Step 2 to help you connect it to a
+data source.</p>
+<ul>
+<li><strong>Gauge</strong> — Displays a live numeric value with a
+radial, linear, circular, semicircular, or thermostat-style gauge.
+Supports color zones, thresholds, and multiple pointers.</li>
+<li><strong>Chart</strong> — Line, bar, or pie chart fed by MQTT
+data.</li>
+<li><strong>MQTT Button</strong> — A toggle or momentary button that
+publishes to an MQTT topic when tapped and shows live state from a
+subscription.</li>
+<li><strong>Alarmo</strong> — A Home Assistant Alarmo security panel
+with arm/disarm modes and PIN entry.</li>
+<li><strong>MQTT Image</strong> — Displays images received via MQTT
+payloads (useful for camera frames or generated images).</li>
+</ul>
+<p><strong>Display</strong> — These widgets show information that does
+not require an MQTT data binding.</p>
+<ul>
+<li><strong>Clock</strong> — Analog or digital, with options for 24-hour
+format, seconds hand, and theme.</li>
+<li><strong>Weather</strong> — Current conditions and forecast using a
+weather API. Configure location, units, and refresh interval.</li>
+<li><strong>Animated Text</strong> — Text with animation effects (fade,
+typewriter, wave, kinetic presets).</li>
+<li><strong>Screensaver</strong> — Configures the kiosk’s idle
+screensaver with custom items and timing.</li>
+</ul>
+<p><strong>Interactive</strong> — Widgets that users at the kiosk (or
+you, remotely) can interact with.</p>
+<ul>
+<li><strong>Map</strong> — Interactive map with configurable tile
+provider, initial position, and zoom.</li>
+<li><strong>Canvas</strong> — Drawing and diagramming surface with
+objects, grid snap, and touch interaction.</li>
+<li><strong>Remote Browser</strong> — A browser session streamed via
+WebRTC from a Feature Server.</li>
+<li><strong>Local Browser</strong> — A native web view.</li>
+</ul>
+<p><strong>Media</strong> — Content playback widgets.</p>
+<ul>
+<li><strong>Media</strong> — Video, audio, image, or web content with
+playback controls.</li>
+<li><strong>Carousel</strong> — A rotating slideshow of multiple
+items.</li>
+<li><strong>DLNA Player</strong> — A UPnP/DLNA media renderer.</li>
+</ul>
+<h4 data-number="1.4.6.2" id="step-2-configure"><span
+class="header-section-number">1.4.6.2</span> Step 2 — Configure</h4>
+<p>Once you pick a type, the configuration form appears. It has up to
+three sections, depending on the widget type.</p>
+<h5 data-number="1.4.6.2.1"
+id="the-entity-picker-data-driven-widgets-only"><span
+class="header-section-number">1.4.6.2.1</span> The Entity Picker
+(Data-Driven widgets only)</h5>
+<p>If you chose a data-driven type (Gauge, Chart, Button, Alarmo, or
+MQTT Image) and your kiosks are connected to Home Assistant, an
+<strong>Entity Picker</strong> appears at the top of the form. This is
+the fastest way to wire up a widget to real data.</p>
+<p><strong>How it works:</strong></p>
+<ol type="1">
+<li><p>A <strong>Domain Filter</strong> bar shows chips for each
+available entity domain — sensor, light, switch, climate, camera,
+alarm_control_panel, and so on. Tap a domain to narrow the list, or
+leave it on “All” to see everything.</p></li>
+<li><p>Below that, a <strong>search field</strong> lets you filter by
+entity name, ID, or area. Results are grouped by room/area, with each
+area header showing its name and entity count.</p></li>
+<li><p>Each entity in the list shows its friendly name, entity ID,
+current state, and unit of measurement. Tap one to select it.</p></li>
+</ol>
+<p><strong>What happens when you select an entity</strong> — this is
+where the builder saves you real time. It auto-populates the widget’s
+configuration based on the entity:</p>
+<ul>
+<li>The <strong>MQTT subscribe topic</strong> is set to the entity’s
+state topic
+(e.g. <code>kingkiosk/ha/state/sensor/living_room_temperature</code>).</li>
+<li>The <strong>MQTT publish topic</strong> is set to the entity’s
+command topic.</li>
+<li>The <strong>title and label</strong> are set to the entity’s
+friendly name.</li>
+<li>The <strong>unit</strong> is filled from the entity’s unit of
+measurement.</li>
+<li>For numeric entities (sensors, thermostats): the <strong>min and
+max</strong> values are intelligently guessed — it uses the entity’s own
+min/max attributes if available, or infers reasonable ranges from the
+unit (0–100 for percentages, 50–90 for Fahrenheit temperatures, 10–35
+for Celsius, etc.).</li>
+<li>For <strong>climate entities</strong> specifically, the builder
+creates a full thermostat gauge configuration with three pointers
+(current temperature, heat setpoint, cool setpoint), each with the
+correct color and publish payloads for controlling the thermostat.</li>
+<li>For <strong>buttons</strong>, it sets up toggle mode with the
+correct service call payload.</li>
+<li>For <strong>Alarmo</strong>, it pre-fills the entity and MQTT base
+topic.</li>
+</ul>
+<p>You can always override any of these auto-populated values in the
+form below. The entity picker is a starting point, not a locked-in
+choice.</p>
+<h5 data-number="1.4.6.2.2" id="the-configuration-form"><span
+class="header-section-number">1.4.6.2.2</span> The Configuration
+Form</h5>
+<p>Below the entity picker (or at the top, for non-data-driven types),
+the form shows fields specific to the widget type you selected. Here are
+the key options for the most commonly used types:</p>
+<p><strong>Gauge configuration:</strong> - <strong>Gauge Type</strong> —
+Choose from Linear, Radial, Circular, Semicircular, or Thermostat.
+Thermostat mode is designed for HVAC displays with multiple pointers. -
+<strong>Min and Max</strong> — The range of the gauge. - <strong>Default
+Value and Unit</strong> — Starting value and the unit label (e.g. “F”,
+“%”, “kW”). - <strong>Color Mode</strong> — How the gauge is colored:
+Zones (colored bands at value ranges), Thresholds (color changes at
+specific values), Gradient (smooth color transition), or Solid (single
+color). - <strong>Interactive and Locked</strong> — Whether kiosk users
+can drag the gauge to set a value, or whether it is display-only. -
+<strong>MQTT Binding</strong> — Subscribe topic (where the gauge reads
+values from), publish topic (where it sends values when interacted
+with), and JSON field (which field in the MQTT payload contains the
+value, e.g. <code>state</code> or <code>data.value</code>). -
+<strong>Pointers</strong> — You can add multiple pointers to a single
+gauge. Each pointer has its own label, style (Needle, Dot, Target, or
+Bar), color, data binding, and publish payload. For thermostat gauges, a
+“Thermostat Preset” button auto-creates the standard Current/Heat/Cool
+pointer set. - <strong>Thresholds and Zones</strong> — Defined as JSON
+arrays for fine control over color breakpoints.</p>
+<p><strong>Weather configuration:</strong> - <strong>API Key</strong> —
+Your weather service API key. - <strong>Location</strong> — City and
+country code (e.g. “San Francisco,US”). - <strong>Units</strong> —
+Imperial, Metric, or Standard. - <strong>Show Forecast</strong> — Toggle
+the multi-day forecast display. - <strong>Auto Refresh</strong> —
+Whether to periodically refresh, and how often (in seconds).</p>
+<p><strong>MQTT Button configuration:</strong> - <strong>Mode</strong> —
+Toggle (stays on/off), Button (momentary), or Icon Button. -
+<strong>Label</strong> — Text shown on the button. - <strong>Publish
+Topic and Payload</strong> — The MQTT message sent when the button is
+pressed. - <strong>Subscribe Topic and Status Path</strong> — Where to
+read the current state from. - <strong>Icons and Colors</strong> —
+Separate icons and colors for the on and off states.</p>
+<p><strong>Clock configuration:</strong> - <strong>Mode</strong> —
+Analog or Digital. - <strong>Theme</strong> — Auto, Light, or Dark. -
+<strong>Show Numbers</strong> — Whether the clock face shows hour
+numbers. - <strong>Show Second Hand</strong> — Whether seconds are
+displayed.</p>
+<p><strong>Chart, Map, Canvas, Carousel, and other types</strong> each
+have their own form with relevant fields. The forms are designed to
+expose the most common options as simple fields, with an “Advanced” JSON
+editor available for power users who need access to every possible
+parameter.</p>
+<h5 data-number="1.4.6.2.3" id="window-geometry"><span
+class="header-section-number">1.4.6.2.3</span> Window Geometry</h5>
+<p>At the bottom of every configuration form, regardless of widget type,
+is the <strong>Window Geometry</strong> section. This controls where the
+widget appears on the kiosk screen:</p>
+<ul>
+<li><strong>Window ID</strong> — Auto-generated, but you can change
+it.</li>
+<li><strong>Title</strong> — The window title (shown in the title bar if
+the kiosk displays one).</li>
+<li><strong>X and Y</strong> — Position in pixels from the top-left
+corner.</li>
+<li><strong>Width and Height</strong> — Size in pixels.</li>
+<li><strong>Opacity</strong> — 0 (fully transparent) to 1 (fully
+opaque).</li>
+</ul>
+<h5 data-number="1.4.6.2.4" id="validation"><span
+class="header-section-number">1.4.6.2.4</span> Validation</h5>
+<p>If any required fields are missing or invalid, a red
+<strong>Validation Errors</strong> panel appears below the geometry
+section listing each problem. These must be resolved before
+deploying.</p>
+<p>From here, click <strong>Preview &amp; Deploy</strong> to advance to
+Step 3, or <strong>Back</strong> to return to the type picker.</p>
+<h4 data-number="1.4.6.3" id="step-3-preview-and-deploy"><span
+class="header-section-number">1.4.6.3</span> Step 3 — Preview and
+Deploy</h4>
+<p>This step has two panels side by side on wide screens (stacked on
+narrow screens): the <strong>Live Preview</strong> panel on the left and
+the <strong>Deploy</strong> panel on the right.</p>
+<h5 data-number="1.4.6.3.1" id="live-preview"><span
+class="header-section-number">1.4.6.3.1</span> Live Preview</h5>
+<p>This is the feature that makes the Widget Builder special. Instead of
+guessing what your widget will look like, you push it to a real kiosk
+and see it live.</p>
+<p><strong>To start a live preview:</strong></p>
+<ol type="1">
+<li><p>Choose a <strong>preview device</strong> from the dropdown. This
+lists all online KingKiosk and KingLauncher devices. The preview device
+can be different from your eventual deploy target — you might preview on
+a test kiosk and deploy to production.</p></li>
+<li><p>Click <strong>Start Preview</strong>. A pulsing green dot appears
+to confirm the preview is active.</p></li>
+</ol>
+<p><strong>What happens on the kiosk:</strong> The builder first saves a
+backup of the kiosk’s current screen layout (so nothing is lost). It
+then overlays a dark semi-transparent backdrop and renders your widget
+on top of it, so you can see it clearly against a clean background.</p>
+<p><strong>Live updating:</strong> As you go back to Step 2 and change
+configuration values, the widget on the kiosk updates automatically
+after a short 500ms pause. You can watch the real hardware while you
+adjust colors, sizes, data bindings, gauge ranges, and positions. This
+tight feedback loop means you can fine-tune a widget in seconds rather
+than going through a deploy-check-redeploy cycle.</p>
+<p><strong>Stopping preview:</strong> Click <strong>Stop
+Preview</strong> (or navigate away from the Widget Builder). The kiosk’s
+original screen layout is automatically restored from the backup. Even
+if you close the browser tab or the app crashes, the next time you
+connect King Admin will attempt to clean up.</p>
+<p>You can switch the preview device at any time — the old device is
+restored and the new device picks up the preview.</p>
+<h5 data-number="1.4.6.3.2" id="the-json-editor"><span
+class="header-section-number">1.4.6.3.2</span> The JSON Editor</h5>
+<p>Next to (or below) the preview panel, a <strong>JSON editor</strong>
+shows the live MQTT command that will be sent to the kiosk. This is the
+raw payload — the exact JSON that creates the widget.</p>
+<p>The editor syncs bidirectionally with the form: - Change a field in
+the form → the JSON updates instantly. - Edit the JSON directly → the
+form fields update to match.</p>
+<p>This is useful for power users who want to hand-tune parameters that
+are not exposed in the form, or for copying a command payload to use
+elsewhere. A <strong>Copy</strong> button copies the JSON to your
+clipboard.</p>
+<p>If you paste or type invalid JSON, an error message appears below the
+editor. The builder preserves any custom fields in the JSON that it does
+not recognize, so you can add extra keys without losing them when
+switching back to the form.</p>
+<h5 data-number="1.4.6.3.3" id="templates"><span
+class="header-section-number">1.4.6.3.3</span> Templates</h5>
+<p>Templates let you save and reuse widget configurations:</p>
+<ul>
+<li><strong>Save Template</strong> — Click the bookmark icon, give the
+template a name (e.g. “Lobby Temperature Gauge”), and save. The entire
+widget type and configuration are stored.</li>
+<li><strong>Load Template</strong> — Click the bookmarks icon to open a
+list of all saved templates. Tap one to restore its widget type and
+configuration. You can also delete templates from this list.</li>
+</ul>
+<p>Templates are saved locally, so they persist across sessions. They
+are a good way to standardize widgets across a fleet — configure one
+gauge perfectly, save it as a template, and deploy it to every
+kiosk.</p>
+<h5 data-number="1.4.6.3.4" id="deploying"><span
+class="header-section-number">1.4.6.3.4</span> Deploying</h5>
+<p>Choose how and where to deploy:</p>
+<ul>
+<li><strong>Single device</strong> — Select a target device from the
+dropdown and click <strong>Deploy Widget</strong>. The widget is created
+on that kiosk immediately. A success notification confirms the
+deployment.</li>
+<li><strong>Batch deploy</strong> — Toggle <strong>“Deploy to all online
+devices”</strong> and click <strong>Batch Deploy</strong>. The widget
+command is sent to every online KingKiosk and KingLauncher device. A
+notification tells you how many devices received it.</li>
+</ul>
+<p>If there are validation errors in your configuration, deploying is
+blocked and you see a warning listing the problems.</p>
+<p><strong>Keyboard shortcut:</strong> Press <strong>Ctrl+Enter</strong>
+on Step 3 to deploy immediately.</p>
+<p>If you had a live preview running on the same device you are
+deploying to, the builder is smart about it: it stops the preview
+(removing the backdrop), deploys the widget cleanly, and restores the
+rest of the screen layout. The result is your widget appearing on the
+kiosk exactly as it looked in preview, but now as a permanent part of
+the display.</p>
+<h4 data-number="1.4.6.4"
+id="widget-builder-walkthrough-temperature-gauge-from-a-ha-sensor"><span
+class="header-section-number">1.4.6.4</span> Widget Builder Walkthrough:
+Temperature Gauge from a HA Sensor</h4>
+<p>Here is a complete example of using the Widget Builder end to
+end:</p>
+<ol type="1">
+<li>From a kiosk detail screen, tap <strong>Widget Builder</strong> in
+the action chip bar.</li>
+<li>In Step 1, tap <strong>Gauge</strong> in the Data-Driven
+category.</li>
+<li>In Step 2, the Entity Picker appears at the top. Tap the
+<strong>“sensor”</strong> domain filter chip to narrow the list to
+sensors only. Use the search field to find your temperature sensor
+(e.g. type “living room”). Tap it.</li>
+<li>The builder auto-fills the MQTT topics, sets the unit to “F” (or
+“C”), and guesses a reasonable min/max range based on the sensor’s
+current value.</li>
+<li>Under Gauge Settings, change the <strong>Gauge Type</strong> to
+“Radial” and set the <strong>Color Mode</strong> to “Zones.” Under the
+Advanced section, add color zones: green for comfortable (65–75F), amber
+for warm (75–85F), red for hot (85+).</li>
+<li>Under Window Geometry, set the position and size where you want the
+gauge on screen (e.g. X: 50, Y: 50, Width: 300, Height: 300).</li>
+<li>Click <strong>Preview &amp; Deploy</strong> to go to Step 3.</li>
+<li>Select your kiosk from the preview device dropdown and click
+<strong>Start Preview</strong>. The gauge appears on the actual kiosk
+screen with the dark backdrop behind it.</li>
+<li>Go back to Step 2 (click “2 Configure” in the header or press
+Escape). Adjust the colors and size. Watch the kiosk update live after
+each change.</li>
+<li>When it looks right, go back to Step 3. Click <strong>Save
+Template</strong> and name it “Room Temperature Gauge” for future
+reuse.</li>
+<li>Select the target kiosk (or toggle batch deploy) and click
+<strong>Deploy Widget</strong>. The gauge is now live on the kiosk,
+reading real-time temperature data.</li>
+</ol>
+<h4 data-number="1.4.6.5"
+id="widget-builder-walkthrough-deploying-a-clock-to-every-screen"><span
+class="header-section-number">1.4.6.5</span> Widget Builder Walkthrough:
+Deploying a Clock to Every Screen</h4>
+<ol type="1">
+<li>Open the Widget Builder from any kiosk.</li>
+<li>Tap <strong>Clock</strong> in the Display category.</li>
+<li>Set <strong>Mode</strong> to “Digital”, enable <strong>24-Hour
+Format</strong>, and turn on <strong>Show Seconds</strong>.</li>
+<li>Set the window position to the top-right corner of the screen
+(e.g. X: 1520, Y: 20, Width: 380, Height: 100).</li>
+<li>Preview on one device to confirm it looks right.</li>
+<li>On Step 3, toggle <strong>“Deploy to all online
+devices”</strong>.</li>
+<li>Click <strong>Batch Deploy</strong>. Every online kiosk gets the
+same clock widget in the same position.</li>
+</ol>
+<h4 data-number="1.4.6.6"
+id="widget-builder-walkthrough-thermostat-control-from-ha-climate-entity"><span
+class="header-section-number">1.4.6.6</span> Widget Builder Walkthrough:
+Thermostat Control from HA Climate Entity</h4>
+<ol type="1">
+<li>Open the Widget Builder and tap <strong>Gauge</strong>.</li>
+<li>In the Entity Picker, filter by <strong>“climate”</strong> and
+select your thermostat entity.</li>
+<li>The builder automatically configures a thermostat-style gauge with
+three pointers: a white needle for current temperature, an orange dot
+for the heat setpoint, and a blue dot for the cool setpoint. The publish
+payloads are pre-configured so dragging the setpoint pointers on the
+kiosk actually controls the thermostat.</li>
+<li>Preview it, adjust the size, and deploy.</li>
+</ol>
 <h3 data-number="1.4.7" id="the-command-center"><span
 class="header-section-number">1.4.7</span> The Command Center</h3>
 <p>The Command Center is an advanced control panel with 10 tabs covering
