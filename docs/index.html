@@ -27,6 +27,7 @@
   <ul class="nav-links">
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="KINGKIOSK_USER_GUIDE.html" >User Guide</a></li>
+    <li><a href="KING_ADMIN_USER_GUIDE.html" >Admin Guide</a></li>
     <li><a href="MQTT_WIDGET_REFERENCE.html" >MQTT Reference</a></li>
     <li><a href="CUSTOM_WIDGET_SDK.html" >Widget SDK</a></li>
     <li><a href="https://kingkiosk.kallinnovations.com" target="_blank">Website &nearr;</a></li>
@@ -72,6 +73,11 @@ Widget Reference</a></h3>
 type, and configuration option. Covers 25+ widget types including
 gauges, charts, carousels, animated text, clocks, weather, maps, canvas,
 calendars, games, and more.</p>
+<h3 id="admin-guide"><a href="KING_ADMIN_USER_GUIDE.html">Admin
+Guide</a></h3>
+<p>Administration and end-user operations guide. Covers device
+provisioning, fleet management, user roles, security policies, remote
+troubleshooting, and day-to-day operational workflows.</p>
 <h3 id="custom-widget-sdk"><a href="CUSTOM_WIDGET_SDK.html">Custom
 Widget SDK</a></h3>
 <p>Build your own widgets for KingKiosk. The Custom Widget SDK provides
@@ -163,6 +169,7 @@ document.querySelectorAll('.sidebar a').forEach(a => {
   const pageNames = {
     'index.html': 'Home',
     'KINGKIOSK_USER_GUIDE.html': 'User Guide',
+    'KING_ADMIN_USER_GUIDE.html': 'Admin Guide',
     'MQTT_WIDGET_REFERENCE.html': 'MQTT Reference',
     'CUSTOM_WIDGET_SDK.html': 'Widget SDK'
   };
@@ -184,6 +191,7 @@ document.querySelectorAll('.sidebar a').forEach(a => {
   // Cross-doc pages (always available)
   const docs = [
     { title: 'User Guide', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html', isLocal: false },
+    { title: 'Admin Guide', doc: 'Admin Guide', url: 'KING_ADMIN_USER_GUIDE.html', isLocal: false },
     { title: 'MQTT Widget Reference', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html', isLocal: false },
     { title: 'Custom Widget SDK', doc: 'Widget SDK', url: 'CUSTOM_WIDGET_SDK.html', isLocal: false },
     { title: 'Documentation Home', doc: 'Home', url: 'index.html', isLocal: false }
@@ -234,6 +242,11 @@ document.querySelectorAll('.sidebar a').forEach(a => {
     { title: 'Windows Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
     { title: 'macOS Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
     { title: 'Linux Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Device Provisioning', doc: 'Admin Guide', url: 'KING_ADMIN_USER_GUIDE.html' },
+    { title: 'Fleet Management', doc: 'Admin Guide', url: 'KING_ADMIN_USER_GUIDE.html' },
+    { title: 'User Roles', doc: 'Admin Guide', url: 'KING_ADMIN_USER_GUIDE.html' },
+    { title: 'Security Policies', doc: 'Admin Guide', url: 'KING_ADMIN_USER_GUIDE.html' },
+    { title: 'Remote Troubleshooting', doc: 'Admin Guide', url: 'KING_ADMIN_USER_GUIDE.html' },
   ];
   crossTopics.forEach(t => {
     if (t.url !== currentPage) {
