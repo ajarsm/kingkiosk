@@ -473,8 +473,8 @@ Different</a></li>
 (Guided Access)</a></li>
 <li><a href="#macos-kiosk-mode-best-effort">macOS Kiosk Mode
 (Best-Effort)</a></li>
-<li><a href="#connecting-to-your-mqtt-broker">Connecting to Your MQTT
-Broker</a></li>
+<li><a href="#connecting-to-your-mqtt-server">Connecting to Your MQTT
+Server</a></li>
 <li><a href="#understanding-your-device-id">Understanding Your Device
 ID</a></li>
 <li><a href="#home-assistant-auto-discovery">Home Assistant
@@ -636,9 +636,6 @@ Bridge</a></li>
 <li><a href="#remote-browser-full-web-on-your-tv">Remote Browser: Full
 Web on Your TV</a></li>
 </ul>
-<ol start="12" type="1">
-<li><a href="#12-quick-reference-card">Quick Reference Card</a></li>
-</ol>
 <hr />
 <h2 data-number="1.2" id="welcome-to-king-kiosk"><span
 class="header-section-number">1.2</span> 1. Welcome to King Kiosk</h2>
@@ -852,7 +849,7 @@ class="header-section-number">1.4</span> 3. The MQTT Architecture</h2>
 <h3 data-number="1.4.1" id="how-king-kiosk-communicates"><span
 class="header-section-number">1.4.1</span> How King Kiosk
 Communicates</h3>
-<p>King Kiosk uses a elegant two-level communication model:</p>
+<p>King Kiosk uses an elegant two-level communication model:</p>
 <p><strong>System Commands</strong> control the device as a whole -
 things like volume, brightness, creating windows, taking screenshots,
 and managing layouts.</p>
@@ -870,7 +867,7 @@ consistent, easy-to-follow address structure:</p>
 <p><strong>Sending Commands TO King Kiosk:</strong></p>
 <pre><code>kingkiosk/{your-device-id}/system/cmd          -&gt; System-wide commands
 kingkiosk/{your-device-id}/element/{widget-id}/cmd  -&gt; Widget-specific commands
-kingkiosk/{your-device-id}/window/{window-id}/command -&gt; Window-controller commands (legacy/compat)</code></pre>
+kingkiosk/{your-device-id}/window/{window-id}/command -&gt; Window-controller commands (legacy compatibility; prefer `system/cmd`)</code></pre>
 <p><strong>Receiving Responses FROM King Kiosk:</strong></p>
 <pre><code>kingkiosk/{your-device-id}/system/response     -&gt; System command results
 kingkiosk/{your-device-id}/element/{widget-id}/response  -&gt; Widget command results
@@ -6005,7 +6002,7 @@ class="header-section-number">1.14.1</span> Essential Topics</h3>
 <td><code>kingkiosk/{device_id}/element/{widget_id}/cmd</code></td>
 </tr>
 <tr>
-<td>Send window-controller commands</td>
+<td>Send window-controller commands (legacy compatibility path)</td>
 <td><code>kingkiosk/{device_id}/window/{window_id}/command</code></td>
 </tr>
 <tr>

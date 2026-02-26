@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="pandoc">
+  <title>King Admin User Guide</title>
+  <link rel="stylesheet" href="kingkiosk-docs.css">
+  <link rel="icon" href="kingkiosk-icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <a href="index.html" class="logo">
+    <img src="kingkiosk-icon.svg" alt="KingKiosk" class="logo-icon">
+    <span>KingKiosk Docs</span>
+  </a>
+  <div class="nav-search-wrap">
+    <div class="nav-search" id="navSearch">
+      <svg class="nav-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="navSearchInput" class="nav-search-input" placeholder="Search docs..." autocomplete="off" spellcheck="false">
+      <kbd class="nav-search-kbd">/</kbd>
+    </div>
+    <div class="nav-search-results" id="navSearchResults"></div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html" >Home</a></li>
+    <li><a href="KINGKIOSK_USER_GUIDE.html" >User Guide</a></li>
+    <li><a href="MQTT_WIDGET_REFERENCE.html" >MQTT Reference</a></li>
+    <li><a href="CUSTOM_WIDGET_SDK.html" >Widget SDK</a></li>
+    <li><a href="https://kingkiosk.kallinnovations.com" target="_blank">Website &nearr;</a></li>
+  </ul>
+</nav>
+
+<!-- Sidebar Toggle (mobile) -->
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle navigation">
+  &#9776;
+</button>
+
+<div class="page-wrapper">
+
+  <!-- Sidebar with TOC -->
+  <aside class="sidebar">
+    <div class="toc-title">On this page</div>
+    <ul>
+    <li><a href="#king-admin-user-guide"
+    id="toc-king-admin-user-guide"><span
+    class="toc-section-number">1</span> King Admin User Guide</a>
+    <ul>
+    <li><a href="#table-of-contents" id="toc-table-of-contents"><span
+    class="toc-section-number">1.1</span> Table of Contents</a></li>
+    <li><a href="#logging-in" id="toc-logging-in"><span
+    class="toc-section-number">1.2</span> Logging In</a>
+    <ul>
+    <li><a href="#connection-modes" id="toc-connection-modes"><span
+    class="toc-section-number">1.2.1</span> Connection Modes</a></li>
+    <li><a href="#desktop-and-mobile-login-direct-mqtt"
+    id="toc-desktop-and-mobile-login-direct-mqtt"><span
+    class="toc-section-number">1.2.2</span> Desktop and Mobile Login
+    (Direct MQTT)</a></li>
+    <li><a href="#web-login-direct-mqtt-over-websocket"
+    id="toc-web-login-direct-mqtt-over-websocket"><span
+    class="toc-section-number">1.2.3</span> Web Login (Direct MQTT over
+    WebSocket)</a></li>
+    <li><a href="#web-tls-restrictions"
+    id="toc-web-tls-restrictions"><span
+    class="toc-section-number">1.2.4</span> Web TLS
+    Restrictions</a></li>
+    <li><a href="#ha-addon-mode-auto" id="toc-ha-addon-mode-auto"><span
+    class="toc-section-number">1.2.5</span> HA Addon Mode
+    (Auto)</a></li>
+    <li><a href="#remember-me-and-auto-connect"
+    id="toc-remember-me-and-auto-connect"><span
+    class="toc-section-number">1.2.6</span> Remember Me and
+    Auto-Connect</a></li>
+    <li><a href="#command-signing-optional"
+    id="toc-command-signing-optional"><span
+    class="toc-section-number">1.2.7</span> Command Signing
+    (Optional)</a></li>
+    <li><a href="#connection-failures-and-reconnect"
+    id="toc-connection-failures-and-reconnect"><span
+    class="toc-section-number">1.2.8</span> Connection Failures and
+    Reconnect</a></li>
+    </ul></li>
+    <li><a href="#home-dashboard" id="toc-home-dashboard"><span
+    class="toc-section-number">1.3</span> Home Dashboard</a>
+    <ul>
+    <li><a href="#views-filters-and-sorting"
+    id="toc-views-filters-and-sorting"><span
+    class="toc-section-number">1.3.1</span> Views, Filters, and
+    Sorting</a></li>
+    <li><a href="#device-cards" id="toc-device-cards"><span
+    class="toc-section-number">1.3.2</span> Device Cards</a></li>
+    <li><a href="#notification-panel" id="toc-notification-panel"><span
+    class="toc-section-number">1.3.3</span> Notification Panel</a></li>
+    </ul></li>
+    <li><a href="#managing-kingkiosk-devices"
+    id="toc-managing-kingkiosk-devices"><span
+    class="toc-section-number">1.4</span> Managing KingKiosk Devices</a>
+    <ul>
+    <li><a href="#kiosk-detail-screen"
+    id="toc-kiosk-detail-screen"><span
+    class="toc-section-number">1.4.1</span> Kiosk Detail Screen</a></li>
+    <li><a href="#quick-controls" id="toc-quick-controls"><span
+    class="toc-section-number">1.4.2</span> Quick Controls</a></li>
+    <li><a href="#screen-view-and-graph-view"
+    id="toc-screen-view-and-graph-view"><span
+    class="toc-section-number">1.4.3</span> Screen View and Graph
+    View</a></li>
+    <li><a href="#adding-and-editing-elements"
+    id="toc-adding-and-editing-elements"><span
+    class="toc-section-number">1.4.4</span> Adding and Editing
+    Elements</a></li>
+    <li><a href="#command-center" id="toc-command-center"><span
+    class="toc-section-number">1.4.5</span> Command Center</a></li>
+    <li><a href="#screenshots" id="toc-screenshots"><span
+    class="toc-section-number">1.4.6</span> Screenshots</a></li>
+    <li><a href="#screen-states" id="toc-screen-states"><span
+    class="toc-section-number">1.4.7</span> Screen States</a></li>
+    <li><a href="#remote-settings" id="toc-remote-settings"><span
+    class="toc-section-number">1.4.8</span> Remote Settings</a></li>
+    <li><a href="#lockunlock" id="toc-lockunlock"><span
+    class="toc-section-number">1.4.9</span> Lock/Unlock</a></li>
+    <li><a href="#exportimport-config"
+    id="toc-exportimport-config"><span
+    class="toc-section-number">1.4.10</span> Export/Import
+    Config</a></li>
+    </ul></li>
+    <li><a href="#managing-cameras" id="toc-managing-cameras"><span
+    class="toc-section-number">1.5</span> Managing Cameras</a>
+    <ul>
+    <li><a href="#add-camera-wizard" id="toc-add-camera-wizard"><span
+    class="toc-section-number">1.5.1</span> Add Camera Wizard</a></li>
+    <li><a href="#camera-detail-screen"
+    id="toc-camera-detail-screen"><span
+    class="toc-section-number">1.5.2</span> Camera Detail
+    Screen</a></li>
+    <li><a href="#preview-modes-snapshotwebrtc"
+    id="toc-preview-modes-snapshotwebrtc"><span
+    class="toc-section-number">1.5.3</span> Preview Modes
+    (Snapshot/WebRTC)</a></li>
+    <li><a href="#ai-panels-and-overlays"
+    id="toc-ai-panels-and-overlays"><span
+    class="toc-section-number">1.5.4</span> AI Panels and
+    Overlays</a></li>
+    <li><a href="#recording" id="toc-recording"><span
+    class="toc-section-number">1.5.5</span> Recording</a></li>
+    <li><a href="#rtsp-export" id="toc-rtsp-export"><span
+    class="toc-section-number">1.5.6</span> RTSP Export</a></li>
+    <li><a href="#ignore-bounds" id="toc-ignore-bounds"><span
+    class="toc-section-number">1.5.7</span> Ignore Bounds</a></li>
+    </ul></li>
+    <li><a href="#raw-commands" id="toc-raw-commands"><span
+    class="toc-section-number">1.6</span> Raw Commands</a></li>
+    <li><a href="#troubleshooting" id="toc-troubleshooting"><span
+    class="toc-section-number">1.7</span> Troubleshooting</a>
+    <ul>
+    <li><a href="#devices-not-appearing"
+    id="toc-devices-not-appearing"><span
+    class="toc-section-number">1.7.1</span> Devices not
+    appearing</a></li>
+    <li><a href="#device-marked-offline-unexpectedly"
+    id="toc-device-marked-offline-unexpectedly"><span
+    class="toc-section-number">1.7.2</span> Device marked offline
+    unexpectedly</a></li>
+    <li><a href="#web-cannot-connect" id="toc-web-cannot-connect"><span
+    class="toc-section-number">1.7.3</span> Web cannot connect</a></li>
+    <li><a href="#ha-addon-mode-does-not-auto-enter-web"
+    id="toc-ha-addon-mode-does-not-auto-enter-web"><span
+    class="toc-section-number">1.7.4</span> HA Addon mode does not
+    auto-enter (web)</a></li>
+    <li><a href="#command-signing-issues"
+    id="toc-command-signing-issues"><span
+    class="toc-section-number">1.7.5</span> Command signing
+    issues</a></li>
+    <li><a href="#saved-credentials-behavior"
+    id="toc-saved-credentials-behavior"><span
+    class="toc-section-number">1.7.6</span> Saved credentials
+    behavior</a></li>
+    </ul></li>
+    </ul></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <main class="content">
+      <header id="title-block-header">
+        <h1 class="title">King Admin User Guide</h1>
+        <p class="subtitle">Administration and End-User Operations
+Guide</p>
+        <p class="date">Last updated: February 2026</p>
+      </header>
+<h1 data-number="1" id="king-admin-user-guide"><span
+class="header-section-number">1</span> King Admin User Guide</h1>
+<p>King Admin is the admin console for KingKiosk and camera
+integrations.</p>
+<p>This guide is written against the current app behavior so admins and
+operators can follow it directly.</p>
+<hr />
+<h2 data-number="1.1" id="table-of-contents"><span
+class="header-section-number">1.1</span> Table of Contents</h2>
+<ul>
+<li><a href="#logging-in">Logging In</a>
+<ul>
+<li><a href="#connection-modes">Connection Modes</a></li>
+<li><a href="#desktop-and-mobile-login-direct-mqtt">Desktop and Mobile
+Login (Direct MQTT)</a></li>
+<li><a href="#web-login-direct-mqtt-over-websocket">Web Login (Direct
+MQTT over WebSocket)</a></li>
+<li><a href="#web-tls-restrictions">Web TLS Restrictions</a></li>
+<li><a href="#ha-addon-mode-auto">HA Addon Mode (Auto)</a></li>
+<li><a href="#remember-me-and-auto-connect">Remember Me and
+Auto-Connect</a></li>
+<li><a href="#command-signing-optional">Command Signing
+(Optional)</a></li>
+<li><a href="#connection-failures-and-reconnect">Connection Failures and
+Reconnect</a></li>
+</ul></li>
+<li><a href="#home-dashboard">Home Dashboard</a>
+<ul>
+<li><a href="#views-filters-and-sorting">Views, Filters, and
+Sorting</a></li>
+<li><a href="#device-cards">Device Cards</a></li>
+<li><a href="#notification-panel">Notification Panel</a></li>
+</ul></li>
+<li><a href="#managing-kingkiosk-devices">Managing KingKiosk Devices</a>
+<ul>
+<li><a href="#kiosk-detail-screen">Kiosk Detail Screen</a></li>
+<li><a href="#quick-controls">Quick Controls</a></li>
+<li><a href="#screen-view-and-graph-view">Screen View and Graph
+View</a></li>
+<li><a href="#adding-and-editing-elements">Adding and Editing
+Elements</a></li>
+<li><a href="#command-center">Command Center</a></li>
+<li><a href="#screenshots">Screenshots</a></li>
+<li><a href="#screen-states">Screen States</a></li>
+<li><a href="#remote-settings">Remote Settings</a></li>
+<li><a href="#lockunlock">Lock/Unlock</a></li>
+<li><a href="#exportimport-config">Export/Import Config</a></li>
+</ul></li>
+<li><a href="#managing-cameras">Managing Cameras</a>
+<ul>
+<li><a href="#add-camera-wizard">Add Camera Wizard</a></li>
+<li><a href="#camera-detail-screen">Camera Detail Screen</a></li>
+<li><a href="#preview-modes-snapshotwebrtc">Preview Modes
+(Snapshot/WebRTC)</a></li>
+<li><a href="#ai-panels-and-overlays">AI Panels and Overlays</a></li>
+<li><a href="#recording">Recording</a></li>
+<li><a href="#rtsp-export">RTSP Export</a></li>
+<li><a href="#ignore-bounds">Ignore Bounds</a></li>
+</ul></li>
+<li><a href="#raw-commands">Raw Commands</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+<hr />
+<h2 data-number="1.2" id="logging-in"><span
+class="header-section-number">1.2</span> Logging In</h2>
+<h3 data-number="1.2.1" id="connection-modes"><span
+class="header-section-number">1.2.1</span> Connection Modes</h3>
+<p>King Admin uses MQTT in one of two modes:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Mode</th>
+<th>How it works</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Direct MQTT</strong></td>
+<td>App connects directly to broker</td>
+<td>Standalone deployments</td>
+</tr>
+<tr>
+<td><strong>HA Addon Mode</strong></td>
+<td>App uses Core3 HTTP bridge/proxy</td>
+<td>Home Assistant addon deployments</td>
+</tr>
+</tbody>
+</table>
+<p>After successful connection, a toast shows active mode: -
+<code>King Admin using Direct Mode</code> -
+<code>King Admin using HA Addon Mode</code></p>
+<h3 data-number="1.2.2" id="desktop-and-mobile-login-direct-mqtt"><span
+class="header-section-number">1.2.2</span> Desktop and Mobile Login
+(Direct MQTT)</h3>
+<p>On macOS/Windows/Linux/iOS/Android, the login form includes:</p>
+<ol type="1">
+<li><strong>Broker Host / URL</strong>
+<ul>
+<li>Supports host/IP or URI (<code>mqtt://</code>,
+<code>mqtts://</code>, <code>ws://</code>, <code>wss://</code>,
+etc.)</li>
+</ul></li>
+<li><strong>Port</strong>
+<ul>
+<li>Default is <code>1883</code> for native direct input</li>
+</ul></li>
+<li><strong>Username</strong> (optional)</li>
+<li><strong>Password</strong> (optional)</li>
+<li><strong>Use TLS / Secure Transport</strong> (native only)
+<ul>
+<li>Optional <strong>Allow insecure/self-signed certs</strong></li>
+<li>Optional <strong>CA Certificate (PEM)</strong> (shown when TLS is on
+and insecure certs are off)</li>
+</ul></li>
+<li><strong>Remember me</strong> (native only)</li>
+<li><strong>Connect</strong></li>
+</ol>
+<h3 data-number="1.2.3" id="web-login-direct-mqtt-over-websocket"><span
+class="header-section-number">1.2.3</span> Web Login (Direct MQTT over
+WebSocket)</h3>
+<p>On web, transport is WebSocket-only.</p>
+<p>Form behavior:</p>
+<ol type="1">
+<li><strong>Broker Host</strong></li>
+<li><strong>Port</strong> (prefilled by page protocol)
+<ul>
+<li>HTTPS page: <code>8884</code></li>
+<li>HTTP page: <code>1884</code></li>
+</ul></li>
+<li><strong>Username / Password</strong></li>
+<li><strong>Connection mode chip</strong>
+<ul>
+<li>HTTPS page: <code>Secure connection (WSS)</code></li>
+<li>HTTP page: <code>Unencrypted connection (WS)</code></li>
+</ul></li>
+<li><strong>Connect</strong></li>
+</ol>
+<p>Web connection behavior: - If no explicit WebSocket path is provided,
+the app tries <code>/mqtt</code> first, then <code>/</code>.</p>
+<h3 data-number="1.2.4" id="web-tls-restrictions"><span
+class="header-section-number">1.2.4</span> Web TLS Restrictions</h3>
+<p>Browser TLS rules apply on web:</p>
+<ul>
+<li>No raw TCP sockets</li>
+<li>No insecure-cert override toggle</li>
+<li>No custom CA PEM field in the app</li>
+<li>HTTPS page cannot use <code>ws://</code> (must use
+<code>wss://</code>)</li>
+</ul>
+<p>If your broker cert is self-signed and not trusted by the browser/OS,
+WSS connection will fail.</p>
+<h3 data-number="1.2.5" id="ha-addon-mode-auto"><span
+class="header-section-number">1.2.5</span> HA Addon Mode (Auto)</h3>
+<p>On web startup, King Admin probes server-side config for Core3 bridge
+mode.</p>
+<p>If available: - Login screen is skipped - App connects via Core3 HTTP
+bridge - Data is polled (default poll interval is about 800ms)</p>
+<p>If not available: - App falls back to direct login form</p>
+<p>On native desktop/mobile builds, login stays on the direct MQTT flow
+unless your deployment explicitly provides Core3 proxy config.</p>
+<p>In Core3 mode, the app can also keep a direct MQTT “screen shadow”
+subscription for screen/screenshot topics.</p>
+<h3 data-number="1.2.6" id="remember-me-and-auto-connect"><span
+class="header-section-number">1.2.6</span> Remember Me and
+Auto-Connect</h3>
+<p>Native: - <code>Remember me</code> is visible and off by default - If
+enabled and login succeeds, credentials are stored and auto-connect is
+attempted on next launch</p>
+<p>Web: - Credentials are saved automatically after successful connect -
+Fields are prefilled on later loads - Startup still probes HA/Core3
+first before showing login</p>
+<p>Disconnect behavior: - Disconnect clears saved MQTT credentials and
+remember flag</p>
+<h3 data-number="1.2.7" id="command-signing-optional"><span
+class="header-section-number">1.2.7</span> Command Signing
+(Optional)</h3>
+<p>Optional HMAC signing is available from Home -&gt; overflow menu
+-&gt; <strong>Signing (On/Off)</strong>.</p>
+<p>Behavior: - Uses HMAC-SHA256 envelope with fields <code>ts</code>,
+<code>msg</code>, <code>sig</code> - Signature input format is
+<code>topic\ntimestamp\nmsg</code> - Only useful if target devices are
+configured to verify signatures</p>
+<h3 data-number="1.2.8" id="connection-failures-and-reconnect"><span
+class="header-section-number">1.2.8</span> Connection Failures and
+Reconnect</h3>
+<p>If connection drops while authenticated, auto-reconnect is attempted
+(5-second retry delay).</p>
+<p>Common causes: - Wrong host/port - Broker auth failure - WebSocket
+listener not enabled on broker (web) - Browser trust/certificate issue
+(web WSS) - Core3 bridge unavailable (HA mode)</p>
+<hr />
+<h2 data-number="1.3" id="home-dashboard"><span
+class="header-section-number">1.3</span> Home Dashboard</h2>
+<h3 data-number="1.3.1" id="views-filters-and-sorting"><span
+class="header-section-number">1.3.1</span> Views, Filters, and
+Sorting</h3>
+<p>Home shows discovered MQTT devices plus cameras.</p>
+<p>Available controls: - <strong>View toggle</strong>: Grid/List -
+<strong>Search toggle</strong>: filter by name/id - <strong>Status
+chips</strong>: All / Online / Offline - <strong>Type chips</strong>:
+All Types plus released device categories (Kiosk, Camera) - <strong>Sort
+menu</strong>: - Name A-&gt;Z - Name Z-&gt;A - Last Seen - Online First
+- Device Type</p>
+<h3 data-number="1.3.2" id="device-cards"><span
+class="header-section-number">1.3.2</span> Device Cards</h3>
+<p>Card behaviors by device type: - <strong>Kiosk</strong>: screenshot
+background + online state + metadata - <strong>Camera</strong>:
+snapshot-style card with feature/state badges</p>
+<p>Cards open the corresponding detail screen.</p>
+<h3 data-number="1.3.3" id="notification-panel"><span
+class="header-section-number">1.3.3</span> Notification Panel</h3>
+<p>Authenticated screens include a bottom notification panel: -
+Collapsed: summary + unread count - Expanded: notification center list -
+Supports dismiss (<code>X</code>), swipe-to-dismiss, and clear-all</p>
+<hr />
+<h2 data-number="1.4" id="managing-kingkiosk-devices"><span
+class="header-section-number">1.4</span> Managing KingKiosk Devices</h2>
+<h3 data-number="1.4.1" id="kiosk-detail-screen"><span
+class="header-section-number">1.4.1</span> Kiosk Detail Screen</h3>
+<p>Main layout: - AppBar: device name, online/offline badge, and sensor
+chips (battery/CPU/memory when available) - Action chip row: Command
+Center, Widget Builder, Export/Import, Raw Command, Screenshot tools -
+Quick controls row - Main visualization (Screen View or Graph View) -
+Right-side element editor panel when an element is selected</p>
+<h3 data-number="1.4.2" id="quick-controls"><span
+class="header-section-number">1.4.2</span> Quick Controls</h3>
+<p>Quick controls include: - Volume slider - Brightness slider -
+<code>Close All</code> - Window mode toggle (floating/tiling) -
+<code>Screenshot</code> - <code>Screensaver/Wake</code></p>
+<h3 data-number="1.4.3" id="screen-view-and-graph-view"><span
+class="header-section-number">1.4.3</span> Screen View and Graph
+View</h3>
+<p>The kiosk visualization supports both modes.</p>
+<p><strong>Screen View</strong>: - Uses latest screenshot as background
+- Overlays element bounds in screen-relative coordinates - Drag to move;
+corner handle drag to resize - Updates are sent with
+<code>update_window</code></p>
+<p><strong>Graph View</strong>: - Display node + element nodes by
+category - Drag nodes to rearrange graph layout - Drag element onto
+display to connect - Zoom/pan controls</p>
+<p>Toolbar includes: - Media/Windows/Widgets/Alerts counters - Add
+Element - Remote Settings - Lock/Unlock button</p>
+<h3 data-number="1.4.4" id="adding-and-editing-elements"><span
+class="header-section-number">1.4.4</span> Adding and Editing
+Elements</h3>
+<p><strong>Quick add dialog</strong> (from graph toolbar) supports
+common types by category: - Window: Browser, WebView, PDF - Media:
+Video, Audio, Image, Carousel, YouTube, RTSP - Widget: Clock, Calendar,
+Timer, Weather, Gauges, Charts - Alert:
+Info/Success/Warning/Error/Notification</p>
+<p>For broader/advanced commands, use Command Center or Raw Command
+templates.</p>
+<p>Element editor supports: - Base fields:
+title/url/x/y/width/height/opacity/z - Category-specific controls
+(window/media/widget/alert) - Per-element actions like bring-to-front,
+maximize, refresh, close - <code>Apply</code> and
+<code>Delete</code></p>
+<h3 data-number="1.4.5" id="command-center"><span
+class="header-section-number">1.4.5</span> Command Center</h3>
+<p>Open from action chip row or overflow menu.</p>
+<p>Tabs: - <strong>System</strong> - <strong>Windows</strong> -
+<strong>Media</strong> - <strong>Widgets</strong> -
+<strong>States</strong> - <strong>Schedule</strong> -
+<strong>Batch</strong> - <strong>AI/Vision</strong> -
+<strong>Alerts</strong> - <strong>Cache</strong></p>
+<p>Examples of what is exposed: - Brightness/volume/screenshot/config
+requests - Window mode, window update/close/maximize - Media and remote
+browser commands - Widget creation helpers
+(gauge/chart/weather/alarmo/button/carousel/dlna) - Screen state
+save/load/list/delete/export - Schedule commands - Batch command builder
+and raw JSON batch - Person detection/security camera/TTS helpers -
+Alert and cache operations</p>
+<h3 data-number="1.4.6" id="screenshots"><span
+class="header-section-number">1.4.6</span> Screenshots</h3>
+<p>Screenshot tools include: - Auto-request on entering detail (when
+device is online) - Manual request - Screenshot viewer dialog with zoom
+and metadata - Copy base64 option</p>
+<h3 data-number="1.4.7" id="screen-states"><span
+class="header-section-number">1.4.7</span> Screen States</h3>
+<p>Screen state operations are available in Command Center: - Save -
+Load - List - Delete - Export</p>
+<h3 data-number="1.4.8" id="remote-settings"><span
+class="header-section-number">1.4.8</span> Remote Settings</h3>
+<p>Remote Settings opens from the graph toolbar gear.</p>
+<p>Sections are runtime-dependent (Flutter vs tvOS), and include
+combinations of: - Security - App Settings - MQTT Settings - Feature
+Server - Speech/AI - Voice (tvOS) - Media/Cameras - ML Detection (tvOS)
+- Networked Audio - About</p>
+<p>Editing modes: - Form-style fields - Raw JSON editor</p>
+<p>Unsaved changes are tracked (dirty state).</p>
+<h3 data-number="1.4.9" id="lockunlock"><span
+class="header-section-number">1.4.9</span> Lock/Unlock</h3>
+<p>The lock button prompts for PIN and sends lock/unlock commands.</p>
+<h3 data-number="1.4.10" id="exportimport-config"><span
+class="header-section-number">1.4.10</span> Export/Import Config</h3>
+<p>From detail screen actions: - <strong>Export Config</strong>: pulls
+current config and supports copy - <strong>Import Config</strong>:
+accepts JSON and applies via provision-style update</p>
+<hr />
+<h2 data-number="1.5" id="managing-cameras"><span
+class="header-section-number">1.5</span> Managing Cameras</h2>
+<h3 data-number="1.5.1" id="add-camera-wizard"><span
+class="header-section-number">1.5.1</span> Add Camera Wizard</h3>
+<p>Use Home FAB (camera icon) to open the add-camera wizard.</p>
+<p>Steps: 1. <strong>Connection</strong> - Name, RTSP URL, optional
+credentials 2. <strong>Test</strong> - Runs connection test and returns
+stream metadata (if successful) 3. <strong>Features &amp; Save</strong>
+- Auto-start - Object detection - Face recognition - Audio transcription
+- Audio event detection - Recording (+ optional recording path) - RTSP
+export (+ rotation in wizard)</p>
+<h3 data-number="1.5.2" id="camera-detail-screen"><span
+class="header-section-number">1.5.2</span> Camera Detail Screen</h3>
+<p>Layout: - AppBar with camera state badge - Live preview area -
+Controls bar (start/stop + feature toggles) - Camera info chips -
+Hardware acceleration diagnostics - Feature panels</p>
+<h3 data-number="1.5.3" id="preview-modes-snapshotwebrtc"><span
+class="header-section-number">1.5.3</span> Preview Modes
+(Snapshot/WebRTC)</h3>
+<ul>
+<li><strong>Snapshot mode</strong> is default and refreshes roughly
+every 3 seconds</li>
+<li><strong>WebRTC mode</strong> can be toggled when camera is
+active</li>
+<li>WebRTC controls include mute/unmute and push-to-talk (when
+available)</li>
+</ul>
+<h3 data-number="1.5.4" id="ai-panels-and-overlays"><span
+class="header-section-number">1.5.4</span> AI Panels and Overlays</h3>
+<p>When enabled and active, preview can show: - Detection overlays -
+Face overlays - Audio event status/panels - Transcription panel</p>
+<p>Dedicated panels include: - Object Detection - Face Recognition -
+Audio Events - Ignore Bounds - Audio Transcription - Recording - RTSP
+Export</p>
+<h3 data-number="1.5.5" id="recording"><span
+class="header-section-number">1.5.5</span> Recording</h3>
+<p>Recording panel supports: - Active/idle state display - Recording
+list refresh - Per-item actions: download, copy URL, delete</p>
+<h3 data-number="1.5.6" id="rtsp-export"><span
+class="header-section-number">1.5.6</span> RTSP Export</h3>
+<p>RTSP Export panel shows current export state and URL (when
+available).</p>
+<h3 data-number="1.5.7" id="ignore-bounds"><span
+class="header-section-number">1.5.7</span> Ignore Bounds</h3>
+<p>Ignore bounds can be edited directly over preview: - Add area - Drag
+to move - Drag corner to resize - Delete area</p>
+<p>Bounds are saved back through camera update calls.</p>
+<hr />
+<h2 data-number="1.6" id="raw-commands"><span
+class="header-section-number">1.6</span> Raw Commands</h2>
+<p>Raw JSON command tooling differs by device type:</p>
+<ul>
+<li><strong>KingKiosk</strong>: Raw MQTT dialog with System/Element
+scope + template picker</li>
+<li><strong>Cameras</strong>: managed through REST APIs in camera UI (no
+MQTT raw dialog in camera detail)</li>
+</ul>
+<hr />
+<h2 data-number="1.7" id="troubleshooting"><span
+class="header-section-number">1.7</span> Troubleshooting</h2>
+<h3 data-number="1.7.1" id="devices-not-appearing"><span
+class="header-section-number">1.7.1</span> Devices not appearing</h3>
+<ul>
+<li>Confirm MQTT connection is established</li>
+<li>Confirm devices are publishing status/topics</li>
+<li>For cameras, verify Core3 camera API availability</li>
+</ul>
+<h3 data-number="1.7.2" id="device-marked-offline-unexpectedly"><span
+class="header-section-number">1.7.2</span> Device marked offline
+unexpectedly</h3>
+<p>Presence watchdog is used for MQTT devices (45-second timeout).</p>
+<p>Retained messages with stale embedded timestamps are filtered; fresh
+activity updates presence.</p>
+<h3 data-number="1.7.3" id="web-cannot-connect"><span
+class="header-section-number">1.7.3</span> Web cannot connect</h3>
+<ul>
+<li>Ensure broker WebSocket listener is enabled</li>
+<li>Ensure cert is browser-trusted for WSS</li>
+<li>If page is HTTPS, broker must be reachable via WSS</li>
+</ul>
+<h3 data-number="1.7.4" id="ha-addon-mode-does-not-auto-enter-web"><span
+class="header-section-number">1.7.4</span> HA Addon mode does not
+auto-enter (web)</h3>
+<ul>
+<li>Verify bridge/server config is available</li>
+<li>Verify Core3 backend is reachable and healthy</li>
+<li>If probe fails, use direct login mode</li>
+</ul>
+<h3 data-number="1.7.5" id="command-signing-issues"><span
+class="header-section-number">1.7.5</span> Command signing issues</h3>
+<ul>
+<li>Ensure shared secret matches on both sides</li>
+<li>If devices do not verify signatures, disable signing to test
+connectivity</li>
+</ul>
+<h3 data-number="1.7.6" id="saved-credentials-behavior"><span
+class="header-section-number">1.7.6</span> Saved credentials
+behavior</h3>
+<ul>
+<li>Native: controlled by Remember me</li>
+<li>Web: credentials are persisted after successful connect</li>
+<li>Disconnect clears saved MQTT credentials</li>
+</ul>
+      <footer class="doc-footer">
+        <p>
+          <a href="https://kingkiosk.kallinnovations.com">KingKiosk</a>
+          &mdash; The Programmable Display Runtime &mdash;
+          &copy; Kall Innovations
+        </p>
+      </footer>
+    </main>
+  </div>
+
+</div>
+
+<!-- Back to Top -->
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  &uarr;
+</button>
+
+<script>
+// Back to Top visibility
+const btn = document.querySelector('.back-to-top');
+window.addEventListener('scroll', () => {
+  btn.classList.toggle('visible', window.scrollY > 400);
+});
+
+// Active TOC highlight on scroll
+const tocLinks = document.querySelectorAll('#TOC a');
+const headings = [];
+tocLinks.forEach(link => {
+  const id = link.getAttribute('href');
+  if (id && id.startsWith('#')) {
+    const el = document.getElementById(id.slice(1));
+    if (el) headings.push({ el, link });
+  }
+});
+
+function updateActiveTOC() {
+  let current = null;
+  const scrollY = window.scrollY + 100;
+  for (const { el, link } of headings) {
+    if (el.offsetTop <= scrollY) {
+      current = link;
+    }
+  }
+  tocLinks.forEach(l => l.classList.remove('active'));
+  if (current) current.classList.add('active');
+}
+
+window.addEventListener('scroll', updateActiveTOC, { passive: true });
+updateActiveTOC();
+
+// Close sidebar on mobile when clicking a link
+document.querySelectorAll('.sidebar a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 960) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+  });
+});
+
+// === Doc Nav Search ===
+(function initNavSearch() {
+  const input = document.getElementById('navSearchInput');
+  const resultsEl = document.getElementById('navSearchResults');
+  const kbdEl = document.querySelector('.nav-search-kbd');
+  if (!input || !resultsEl) return;
+
+  // Build search index from page headings + cross-doc links
+  const index = [];
+
+  // Current page headings (h2, h3, h4)
+  const currentPage = location.pathname.split('/').pop() || 'index.html';
+  const pageNames = {
+    'index.html': 'Home',
+    'KINGKIOSK_USER_GUIDE.html': 'User Guide',
+    'MQTT_WIDGET_REFERENCE.html': 'MQTT Reference',
+    'CUSTOM_WIDGET_SDK.html': 'Widget SDK'
+  };
+  const currentPageName = pageNames[currentPage] || 'Docs';
+
+  document.querySelectorAll('h2, h3, h4').forEach(h => {
+    if (!h.id) return;
+    const num = h.querySelector('.header-section-number');
+    const text = h.textContent.replace(/^\d+[\.\d]*\s*/, '').trim();
+    if (!text) return;
+    index.push({
+      title: text,
+      doc: currentPageName,
+      url: '#' + h.id,
+      isLocal: true
+    });
+  });
+
+  // Cross-doc pages (always available)
+  const docs = [
+    { title: 'User Guide', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html', isLocal: false },
+    { title: 'MQTT Widget Reference', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html', isLocal: false },
+    { title: 'Custom Widget SDK', doc: 'Widget SDK', url: 'CUSTOM_WIDGET_SDK.html', isLocal: false },
+    { title: 'Documentation Home', doc: 'Home', url: 'index.html', isLocal: false }
+  ];
+  // Add cross-doc entries (skip current page)
+  docs.forEach(d => {
+    if (d.url !== currentPage) index.push(d);
+  });
+
+  // Common cross-doc topics for quick access
+  const crossTopics = [
+    { title: 'Getting Started', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'add_window', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'remove_window', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'arrange_windows', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Carousel', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Gauge Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Chart Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'WebView', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Media Player', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Intercom', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Camera Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Clock Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Weather Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Canvas Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Animated Text', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'LED Panel', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'YouTube Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Calendar Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Map Widget', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Kiosk Mode', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Home Assistant', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Screen Presets', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Scheduling', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'MQTT Connection', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Topic Structure', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Command Envelope', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'window.KingKiosk API', doc: 'Widget SDK', url: 'CUSTOM_WIDGET_SDK.html' },
+    { title: 'onCommand()', doc: 'Widget SDK', url: 'CUSTOM_WIDGET_SDK.html' },
+    { title: 'sendCommand()', doc: 'Widget SDK', url: 'CUSTOM_WIDGET_SDK.html' },
+    { title: 'publishTelemetry()', doc: 'Widget SDK', url: 'CUSTOM_WIDGET_SDK.html' },
+    { title: 'TTS / Text-to-Speech', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Screenshot', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Notification', doc: 'MQTT Reference', url: 'MQTT_WIDGET_REFERENCE.html' },
+    { title: 'Apple TV / tvOS', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Android Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'iOS Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Windows Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'macOS Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+    { title: 'Linux Setup', doc: 'User Guide', url: 'KINGKIOSK_USER_GUIDE.html' },
+  ];
+  crossTopics.forEach(t => {
+    if (t.url !== currentPage) {
+      index.push({ title: t.title, doc: t.doc, url: t.url, isLocal: false });
+    }
+  });
+
+  let activeIdx = -1;
+  let filtered = [];
+  let isOpen = false;
+
+  function search(query) {
+    const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    if (!words.length) return [];
+    const scored = [];
+    const seen = new Set();
+    for (const item of index) {
+      const hay = item.title.toLowerCase();
+      let match = true;
+      let score = 0;
+      for (const w of words) {
+        if (!hay.includes(w)) { match = false; break; }
+        if (hay.startsWith(w)) score += 10;
+        score += 5;
+      }
+      if (!match) continue;
+      // Boost local (same-page) results
+      if (item.isLocal) score += 3;
+      const key = item.title + '|' + item.url;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      scored.push({ item, score });
+    }
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, 15).map(s => s.item);
+  }
+
+  function highlight(text, query) {
+    const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let result = text;
+    for (const w of words) {
+      const escaped = w.replace(/[.*+?^{}()|[\]\\]/g, '\\' + String.fromCharCode(36) + '&');
+      const re = new RegExp('(' + escaped + ')', 'gi');
+      result = result.replace(re, '<mark>' + String.fromCharCode(36) + '1</mark>');
+    }
+    return result;
+  }
+
+  function render(items, query) {
+    if (!items.length) {
+      resultsEl.innerHTML = '<div class="nav-search-empty">No results found</div>';
+      resultsEl.classList.add('open');
+      isOpen = true;
+      return;
+    }
+    // Group: This Page vs Other Docs
+    const local = items.filter(i => i.isLocal);
+    const other = items.filter(i => !i.isLocal);
+    let html = '';
+    if (local.length) {
+      html += '<div class="nav-search-group"><div class="nav-search-group-label">This Page</div>';
+      local.forEach(item => {
+        const idx = filtered.indexOf(item);
+        html += '<a href="' + item.url + '" class="nav-search-item' + (idx === activeIdx ? ' active' : '') + '" data-idx="' + idx + '">'
+          + '<div class="nav-search-item-title">' + highlight(item.title, query) + '</div>'
+          + '</a>';
+      });
+      html += '</div>';
+    }
+    if (other.length) {
+      html += '<div class="nav-search-group"><div class="nav-search-group-label">Other Docs</div>';
+      other.forEach(item => {
+        const idx = filtered.indexOf(item);
+        html += '<a href="' + item.url + '" class="nav-search-item' + (idx === activeIdx ? ' active' : '') + '" data-idx="' + idx + '">'
+          + '<div class="nav-search-item-title">' + highlight(item.title, query) + '</div>'
+          + '<div class="nav-search-item-doc">' + item.doc + '</div>'
+          + '</a>';
+      });
+      html += '</div>';
+    }
+    resultsEl.innerHTML = html;
+    resultsEl.classList.add('open');
+    isOpen = true;
+  }
+
+  function close() {
+    resultsEl.classList.remove('open');
+    resultsEl.innerHTML = '';
+    isOpen = false;
+    activeIdx = -1;
+  }
+
+  function updateActive() {
+    resultsEl.querySelectorAll('.nav-search-item').forEach(el => {
+      el.classList.toggle('active', parseInt(el.dataset.idx) === activeIdx);
+    });
+    const act = resultsEl.querySelector('.nav-search-item.active');
+    if (act) act.scrollIntoView({ block: 'nearest' });
+  }
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    if (!q) { close(); return; }
+    filtered = search(q);
+    activeIdx = -1;
+    render(filtered, q);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (!isOpen) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIdx = Math.min(activeIdx + 1, filtered.length - 1);
+      updateActive();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIdx = Math.max(activeIdx - 1, -1);
+      updateActive();
+    } else if (e.key === 'Enter' && activeIdx >= 0 && filtered[activeIdx]) {
+      e.preventDefault();
+      const entry = filtered[activeIdx];
+      if (entry.isLocal) {
+        const el = document.getElementById(entry.url.slice(1));
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.href = entry.url;
+      }
+      close();
+      input.blur();
+    } else if (e.key === 'Escape') {
+      close();
+      input.blur();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-search-wrap')) close();
+  });
+
+  // "/" keyboard shortcut
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      e.preventDefault();
+      input.focus();
+    }
+  });
+
+  input.addEventListener('focus', () => { if (kbdEl) kbdEl.style.opacity = '0'; });
+  input.addEventListener('blur', () => { if (kbdEl && !input.value) kbdEl.style.opacity = '1'; });
+})();
+</script>
+
+</body>
+</html>

@@ -358,10 +358,12 @@ control the device as a whole</li>
 <li><strong>Element-level commands</strong> (<code>element/*</code>) -
 control an individual element (typically a window tile)</li>
 </ol>
-<p>Legacy topic families (including <code>widget/{id}/*</code>,
-<code>.../command</code>, and any window-scoped command topics) are
-intentionally <strong>not supported</strong> in the current
-implementation.</p>
+<p>Legacy <strong>command ingress</strong> topic families (especially
+<code>.../command</code> and widget/window-scoped command paths) are
+<strong>deprecated</strong>. Some clients still subscribe for backward
+compatibility, but behavior is not guaranteed cross-platform. Use
+canonical <code>system/cmd</code> and <code>element/{id}/cmd</code> for
+stable automation.</p>
 <h2 data-number="1.1" id="admin-ui-contract-definitive"><span
 class="header-section-number">1.1</span> Admin UI Contract
 (Definitive)</h2>
@@ -371,8 +373,10 @@ following as the stable MQTT API contract:</p>
 <li><strong>Ingress (commands)</strong>
 <ul>
 <li>Device/system: <code>kingkiosk/{device_id}/system/cmd</code></li>
-<li>Element-scoped (optional, only when a widget registers a handler):
-<code>kingkiosk/{device_id}/element/{element_id}/cmd</code></li>
+<li>Element-scoped:
+<code>kingkiosk/{device_id}/element/{element_id}/cmd</code> (first
+routed to registered element handlers, then unified dispatcher fallback
+when applicable)</li>
 </ul></li>
 <li><strong>Egress (responses)</strong>
 <ul>
@@ -393,9 +397,9 @@ following as the stable MQTT API contract:</p>
 (non-retained)</li>
 </ul></li>
 </ul>
-<p>Rules: - Do <strong>not</strong> publish/subscribe to legacy topic
-families (no <code>.../command</code>, no <code>widget/...</code>, no
-window-scoped MQTT topics). - For any command, if
+<p>Rules: - Prefer canonical topics; do not rely on legacy
+command-ingress families (<code>.../command</code>, widget/window-scoped
+command topics) for new integrations. - For any command, if
 <code>response_topic</code> is omitted, the app will default to the
 canonical system/element response topic based on the ingress topic. -
 For “full coverage” control surfaces (create windows, move/resize,
@@ -455,7 +459,11 @@ element-level commands via the registration-based router.
 </ul></li>
 <li><code>kingkiosk/{device_id}/system/cmd</code> is accepted by the app
 and is routed to the unified dispatcher when no explicit system handler
-is registered. Calendar bidirectional sync details: see
+is registered.</li>
+<li>Some clients also subscribe to legacy
+<code>kingkiosk/{device_id}/window/+/command</code> for backward
+compatibility. Treat this as deprecated and use <code>system/cmd</code>
+for stable behavior. Calendar bidirectional sync details: see
 docs/CALENDAR_MQTT_SYNC.md.</li>
 </ul>
 <hr />
@@ -851,6 +859,11 @@ class="header-section-number">1.6.1</span> Command Topics
 <td><code>kingkiosk/{device_id}/element/{element_id}/cmd</code></td>
 <td>Canonical per-element commands</td>
 </tr>
+<tr>
+<td><code>kingkiosk/{device_id}/window/{window_id}/command</code></td>
+<td>Legacy compatibility path (deprecated; prefer
+<code>system/cmd</code>)</td>
+</tr>
 </tbody>
 </table>
 <h3 data-number="1.6.2" id="stateevent-topics-publish"><span
@@ -904,7 +917,8 @@ connected, reconnecting, URL, errors).</td>
 <tr>
 <td><code>kingkiosk/{device_id}/element/{element_id}/response</code></td>
 <td>No</td>
-<td>Command response (if correlation_id provided)</td>
+<td>Element command response (includes <code>correlation_id</code>;
+generated when omitted)</td>
 </tr>
 <tr>
 <td><code>kingkiosk/{device_id}/system/response</code></td>
@@ -932,8 +946,10 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href=
 <h3 data-number="1.7.3" id="notes"><span
 class="header-section-number">1.7.3</span> Notes</h3>
 <ul>
-<li>Element-scoped commands are delivered only to elements that register
-a handler with <code>MqttWidgetRouter.registerWidget(...)</code>.</li>
+<li>Element-scoped commands are first offered to registered element
+handlers (<code>MqttWidgetRouter.registerWidget(...)</code>); when no
+handler is registered, the unified dispatcher fallback may still process
+compatible commands.</li>
 <li>Per-element command schemas are widget-specific. This document
 treats <strong>system commands</strong> as the stable contract; element
 commands should be considered optional unless explicitly documented for
@@ -1318,8 +1334,9 @@ keys that are actually parsed/used by the current implementation.</p>
 <code>kingkiosk/{device_id}/system/cmd</code>. These create
 windows/tiles and perform global actions.</li>
 <li><strong>Element-scoped commands</strong>: publish to
-<code>kingkiosk/{device_id}/element/{element_id}/cmd</code>. Only
-controllers that register with the element router receive these.</li>
+<code>kingkiosk/{device_id}/element/{element_id}/cmd</code>. Registered
+element handlers process these first; compatible commands may still be
+handled by dispatcher fallback.</li>
 </ol>
 <h3 data-number="1.13.1" id="common-window-geometry-keys"><span
 class="header-section-number">1.13.1</span> Common Window Geometry
@@ -1535,8 +1552,9 @@ class="header-section-number">1.13.2.3</span> Window Mode
 </table>
 <p>Notes:</p>
 <ul>
-<li>This handler currently logs only (no success/error payload is
-published).</li>
+<li>The window-mode handler itself logs state changes; the unified
+system router still returns a command response on the system response
+topic.</li>
 </ul>
 <hr />
 <h4 data-number="1.13.2.4"
@@ -1597,8 +1615,9 @@ class="header-section-number">1.13.2.4</span> Update Window Geometry
 <code>height</code> are interpreted as <strong>physical pixels</strong>
 and are internally converted to logical pixels by dividing by the device
 pixel ratio.</li>
-<li>This handler currently logs only (no success/error payload is
-published).</li>
+<li>The geometry handler logs updates directly; the unified system
+router still returns a command response on the system response
+topic.</li>
 </ul>
 <hr />
 <h4 data-number="1.13.2.5"
@@ -1657,8 +1676,8 @@ config).</td>
 </table>
 <p>Notes:</p>
 <ul>
-<li>These commands currently log only (no success/error payload is
-published).</li>
+<li>These handlers log actions directly; the unified system router still
+returns a command response on the system response topic.</li>
 <li><code>hide_widget</code> closes the most recently created tile whose
 name contains <code>type</code> (case-insensitive), unless
 <code>type == all</code>.</li>
