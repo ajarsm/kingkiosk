@@ -262,6 +262,8 @@
     id="toc-led-panel-programmable-light-display"><span
     class="toc-section-number">1.13.20</span> LED Panel (Programmable
     Light Display)</a></li>
+    <li><a href="#rss-feed-widget" id="toc-rss-feed-widget"><span
+    class="toc-section-number">1.13.21</span> RSS Feed Widget</a></li>
     </ul></li>
     <li><a href="#integration-examples"
     id="toc-integration-examples"><span
@@ -12661,61 +12663,789 @@ class="header-section-number">1.13.20.3</span> Element State</h4>
 </tbody>
 </table>
 <hr />
+<h3 data-number="1.13.21" id="rss-feed-widget"><span
+class="header-section-number">1.13.21</span> RSS Feed Widget</h3>
+<p>A multi-feed RSS reader with 6 display modes, content filtering,
+reader overlay, and QR share. Supports RSS 2.0, Atom, and JSON Feed
+formats. Merges multiple feeds with deduplication, source badges, and
+automatic refresh.</p>
+<p>Widget type: <code>rss</code></p>
+<h4 data-number="1.13.21.1" id="system-commands-2"><span
+class="header-section-number">1.13.21.1</span> System Commands</h4>
+<h5 data-number="1.13.21.1.1" id="create_rss"><span
+class="header-section-number">1.13.21.1.1</span>
+<code>create_rss</code></h5>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 22%" />
+<col style="width: 33%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>window_id</code></td>
+<td>string</td>
+<td>(required)</td>
+<td>Unique window identifier.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td><code>"RSS Feed"</code></td>
+<td>Display name.</td>
+</tr>
+<tr>
+<td><code>feeds</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Feed sources. Array of feed objects or simple URL strings.</td>
+</tr>
+<tr>
+<td><code>display_mode</code></td>
+<td>string</td>
+<td><code>"carousel"</code></td>
+<td><code>ticker</code>, <code>carousel</code>, <code>grid</code>,
+<code>hero</code>, <code>quote</code>, <code>list</code>.</td>
+</tr>
+<tr>
+<td><code>rotation_interval</code></td>
+<td>int</td>
+<td><code>8</code></td>
+<td>Seconds between auto-advance. Alias:
+<code>rotation_interval_sec</code>.</td>
+</tr>
+<tr>
+<td><code>ticker_speed</code></td>
+<td>number</td>
+<td><code>50.0</code></td>
+<td>Scroll speed for ticker mode (pixels/sec).</td>
+</tr>
+<tr>
+<td><code>transition</code></td>
+<td>string</td>
+<td><code>"fade"</code></td>
+<td>Transition animation: <code>fade</code>, <code>slide</code>,
+<code>flip</code>, <code>zoom</code>.</td>
+</tr>
+<tr>
+<td><code>max_articles</code></td>
+<td>int</td>
+<td><code>100</code></td>
+<td>Maximum articles across all feeds.</td>
+</tr>
+<tr>
+<td><code>show_images</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Show article images.</td>
+</tr>
+<tr>
+<td><code>show_source_badge</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Show colored source name badge.</td>
+</tr>
+<tr>
+<td><code>show_timestamp</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Show relative time (e.g., “2h ago”).</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td>object</td>
+<td>-</td>
+<td>Content filter config (see filter keys below). Also accepts
+<code>filters</code>.</td>
+</tr>
+<tr>
+<td><code>quiet_hours</code></td>
+<td>object</td>
+<td>-</td>
+<td>Quiet hours config (see quiet hours keys below).</td>
+</tr>
+<tr>
+<td><code>background_mode</code></td>
+<td>string</td>
+<td><code>"transparent"</code></td>
+<td><code>transparent</code>, <code>color</code>, <code>gradient</code>,
+<code>image</code>.</td>
+</tr>
+<tr>
+<td><code>background_opacity</code></td>
+<td>number</td>
+<td><code>0.6</code></td>
+<td>Background layer opacity (0.0-1.0).</td>
+</tr>
+<tr>
+<td><code>background_color</code></td>
+<td>string</td>
+<td>-</td>
+<td>Hex color for <code>color</code> mode (e.g.,
+<code>"#1A1A2E"</code>).</td>
+</tr>
+<tr>
+<td><code>background_image_url</code></td>
+<td>string</td>
+<td>-</td>
+<td>URL for <code>image</code> mode.</td>
+</tr>
+<tr>
+<td><code>opacity</code></td>
+<td>number</td>
+<td><code>1.0</code></td>
+<td>Window opacity.</td>
+</tr>
+<tr>
+<td><code>x</code>, <code>y</code></td>
+<td>number</td>
+<td>-</td>
+<td>Optional window position.</td>
+</tr>
+<tr>
+<td><code>width</code>, <code>height</code></td>
+<td>number</td>
+<td><code>600</code>x<code>400</code></td>
+<td>Optional window size.</td>
+</tr>
+</tbody>
+</table>
+<p>Feed object keys:</p>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 22%" />
+<col style="width: 33%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>(required)</td>
+<td>Feed URL (RSS 2.0, Atom, or JSON Feed).</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>-</td>
+<td>Display name for source badge. Falls back to feed’s
+<code>&lt;title&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td>string</td>
+<td>-</td>
+<td>Badge color hex (e.g., <code>"#FF6B35"</code>).</td>
+</tr>
+<tr>
+<td><code>priority</code></td>
+<td>int</td>
+<td><code>5</code></td>
+<td>Sort priority (1-10, lower = higher).</td>
+</tr>
+<tr>
+<td><code>refresh_interval</code></td>
+<td>int</td>
+<td><code>300</code></td>
+<td>Per-feed refresh interval in seconds.</td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Whether this feed is active.</td>
+</tr>
+</tbody>
+</table>
+<p>Feeds also accept a simple string array:
+<code>"feeds": ["https://feed1.com/rss", "https://feed2.com/atom"]</code>.</p>
+<p>Filter object keys:</p>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 22%" />
+<col style="width: 33%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blocked_keywords</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Regex patterns to block (matched against title + description).</td>
+</tr>
+<tr>
+<td><code>allowed_keywords</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Whitelist regex patterns. If non-empty, only matching articles
+pass.</td>
+</tr>
+<tr>
+<td><code>blocked_categories</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Category names to block (case-insensitive).</td>
+</tr>
+<tr>
+<td><code>allowed_categories</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Allowed categories. Empty = allow all.</td>
+</tr>
+<tr>
+<td><code>family_mode</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Enable built-in family-safe filter (blocks violence, adult,
+gambling, drugs).</td>
+</tr>
+<tr>
+<td><code>custom_blocked_terms</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Additional blocked terms (appended to blocked_keywords).</td>
+</tr>
+</tbody>
+</table>
+<p>Quiet hours object keys:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Enable quiet hours.</td>
+</tr>
+<tr>
+<td><code>start_hour</code></td>
+<td>int</td>
+<td><code>22</code></td>
+<td>Start hour (0-23).</td>
+</tr>
+<tr>
+<td><code>start_minute</code></td>
+<td>int</td>
+<td><code>0</code></td>
+<td>Start minute (0-59).</td>
+</tr>
+<tr>
+<td><code>end_hour</code></td>
+<td>int</td>
+<td><code>7</code></td>
+<td>End hour (0-23).</td>
+</tr>
+<tr>
+<td><code>end_minute</code></td>
+<td>int</td>
+<td><code>0</code></td>
+<td>End minute (0-59).</td>
+</tr>
+</tbody>
+</table>
+<p>Quiet hours also accept <code>"start": "HH:MM"</code> and
+<code>"end": "HH:MM"</code> string format.</p>
+<h5 data-number="1.13.21.1.2" id="delete_rss"><span
+class="header-section-number">1.13.21.1.2</span>
+<code>delete_rss</code></h5>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>window_id</code></td>
+<td>string</td>
+<td>Required. Widget to remove.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.21.1.3" id="list_rss"><span
+class="header-section-number">1.13.21.1.3</span>
+<code>list_rss</code></h5>
+<p>No parameters. Returns all active RSS widgets on the device.</p>
+<p>Response:</p>
+<div class="sourceCode" id="cb63"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;success&quot;</span><span class="fu">,</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;list_rss&quot;</span><span class="fu">,</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;rss_widgets&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;news-feed&quot;</span><span class="fu">,</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;News&quot;</span> <span class="fu">}</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;count&quot;</span><span class="fu">:</span> <span class="dv">1</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h4 data-number="1.13.21.2" id="element-commands-9"><span
+class="header-section-number">1.13.21.2</span> Element Commands</h4>
+<p>Sent to
+<code>kingkiosk/{device_id}/element/{rss_widget_id}/cmd</code>.</p>
+<h5 data-number="1.13.21.2.1" id="set_feeds"><span
+class="header-section-number">1.13.21.2.1</span>
+<code>set_feeds</code></h5>
+<p>Replace all feed sources.</p>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 33%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>feeds</code></td>
+<td>array</td>
+<td>Array of feed objects (see feed object keys above).</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.21.2.2" id="add_feed"><span
+class="header-section-number">1.13.21.2.2</span>
+<code>add_feed</code></h5>
+<p>Add a single feed source. Top-level keys match feed object keys.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>Required. Feed URL.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>Optional. Source display name.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td>string</td>
+<td>Optional. Badge hex color.</td>
+</tr>
+<tr>
+<td><code>priority</code></td>
+<td>int</td>
+<td>Optional. Sort priority.</td>
+</tr>
+<tr>
+<td><code>refresh_interval</code></td>
+<td>int</td>
+<td>Optional. Refresh seconds.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.21.2.3" id="remove_feed"><span
+class="header-section-number">1.13.21.2.3</span>
+<code>remove_feed</code></h5>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>Required. URL of the feed to remove.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.21.2.4" id="refresh"><span
+class="header-section-number">1.13.21.2.4</span>
+<code>refresh</code></h5>
+<p>Force refresh all feeds. No parameters.</p>
+<h5 data-number="1.13.21.2.5" id="next-previous"><span
+class="header-section-number">1.13.21.2.5</span> <code>next</code> /
+<code>previous</code></h5>
+<p>Navigate to next or previous article. No parameters.</p>
+<h5 data-number="1.13.21.2.6" id="go_to"><span
+class="header-section-number">1.13.21.2.6</span> <code>go_to</code></h5>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>index</code></td>
+<td>int</td>
+<td>Required. Zero-based article index.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.21.2.7" id="set_mode"><span
+class="header-section-number">1.13.21.2.7</span>
+<code>set_mode</code></h5>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 33%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>string</td>
+<td>Required. <code>ticker</code>, <code>carousel</code>,
+<code>grid</code>, <code>hero</code>, <code>quote</code>,
+<code>list</code>.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.21.2.8" id="set_config-configure"><span
+class="header-section-number">1.13.21.2.8</span> <code>set_config</code>
+/ <code>configure</code></h5>
+<p>Update display configuration. All keys are optional.</p>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 33%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rotation_interval</code></td>
+<td>int</td>
+<td>Seconds between auto-advance. Alias:
+<code>rotation_interval_sec</code>.</td>
+</tr>
+<tr>
+<td><code>ticker_speed</code></td>
+<td>number</td>
+<td>Ticker scroll speed (pixels/sec).</td>
+</tr>
+<tr>
+<td><code>transition</code></td>
+<td>string</td>
+<td><code>fade</code>, <code>slide</code>, <code>flip</code>,
+<code>zoom</code>.</td>
+</tr>
+<tr>
+<td><code>max_articles</code></td>
+<td>int</td>
+<td>Max article count.</td>
+</tr>
+<tr>
+<td><code>show_images</code></td>
+<td>bool</td>
+<td>Show article images.</td>
+</tr>
+<tr>
+<td><code>show_source_badge</code></td>
+<td>bool</td>
+<td>Show source badge.</td>
+</tr>
+<tr>
+<td><code>show_timestamp</code></td>
+<td>bool</td>
+<td>Show time ago.</td>
+</tr>
+<tr>
+<td><code>display_mode</code></td>
+<td>string</td>
+<td><code>ticker</code>, <code>carousel</code>, <code>grid</code>,
+<code>hero</code>, <code>quote</code>, <code>list</code>.</td>
+</tr>
+<tr>
+<td><code>background_mode</code></td>
+<td>string</td>
+<td><code>transparent</code>, <code>color</code>, <code>gradient</code>,
+<code>image</code>.</td>
+</tr>
+<tr>
+<td><code>background_opacity</code></td>
+<td>number</td>
+<td>0.0-1.0.</td>
+</tr>
+<tr>
+<td><code>background_color</code></td>
+<td>string</td>
+<td>Hex color.</td>
+</tr>
+<tr>
+<td><code>background_image_url</code></td>
+<td>string</td>
+<td>Background image URL.</td>
+</tr>
+</tbody>
+</table>
+<h5 data-number="1.13.21.2.9" id="set_filters"><span
+class="header-section-number">1.13.21.2.9</span>
+<code>set_filters</code></h5>
+<p>Update content filters. Top-level keys match filter object keys (see
+create_rss).</p>
+<h5 data-number="1.13.21.2.10" id="set_quiet_hours"><span
+class="header-section-number">1.13.21.2.10</span>
+<code>set_quiet_hours</code></h5>
+<p>Update quiet hours. Top-level keys match quiet hours object keys (see
+create_rss).</p>
+<h5 data-number="1.13.21.2.11" id="share"><span
+class="header-section-number">1.13.21.2.11</span>
+<code>share</code></h5>
+<p>Show QR overlay for current article and publish a share event. No
+parameters.</p>
+<h5 data-number="1.13.21.2.12" id="expand-collapse"><span
+class="header-section-number">1.13.21.2.12</span> <code>expand</code> /
+<code>collapse</code></h5>
+<p>Open or close the reader overlay for the current article. No
+parameters.</p>
+<h5 data-number="1.13.21.2.13" id="pause-resume"><span
+class="header-section-number">1.13.21.2.13</span> <code>pause</code> /
+<code>resume</code></h5>
+<p>Pause or resume auto-rotation. No parameters.</p>
+<hr />
+<h4 data-number="1.13.21.3" id="element-state-2"><span
+class="header-section-number">1.13.21.3</span> Element State</h4>
+<p>Published to
+<code>kingkiosk/{device_id}/element/{rss_widget_id}/state</code>
+(retained).</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 25%" />
+<col style="width: 54%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>Always <code>"rss"</code>.</td>
+</tr>
+<tr>
+<td><code>widget_id</code></td>
+<td>string</td>
+<td>RSS widget window ID.</td>
+</tr>
+<tr>
+<td><code>element_id</code></td>
+<td>string</td>
+<td>Same as <code>widget_id</code>.</td>
+</tr>
+<tr>
+<td><code>display_mode</code></td>
+<td>string</td>
+<td>Current display mode.</td>
+</tr>
+<tr>
+<td><code>feeds</code></td>
+<td>array</td>
+<td>Active feeds <code>[{url, title}]</code>.</td>
+</tr>
+<tr>
+<td><code>total_articles</code></td>
+<td>int</td>
+<td>Total article count.</td>
+</tr>
+<tr>
+<td><code>current_index</code></td>
+<td>int</td>
+<td>Current article index.</td>
+</tr>
+<tr>
+<td><code>current_article</code></td>
+<td>object</td>
+<td><code>{title, source, url}</code> of current article.</td>
+</tr>
+<tr>
+<td><code>is_loading</code></td>
+<td>bool</td>
+<td>Feed refresh in progress.</td>
+</tr>
+<tr>
+<td><code>is_paused</code></td>
+<td>bool</td>
+<td>Auto-rotation paused.</td>
+</tr>
+<tr>
+<td><code>is_expanded</code></td>
+<td>bool</td>
+<td>Reader overlay open.</td>
+</tr>
+<tr>
+<td><code>last_refresh</code></td>
+<td>string</td>
+<td>ISO 8601 timestamp of last refresh.</td>
+</tr>
+<tr>
+<td><code>filters_active</code></td>
+<td>bool</td>
+<td>Whether content filters are active.</td>
+</tr>
+<tr>
+<td><code>quiet_hours_active</code></td>
+<td>bool</td>
+<td>Whether quiet hours are suppressing fetches.</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="1.13.21.4" id="element-events-1"><span
+class="header-section-number">1.13.21.4</span> Element Events</h4>
+<p>Published to
+<code>kingkiosk/{device_id}/element/{rss_widget_id}/event</code>
+(non-retained).</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 28%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr>
+<th>Event</th>
+<th>Fields</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>feed_loaded</code></td>
+<td><code>article_count</code></td>
+<td>Feeds refreshed successfully.</td>
+</tr>
+<tr>
+<td><code>share</code></td>
+<td><code>article_url</code>, <code>article_title</code>,
+<code>source</code></td>
+<td>User shared an article (QR shown).</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td><code>message</code></td>
+<td>Feed fetch or parse error.</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 data-number="1.14" id="integration-examples"><span
 class="header-section-number">1.14</span> Integration Examples</h2>
 <h3 data-number="1.14.1"
 id="node-red-monitor-and-control-a-clock-widget"><span
 class="header-section-number">1.14.1</span> Node-RED: Monitor and
 Control a Clock Widget</h3>
-<div class="sourceCode" id="cb63"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;clock-state-sub&quot;</span><span class="fu">,</span></span>
-<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;mqtt in&quot;</span><span class="fu">,</span></span>
-<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;topic&quot;</span><span class="fu">:</span> <span class="st">&quot;kingkiosk/my-device/element/clock-1/state&quot;</span><span class="fu">,</span></span>
-<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;qos&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span></span>
-<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;clock-cmd-pub&quot;</span><span class="fu">,</span></span>
-<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;mqtt out&quot;</span><span class="fu">,</span></span>
-<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;topic&quot;</span><span class="fu">:</span> <span class="st">&quot;kingkiosk/my-device/element/clock-1/cmd&quot;</span><span class="fu">,</span></span>
-<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;qos&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span></span>
-<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;clock-state-sub&quot;</span><span class="fu">,</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;mqtt in&quot;</span><span class="fu">,</span></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;topic&quot;</span><span class="fu">:</span> <span class="st">&quot;kingkiosk/my-device/element/clock-1/state&quot;</span><span class="fu">,</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;qos&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;clock-cmd-pub&quot;</span><span class="fu">,</span></span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;mqtt out&quot;</span><span class="fu">,</span></span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;topic&quot;</span><span class="fu">:</span> <span class="st">&quot;kingkiosk/my-device/element/clock-1/cmd&quot;</span><span class="fu">,</span></span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;qos&quot;</span><span class="fu">:</span> <span class="st">&quot;1&quot;</span></span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb64-14"><a href="#cb64-14" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div>
 <h3 data-number="1.14.2" id="home-assistant-widget-state-sensor"><span
 class="header-section-number">1.14.2</span> Home Assistant: Widget State
 Sensor</h3>
-<div class="sourceCode" id="cb64"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mqtt</span><span class="kw">:</span></span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">sensor</span><span class="kw">:</span></span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Living Room Clock Mode&quot;</span></span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">state_topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/my-device/element/clock-1/state&quot;</span></span>
-<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">value_template</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ value_json.mode }}&quot;</span></span>
-<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">json_attributes_topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/my-device/element/clock-1/state&quot;</span></span>
-<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">button</span><span class="kw">:</span></span>
-<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Toggle Clock Mode&quot;</span></span>
-<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">command_topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/my-device/element/clock-1/cmd&quot;</span></span>
-<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">payload_press</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;: &quot;toggle_mode&quot;}&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mqtt</span><span class="kw">:</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">sensor</span><span class="kw">:</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Living Room Clock Mode&quot;</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">state_topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/my-device/element/clock-1/state&quot;</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">value_template</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ value_json.mode }}&quot;</span></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">json_attributes_topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/my-device/element/clock-1/state&quot;</span></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">button</span><span class="kw">:</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Toggle Clock Mode&quot;</span></span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">command_topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/my-device/element/clock-1/cmd&quot;</span></span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">payload_press</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;: &quot;toggle_mode&quot;}&#39;</span></span></code></pre></div>
 <h3 data-number="1.14.3" id="python-list-all-widgets-on-a-device"><span
 class="header-section-number">1.14.3</span> Python: List All Widgets on
 a Device</h3>
-<div class="sourceCode" id="cb65"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> paho.mqtt.client <span class="im">as</span> mqtt</span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
-<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_message(client, userdata, msg):</span>
-<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>    info <span class="op">=</span> json.loads(msg.payload)</span>
-<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Device: </span><span class="sc">{</span>info[<span class="st">&#39;device_id&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
-<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Active widgets: </span><span class="sc">{</span>info[<span class="st">&#39;active_widgets&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
-<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> widget_id <span class="kw">in</span> info[<span class="st">&#39;active_widgets&#39;</span>]:</span>
-<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;  - </span><span class="sc">{</span>widget_id<span class="sc">}</span><span class="ss">&quot;</span>)</span>
-<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> mqtt.Client()</span>
-<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>client.on_message <span class="op">=</span> on_message</span>
-<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a>client.<span class="ex">connect</span>(<span class="st">&quot;broker.local&quot;</span>, <span class="dv">1883</span>)</span>
-<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a>client.subscribe(<span class="st">&quot;kingkiosk/+/info&quot;</span>)</span>
-<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a>client.loop_forever()</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> paho.mqtt.client <span class="im">as</span> mqtt</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_message(client, userdata, msg):</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>    info <span class="op">=</span> json.loads(msg.payload)</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Device: </span><span class="sc">{</span>info[<span class="st">&#39;device_id&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Active widgets: </span><span class="sc">{</span>info[<span class="st">&#39;active_widgets&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> widget_id <span class="kw">in</span> info[<span class="st">&#39;active_widgets&#39;</span>]:</span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;  - </span><span class="sc">{</span>widget_id<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> mqtt.Client()</span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>client.on_message <span class="op">=</span> on_message</span>
+<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a>client.<span class="ex">connect</span>(<span class="st">&quot;broker.local&quot;</span>, <span class="dv">1883</span>)</span>
+<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a>client.subscribe(<span class="st">&quot;kingkiosk/+/info&quot;</span>)</span>
+<span id="cb66-15"><a href="#cb66-15" aria-hidden="true" tabindex="-1"></a>client.loop_forever()</span></code></pre></div>
 <hr />
 <h2 data-number="1.15" id="canonical-topic-summary"><span
 class="header-section-number">1.15</span> Canonical Topic Summary</h2>
@@ -12738,74 +13468,74 @@ Support to Widgets</h2>
 <p>To add per-widget MQTT support to a widget controller:</p>
 <h3 data-number="1.16.1" id="add-the-mixin"><span
 class="header-section-number">1.16.1</span> 1. Add the Mixin</h3>
-<div class="sourceCode" id="cb66"><pre
-class="sourceCode dart"><code class="sourceCode dart"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="st">&#39;../../../widgets/mqtt_widget_mixin.dart&#39;</span>;</span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyWidgetController <span class="kw">extends</span> GetxController</span>
-<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">with</span> MqttWidgetMixin</span>
-<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">implements</span> KioskWindowController <span class="op">{</span></span>
-<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">@override</span></span>
-<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">String</span> <span class="kw">get</span> widgetId <span class="op">=&gt;</span> windowName;</span>
-<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">@override</span></span>
-<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">String</span> <span class="kw">get</span> widgetType <span class="op">=&gt;</span> <span class="st">&#39;my_widget&#39;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre
+class="sourceCode dart"><code class="sourceCode dart"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="st">&#39;../../../widgets/mqtt_widget_mixin.dart&#39;</span>;</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyWidgetController <span class="kw">extends</span> GetxController</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">with</span> MqttWidgetMixin</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">implements</span> KioskWindowController <span class="op">{</span></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">@override</span></span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">String</span> <span class="kw">get</span> widgetId <span class="op">=&gt;</span> windowName;</span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">@override</span></span>
+<span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">String</span> <span class="kw">get</span> widgetType <span class="op">=&gt;</span> <span class="st">&#39;my_widget&#39;</span>;</span></code></pre></div>
 <h3 data-number="1.16.2" id="register-in-oninit"><span
 class="header-section-number">1.16.2</span> 2. Register in onInit</h3>
-<div class="sourceCode" id="cb67"><pre
-class="sourceCode dart"><code class="sourceCode dart"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="kw">@override</span></span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> onInit() <span class="op">{</span></span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">super</span><span class="op">.</span>onInit();</span>
-<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  registerWithMqtt();</span>
-<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre
+class="sourceCode dart"><code class="sourceCode dart"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="kw">@override</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> onInit() <span class="op">{</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">super</span><span class="op">.</span>onInit();</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  registerWithMqtt();</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h3 data-number="1.16.3" id="unregister-in-onclose"><span
 class="header-section-number">1.16.3</span> 3. Unregister in
 onClose</h3>
-<div class="sourceCode" id="cb68"><pre
-class="sourceCode dart"><code class="sourceCode dart"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="kw">@override</span></span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> onClose() <span class="op">{</span></span>
-<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  unregisterFromMqtt();</span>
-<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">super</span><span class="op">.</span>onClose();</span>
-<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<h3 data-number="1.16.4" id="handle-commands"><span
-class="header-section-number">1.16.4</span> 4. Handle Commands</h3>
 <div class="sourceCode" id="cb69"><pre
 class="sourceCode dart"><code class="sourceCode dart"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="kw">@override</span></span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Future</span><span class="op">&lt;</span><span class="dt">Map</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">,</span> <span class="at">dynamic</span><span class="op">&gt;?&gt;</span> handleMqttCommand(</span>
-<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Map</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">,</span> <span class="at">dynamic</span><span class="op">&gt;</span> command) <span class="at">async</span> <span class="op">{</span></span>
-<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">final</span> cmd <span class="op">=</span> command[<span class="st">&#39;command&#39;</span>] <span class="kw">as</span> <span class="dt">String</span><span class="op">?</span>;</span>
-<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span> (cmd) <span class="op">{</span></span>
-<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&#39;my_command&#39;</span><span class="op">:</span></span>
-<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>      doSomething();</span>
-<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">return</span> <span class="op">{</span><span class="st">&#39;status&#39;</span><span class="op">:</span> <span class="st">&#39;success&#39;</span><span class="op">}</span>;</span>
-<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">default</span><span class="op">:</span></span>
-<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a>      <span class="kw">return</span> <span class="cn">null</span>; <span class="co">// Let mixin handle common commands</span></span>
-<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<h3 data-number="1.16.5" id="build-state"><span
-class="header-section-number">1.16.5</span> 5. Build State</h3>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> onClose() <span class="op">{</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  unregisterFromMqtt();</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">super</span><span class="op">.</span>onClose();</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 data-number="1.16.4" id="handle-commands"><span
+class="header-section-number">1.16.4</span> 4. Handle Commands</h3>
 <div class="sourceCode" id="cb70"><pre
 class="sourceCode dart"><code class="sourceCode dart"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="kw">@override</span></span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Map</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">,</span> <span class="at">dynamic</span><span class="op">&gt;</span> buildState() <span class="op">{</span></span>
-<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">return</span> <span class="op">{</span></span>
-<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;type&#39;</span><span class="op">:</span> widgetType<span class="op">,</span></span>
-<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;widget_id&#39;</span><span class="op">:</span> widgetId<span class="op">,</span></span>
-<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;my_value&#39;</span><span class="op">:</span> myValue<span class="op">,</span></span>
-<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... other state fields</span></span>
-<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span>;</span>
-<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Future</span><span class="op">&lt;</span><span class="dt">Map</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">,</span> <span class="at">dynamic</span><span class="op">&gt;?&gt;</span> handleMqttCommand(</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Map</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">,</span> <span class="at">dynamic</span><span class="op">&gt;</span> command) <span class="at">async</span> <span class="op">{</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">final</span> cmd <span class="op">=</span> command[<span class="st">&#39;command&#39;</span>] <span class="kw">as</span> <span class="dt">String</span><span class="op">?</span>;</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span> (cmd) <span class="op">{</span></span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&#39;my_command&#39;</span><span class="op">:</span></span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>      doSomething();</span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">return</span> <span class="op">{</span><span class="st">&#39;status&#39;</span><span class="op">:</span> <span class="st">&#39;success&#39;</span><span class="op">}</span>;</span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">default</span><span class="op">:</span></span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>      <span class="kw">return</span> <span class="cn">null</span>; <span class="co">// Let mixin handle common commands</span></span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 data-number="1.16.5" id="build-state"><span
+class="header-section-number">1.16.5</span> 5. Build State</h3>
+<div class="sourceCode" id="cb71"><pre
+class="sourceCode dart"><code class="sourceCode dart"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="kw">@override</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Map</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">,</span> <span class="at">dynamic</span><span class="op">&gt;</span> buildState() <span class="op">{</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">return</span> <span class="op">{</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;type&#39;</span><span class="op">:</span> widgetType<span class="op">,</span></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;widget_id&#39;</span><span class="op">:</span> widgetId<span class="op">,</span></span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;my_value&#39;</span><span class="op">:</span> myValue<span class="op">,</span></span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... other state fields</span></span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span>;</span>
+<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h3 data-number="1.16.6" id="publish-events-optional"><span
 class="header-section-number">1.16.6</span> 6. Publish Events
 (Optional)</h3>
-<div class="sourceCode" id="cb71"><pre
-class="sourceCode dart"><code class="sourceCode dart"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Publish custom events</span></span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>publishEvent(<span class="op">{</span><span class="st">&#39;event&#39;</span><span class="op">:</span> <span class="st">&#39;my_event&#39;</span><span class="op">,</span> <span class="st">&#39;data&#39;</span><span class="op">:</span> someData<span class="op">}</span>);</span>
-<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Convenience methods</span></span>
-<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>publishSimpleEvent(<span class="st">&#39;clicked&#39;</span>);</span>
-<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>publishError(<span class="st">&#39;Something went wrong&#39;</span><span class="op">,</span> <span class="st">&#39;ERR_CODE&#39;</span>);</span>
-<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>publishStateChange(<span class="st">&#39;idle&#39;</span><span class="op">,</span> <span class="st">&#39;playing&#39;</span>);</span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre
+class="sourceCode dart"><code class="sourceCode dart"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Publish custom events</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>publishEvent(<span class="op">{</span><span class="st">&#39;event&#39;</span><span class="op">:</span> <span class="st">&#39;my_event&#39;</span><span class="op">,</span> <span class="st">&#39;data&#39;</span><span class="op">:</span> someData<span class="op">}</span>);</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Convenience methods</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>publishSimpleEvent(<span class="st">&#39;clicked&#39;</span>);</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>publishError(<span class="st">&#39;Something went wrong&#39;</span><span class="op">,</span> <span class="st">&#39;ERR_CODE&#39;</span>);</span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>publishStateChange(<span class="st">&#39;idle&#39;</span><span class="op">,</span> <span class="st">&#39;playing&#39;</span>);</span></code></pre></div>
 <hr />
 <h2 data-number="1.17"
 id="appendix-a-led-panel-scripting-engine-reference"><span
@@ -12839,21 +13569,21 @@ in the grid, the engine:
 performance is excellent even on large grids.</p>
 <h3 data-number="1.17.2" id="script-json-format"><span
 class="header-section-number">1.17.2</span> Script JSON Format</h3>
-<div class="sourceCode" id="cb72"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;fps&quot;</span><span class="fu">:</span> <span class="dv">30</span><span class="fu">,</span></span>
-<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;loop&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;duration&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
-<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;speed&quot;</span><span class="fu">:</span> <span class="fl">2.0</span><span class="fu">,</span></span>
-<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;hue_offset&quot;</span><span class="fu">:</span> <span class="dv">120</span></span>
-<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
-<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;(cell_x * 10 + t * speed + hue_offset) % 360&quot;</span><span class="fu">,</span></span>
-<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
-<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.4 + 0.1 * sin(cell_dist_center * 6.28 - t * 3)&quot;</span></span>
-<span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;fps&quot;</span><span class="fu">:</span> <span class="dv">30</span><span class="fu">,</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;loop&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;duration&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;speed&quot;</span><span class="fu">:</span> <span class="fl">2.0</span><span class="fu">,</span></span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;hue_offset&quot;</span><span class="fu">:</span> <span class="dv">120</span></span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;(cell_x * 10 + t * speed + hue_offset) % 360&quot;</span><span class="fu">,</span></span>
+<span id="cb73-11"><a href="#cb73-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
+<span id="cb73-12"><a href="#cb73-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.4 + 0.1 * sin(cell_dist_center * 6.28 - t * 3)&quot;</span></span>
+<span id="cb73-13"><a href="#cb73-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb73-14"><a href="#cb73-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <table>
 <colgroup>
 <col style="width: 20%" />
@@ -13462,14 +14192,14 @@ class="header-section-number">1.17.7</span> Recipes and Examples</h3>
 <h4 data-number="1.17.7.1" id="rainbow-wave"><span
 class="header-section-number">1.17.7.1</span> 1. Rainbow Wave</h4>
 <p>A classic hue sweep across the grid, scrolling over time.</p>
-<div class="sourceCode" id="cb73"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;(cell_x * 20 + cell_y * 15 + t * 40) % 360&quot;</span><span class="fu">,</span></span>
-<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0&quot;</span><span class="fu">,</span></span>
-<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.5&quot;</span></span>
-<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;(cell_x * 20 + cell_y * 15 + t * 40) % 360&quot;</span><span class="fu">,</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0&quot;</span><span class="fu">,</span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.5&quot;</span></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>The <code>cell_x * 20</code> creates horizontal color variation,
 <code>cell_y * 15</code> adds diagonal tilt, and <code>t * 40</code>
 makes it move. Increase the multipliers for tighter color bands.</p>
@@ -13477,29 +14207,29 @@ makes it move. Increase the multipliers for tighter color bands.</p>
 class="header-section-number">1.17.7.2</span> 2. Pulsing Concentric
 Rings</h4>
 <p>Rings of light expand outward from the center.</p>
-<div class="sourceCode" id="cb74"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;ring_count&quot;</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span> <span class="dt">&quot;speed&quot;</span><span class="fu">:</span> <span class="dv">2</span> <span class="fu">},</span></span>
-<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;200&quot;</span><span class="fu">,</span></span>
-<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.8&quot;</span><span class="fu">,</span></span>
-<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.15 + 0.35 * (0.5 + 0.5 * sin(cell_dist_center * ring_count * 6.28 - t * speed))&quot;</span></span>
-<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;ring_count&quot;</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span> <span class="dt">&quot;speed&quot;</span><span class="fu">:</span> <span class="dv">2</span> <span class="fu">},</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;200&quot;</span><span class="fu">,</span></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.8&quot;</span><span class="fu">,</span></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.15 + 0.35 * (0.5 + 0.5 * sin(cell_dist_center * ring_count * 6.28 - t * speed))&quot;</span></span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p><code>cell_dist_center * ring_count * 6.28</code> creates multiple
 sine wave rings. Subtracting <code>t * speed</code> makes them expand
 outward. Change <code>ring_count</code> to control density.</p>
 <h4 data-number="1.17.7.3" id="fire-effect"><span
 class="header-section-number">1.17.7.3</span> 3. Fire Effect</h4>
 <p>Warm colors flickering upward using noise.</p>
-<div class="sourceCode" id="cb75"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;10 + 25 * noise(cell_x * 0.5, t * 2)&quot;</span><span class="fu">,</span></span>
-<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0&quot;</span><span class="fu">,</span></span>
-<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;clamp(0.6 * (1 - cell_y / total_rows) + 0.15 * noise(cell_x * 0.8, cell_y * 0.5 + t * 3), 0.02, 0.7)&quot;</span></span>
-<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;10 + 25 * noise(cell_x * 0.5, t * 2)&quot;</span><span class="fu">,</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0&quot;</span><span class="fu">,</span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;clamp(0.6 * (1 - cell_y / total_rows) + 0.15 * noise(cell_x * 0.8, cell_y * 0.5 + t * 3), 0.02, 0.7)&quot;</span></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>Hue varies between orange and red using noise. Lightness decreases
 from bottom to top (fire rises), with noise adding flicker.
 <code>clamp</code> prevents it from going fully black or white.</p>
@@ -13507,42 +14237,42 @@ from bottom to top (fire rises), with noise adding flicker.
 class="header-section-number">1.17.7.4</span> 4. Color Zones
 (Threshold-Based)</h4>
 <p>Color cells based on their position — useful for status panels.</p>
-<div class="sourceCode" id="cb76"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;cell_x &lt; total_cols * 0.33 ? 0 : cell_x &lt; total_cols * 0.66 ? 60 : 120&quot;</span><span class="fu">,</span></span>
-<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
-<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.45 + 0.05 * sin(t * 2)&quot;</span></span>
-<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb77"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;cell_x &lt; total_cols * 0.33 ? 0 : cell_x &lt; total_cols * 0.66 ? 60 : 120&quot;</span><span class="fu">,</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.45 + 0.05 * sin(t * 2)&quot;</span></span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>Left third is red (hue 0), middle is yellow (60), right is green
 (120). The lightness gently pulses. Replace the thresholds with
 sensor-driven user variables for a live status board.</p>
 <h4 data-number="1.17.7.5" id="spiral"><span
 class="header-section-number">1.17.7.5</span> 5. Spiral</h4>
 <p>A color spiral rotating from the center.</p>
-<div class="sourceCode" id="cb77"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;(cell_angle / PI * 180 + cell_dist_center * 360 + t * 60) % 360&quot;</span><span class="fu">,</span></span>
-<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.85&quot;</span><span class="fu">,</span></span>
-<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.3 + 0.2 * cell_dist_center&quot;</span></span>
-<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;(cell_angle / PI * 180 + cell_dist_center * 360 + t * 60) % 360&quot;</span><span class="fu">,</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.85&quot;</span><span class="fu">,</span></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.3 + 0.2 * cell_dist_center&quot;</span></span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p><code>cell_angle</code> provides the angular component,
 <code>cell_dist_center</code> adds radial twist, and <code>t * 60</code>
 makes it rotate. Cells further from center are slightly brighter.</p>
 <h4 data-number="1.17.7.6" id="lava-lamp-smooth-organic-blobs"><span
 class="header-section-number">1.17.7.6</span> 6. Lava Lamp (Smooth
 Organic Blobs)</h4>
-<div class="sourceCode" id="cb78"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;noise(cell_x * 0.15, cell_y * 0.15 + t * 0.3) * 60 + 280&quot;</span><span class="fu">,</span></span>
-<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
-<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.3 + 0.25 * smoothstep(-0.2, 0.5, noise(cell_x * 0.2 + t * 0.1, cell_y * 0.2 + t * 0.15))&quot;</span></span>
-<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb79"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;noise(cell_x * 0.15, cell_y * 0.15 + t * 0.3) * 60 + 280&quot;</span><span class="fu">,</span></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.3 + 0.25 * smoothstep(-0.2, 0.5, noise(cell_x * 0.2 + t * 0.1, cell_y * 0.2 + t * 0.15))&quot;</span></span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>Two layers of simplex noise at different scales create slowly
 drifting blobs. <code>smoothstep</code> sharpens the blob edges. Hue
 stays in the purple/magenta range (280 +/- 60).</p>
@@ -13550,15 +14280,15 @@ stays in the purple/magenta range (280 +/- 60).</p>
 class="header-section-number">1.17.7.7</span> 7. Strobe / Flash to
 Beat</h4>
 <p>Flash all cells on a timed interval (e.g., every 0.5 seconds).</p>
-<div class="sourceCode" id="cb79"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;bpm&quot;</span><span class="fu">:</span> <span class="dv">120</span> <span class="fu">},</span></span>
-<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;0&quot;</span><span class="fu">,</span></span>
-<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0&quot;</span><span class="fu">,</span></span>
-<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;fract(t * bpm / 60) &lt; 0.15 ? 1.0 : 0.02&quot;</span></span>
-<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;bpm&quot;</span><span class="fu">:</span> <span class="dv">120</span> <span class="fu">},</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;0&quot;</span><span class="fu">,</span></span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0&quot;</span><span class="fu">,</span></span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;fract(t * bpm / 60) &lt; 0.15 ? 1.0 : 0.02&quot;</span></span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p><code>t * bpm / 60</code> counts beats. <code>fract()</code> gives
 position within the current beat (0-1). The first 15% of each beat is a
 bright white flash, then dark. Adjust <code>0.15</code> for
@@ -13566,14 +14296,14 @@ longer/shorter flashes.</p>
 <h4 data-number="1.17.7.8" id="matrix-digital-rain-per-column"><span
 class="header-section-number">1.17.7.8</span> 8. Matrix / Digital Rain
 Per Column</h4>
-<div class="sourceCode" id="cb80"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;120&quot;</span><span class="fu">,</span></span>
-<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0&quot;</span><span class="fu">,</span></span>
-<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;clamp(0.5 - abs(cell_y - fmod(t * 4 + cell_x * 3.7, total_rows + 4)) * 0.15, 0.01, 0.5)&quot;</span></span>
-<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb81"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;120&quot;</span><span class="fu">,</span></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0&quot;</span><span class="fu">,</span></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;clamp(0.5 - abs(cell_y - fmod(t * 4 + cell_x * 3.7, total_rows + 4)) * 0.15, 0.01, 0.5)&quot;</span></span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>Each column has a “raindrop” position calculated from time and a
 per-column phase offset (<code>cell_x * 3.7</code>). Lightness falls off
 around the drop position using <code>abs()</code>. Green hue (120) for
@@ -13582,14 +14312,14 @@ the classic Matrix look.</p>
 id="smooth-color-cycling-with-brightness-wave"><span
 class="header-section-number">1.17.7.9</span> 9. Smooth Color Cycling
 with Brightness Wave</h4>
-<div class="sourceCode" id="cb81"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;t * 20&quot;</span><span class="fu">,</span></span>
-<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
-<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.25 + 0.25 * sin(cell_x * 0.5 + cell_y * 0.3 + t * 1.5)&quot;</span></span>
-<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;t * 20&quot;</span><span class="fu">,</span></span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.9&quot;</span><span class="fu">,</span></span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;0.25 + 0.25 * sin(cell_x * 0.5 + cell_y * 0.3 + t * 1.5)&quot;</span></span>
+<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>All cells share the same slowly changing hue, but lightness varies
 spatially as a diagonal sine wave. Simple yet visually rich.</p>
 <h4 data-number="1.17.7.10" id="binary-clock-advanced"><span
@@ -13597,15 +14327,15 @@ class="header-section-number">1.17.7.10</span> 10. Binary Clock
 (Advanced)</h4>
 <p>Display hours and minutes as binary columns (conceptual — requires at
 least 6 columns and 4 rows).</p>
-<div class="sourceCode" id="cb82"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;on_hue&quot;</span><span class="fu">:</span> <span class="dv">200</span><span class="fu">,</span> <span class="dt">&quot;off_l&quot;</span><span class="fu">:</span> <span class="fl">0.05</span> <span class="fu">},</span></span>
-<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;on_hue&quot;</span><span class="fu">,</span></span>
-<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.8&quot;</span><span class="fu">,</span></span>
-<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;fmod(floor(fmod(t / 60, 60) / pow(2, 3 - cell_y)), 2) &gt; 0.5 &amp;&amp; cell_x &lt; 6 ? 0.5 : off_l&quot;</span></span>
-<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb82-8"><a href="#cb82-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb83"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;variables&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;on_hue&quot;</span><span class="fu">:</span> <span class="dv">200</span><span class="fu">,</span> <span class="dt">&quot;off_l&quot;</span><span class="fu">:</span> <span class="fl">0.05</span> <span class="fu">},</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;per_cell&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;h&quot;</span><span class="fu">:</span> <span class="st">&quot;on_hue&quot;</span><span class="fu">,</span></span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;s&quot;</span><span class="fu">:</span> <span class="st">&quot;0.8&quot;</span><span class="fu">,</span></span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;l&quot;</span><span class="fu">:</span> <span class="st">&quot;fmod(floor(fmod(t / 60, 60) / pow(2, 3 - cell_y)), 2) &gt; 0.5 &amp;&amp; cell_x &lt; 6 ? 0.5 : off_l&quot;</span></span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>This uses <code>t / 60</code> as a minute counter, divides by powers
 of 2 per row to extract binary digits, and checks each bit. Each column
 represents a digit, each row a bit position.</p>
