@@ -1,0 +1,92 @@
+name: Feature Request
+description: Suggest a new feature or improvement for KingKiosk
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea for KingKiosk? We'd love to hear it!
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: Which platform(s) would this feature apply to?
+      options:
+        - All Platforms
+        - Android
+        - iOS
+        - macOS
+        - Windows
+        - Linux / Raspberry Pi
+        - Apple TV (tvOS)
+        - Web
+      multiple: true
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature Area
+      description: Which area does this relate to?
+      options:
+        - MQTT / Commands
+        - Intercom / WebRTC
+        - Media Playback
+        - WebView
+        - Window / Tile Layout
+        - Kiosk Mode
+        - Home Assistant Integration
+        - Settings / Configuration
+        - Text-to-Speech
+        - Object Detection / AI
+        - New Window Type
+        - New Platform Support
+        - API / Integration
+        - Other
+      multiple: true
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Use Case
+      description: What problem does this solve, or what use case does it enable?
+      placeholder: I'm trying to... / It would be useful for...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How do you envision this working?
+      placeholder: Describe your ideal solution
+    validations:
+      required: true
+
+  - type: textarea
+    id: mqtt_commands
+    attributes:
+      label: Suggested MQTT Commands (if applicable)
+      description: If this involves new MQTT commands, describe the topic/payload structure
+      placeholder: |
+        Topic: kingkiosk/{device_id}/element/{id}/cmd
+        Command: new_command
+        Payload: {"key": "value"}
+      render: json
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative approaches?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context, mockups, or screenshots

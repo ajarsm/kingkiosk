@@ -1,0 +1,66 @@
+name: Question / Help
+description: Ask a question about setup, configuration, or usage
+title: "[Question] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Need help with KingKiosk? Check the [documentation](https://github.com/ajarsm/kingkiosk/tree/main/docs) first, then ask here if you still need help.
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: Which platform are you using?
+      options:
+        - Android
+        - iOS
+        - macOS
+        - Windows
+        - Linux / Raspberry Pi
+        - Apple TV (tvOS)
+        - Web
+        - Not platform-specific
+      multiple: false
+    validations:
+      required: true
+
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      description: What is your question about?
+      options:
+        - Installation / Setup
+        - MQTT Configuration
+        - Home Assistant Integration
+        - Intercom / WebRTC Setup
+        - Kiosk Mode
+        - Window / Tile Management
+        - Media Playback
+        - MQTT Commands
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: Describe what you need help with
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What I've Tried
+      description: What have you already tried or looked at?
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Relevant Configuration
+      description: Share any relevant settings (redact passwords/tokens)
+      render: yaml
