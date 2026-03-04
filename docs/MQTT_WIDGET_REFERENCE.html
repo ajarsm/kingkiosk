@@ -928,6 +928,12 @@ generated when omitted)</td>
 <td>No</td>
 <td>System command response</td>
 </tr>
+<tr>
+<td><code>kingkiosk/fleet/{fleet_id}/layout</code></td>
+<td>Optional (<code>retain</code> on publish)</td>
+<td>Shared fleet layout bus used by <code>replicate_layout</code> and
+<code>subscribe_fleet</code></td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -1182,6 +1188,11 @@ details.</li>
 <td><strong>Batch / scripting</strong></td>
 <td><code>batch</code>, <code>kill_batch_script</code>,
 <code>batch_status</code>, <code>wait</code></td>
+</tr>
+<tr>
+<td><strong>Fleet layout management</strong></td>
+<td><code>replicate_layout</code>, <code>subscribe_fleet</code>,
+<code>unsubscribe_fleet</code></td>
 </tr>
 <tr>
 <td><strong>Screen schedule</strong></td>
@@ -5590,8 +5601,52 @@ id="fleet-layout-replication-replicate_layout-subscribe_fleet-unsubscribe_fleet"
 class="header-section-number">1.13.3.25</span> Fleet Layout Replication
 (<code>replicate_layout</code>, <code>subscribe_fleet</code>,
 <code>unsubscribe_fleet</code>)</h4>
-<p>These commands publish/receive layout updates on a shared fleet
-topic.</p>
+<p>Fleet management uses three topic layers:</p>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 42%" />
+<col style="width: 34%" />
+</colgroup>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Direction</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kingkiosk/{device_id}/system/cmd</code></td>
+<td>Controller -&gt; device</td>
+<td>Send fleet control commands (<code>replicate_layout</code>,
+<code>subscribe_fleet</code>, <code>unsubscribe_fleet</code>)</td>
+</tr>
+<tr>
+<td><code>kingkiosk/{device_id}/system/response</code> (or valid
+<code>response_topic</code>)</td>
+<td>Device -&gt; controller</td>
+<td>Command ack/errors for fleet commands</td>
+</tr>
+<tr>
+<td><code>kingkiosk/fleet/{fleet_id}/layout</code></td>
+<td>Device &lt;-&gt; fleet listeners</td>
+<td>Shared fleet layout bus carrying <code>apply_layout</code>
+snapshots</td>
+</tr>
+</tbody>
+</table>
+<p>Validation rules used by fleet commands:</p>
+<ul>
+<li><code>fleet_id</code> cannot be empty and cannot contain
+<code>/</code>, <code>+</code>, <code>#</code>, or NUL.</li>
+<li><code>target_topic</code> cannot be empty and cannot contain
+<code>+</code>, <code>#</code>, or NUL.</li>
+<li>Boolean keys (<code>retain</code>, <code>auto_apply</code>) accept
+bool, number (<code>0</code>/<code>1</code>), and common string values
+(<code>true/false</code>, <code>yes/no</code>,
+<code>on/off</code>).</li>
+</ul>
 <h5 data-number="1.13.3.25.1" id="replicate_layout"><span
 class="header-section-number">1.13.3.25.1</span>
 <code>replicate_layout</code></h5>
@@ -5635,7 +5690,8 @@ class="header-section-number">1.13.3.25.1</span>
 <td><code>response_topic</code></td>
 <td>string</td>
 <td>-</td>
-<td>Optional response topic for replication status.</td>
+<td>Optional response topic for replication status. Must be inside the
+same device namespace when overridden.</td>
 </tr>
 <tr>
 <td><code>correlation_id</code></td>
@@ -5688,7 +5744,8 @@ class="header-section-number">1.13.3.25.2</span>
 <td><code>response_topic</code></td>
 <td>string</td>
 <td>-</td>
-<td>Optional response topic for subscription status.</td>
+<td>Optional response topic for subscription status. Must be inside the
+same device namespace when overridden.</td>
 </tr>
 <tr>
 <td><code>correlation_id</code></td>
@@ -5699,6 +5756,13 @@ class="header-section-number">1.13.3.25.2</span>
 </tbody>
 </table>
 <p>Subscribes to <code>kingkiosk/fleet/{fleet_id}/layout</code>.</p>
+<p>Behavior after subscribe:</p>
+<ul>
+<li><code>auto_apply: true</code>: incoming fleet layouts are applied
+immediately.</li>
+<li><code>auto_apply: false</code>: layout messages are observed but not
+applied; device reports fleet update status only.</li>
+</ul>
 <h5 data-number="1.13.3.25.3" id="unsubscribe_fleet"><span
 class="header-section-number">1.13.3.25.3</span>
 <code>unsubscribe_fleet</code></h5>
@@ -5725,7 +5789,8 @@ class="header-section-number">1.13.3.25.3</span>
 <tr>
 <td><code>response_topic</code></td>
 <td>string</td>
-<td>Optional response topic for unsubscribe status.</td>
+<td>Optional response topic for unsubscribe status. Must be inside the
+same device namespace when overridden.</td>
 </tr>
 <tr>
 <td><code>correlation_id</code></td>
@@ -5734,6 +5799,15 @@ class="header-section-number">1.13.3.25.3</span>
 </tr>
 </tbody>
 </table>
+<p>Typical response statuses for fleet operations include:</p>
+<ul>
+<li><code>replicated</code></li>
+<li><code>subscribed</code></li>
+<li><code>unsubscribed</code></li>
+<li><code>fleet_update</code></li>
+<li><code>applied</code></li>
+<li><code>error</code></li>
+</ul>
 <hr />
 <h4 data-number="1.13.3.26"
 id="screen-schedule-set_screen_schedule-list_screen_schedule-enable_screen_schedule-disable_screen_schedule-screen_schedule_status-trigger_screen_schedule"><span
@@ -11631,6 +11705,10 @@ class="header-section-number">1.13.15.1</span> <code>open_browser</code>
 <p>Note (tvOS): Apple TV maps <code>open_browser</code> /
 <code>open_web</code> / <code>open_simple_web</code> to
 <code>create_remote_browser</code>.</p>
+<p>Note (Linux): Linux now maps <code>open_browser</code> /
+<code>open_web</code> / <code>open_simple_web</code> to
+<code>create_remote_browser</code> (remote browser), because local
+in-app webview support is not available.</p>
 <p>Note (Flutter): <code>open_browser</code> / <code>open_web</code> are
 aliases for <code>open_simple_web</code> (SimpleWeb).</p>
 <h4 data-number="1.13.15.2" id="webrtc_player"><span
@@ -12884,8 +12962,9 @@ class="header-section-number">1.13.21.1.1</span>
 <td><code>transition</code></td>
 <td>string</td>
 <td><code>"fade"</code></td>
-<td>Transition animation: <code>fade</code>, <code>slide</code>,
-<code>flip</code>, <code>zoom</code>.</td>
+<td>Accepted config value: <code>fade</code>, <code>slide</code>,
+<code>flip</code>, <code>zoom</code> (stored and reported in state;
+current RSS views use mode-specific animations).</td>
 </tr>
 <tr>
 <td><code>max_articles</code></td>
@@ -13010,7 +13089,8 @@ class="header-section-number">1.13.21.1.1</span>
 <td><code>priority</code></td>
 <td>int</td>
 <td><code>5</code></td>
-<td>Sort priority (1-10, lower = higher).</td>
+<td>Source weighting hint. Higher values boost article rank in merge
+sorting.</td>
 </tr>
 <tr>
 <td><code>refresh_interval</code></td>
@@ -13081,7 +13161,8 @@ gambling, drugs).</td>
 <td><code>custom_blocked_terms</code></td>
 <td>array</td>
 <td><code>[]</code></td>
-<td>Additional blocked terms (appended to blocked_keywords).</td>
+<td>Additional blocked terms. Applied when
+<code>family_mode=true</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -13198,6 +13279,11 @@ class="header-section-number">1.13.21.2.2</span>
 <code>add_feed</code></h5>
 <p>Add a single feed source. Top-level keys match feed object keys.</p>
 <table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 33%" />
+<col style="width: 38%" />
+</colgroup>
 <thead>
 <tr>
 <th>Key</th>
@@ -13224,7 +13310,7 @@ class="header-section-number">1.13.21.2.2</span>
 <tr>
 <td><code>priority</code></td>
 <td>int</td>
-<td>Optional. Sort priority.</td>
+<td>Optional. Source weighting hint (higher values rank higher).</td>
 </tr>
 <tr>
 <td><code>refresh_interval</code></td>
@@ -13337,7 +13423,8 @@ class="header-section-number">1.13.21.2.8</span> <code>set_config</code>
 <td><code>transition</code></td>
 <td>string</td>
 <td><code>fade</code>, <code>slide</code>, <code>flip</code>,
-<code>zoom</code>.</td>
+<code>zoom</code> (stored and reported in state; current RSS views use
+mode-specific animations).</td>
 </tr>
 <tr>
 <td><code>max_articles</code></td>
