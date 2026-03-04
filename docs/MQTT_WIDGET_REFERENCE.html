@@ -354,12 +354,17 @@ class="header-section-number">1</span> KingKiosk MQTT Element
 Architecture Reference</h1>
 <p>This document describes the KingDSP-style MQTT architecture for
 KingKiosk.</p>
-<p>Canonical control is split into:</p>
+<p>Canonical control uses the same <strong>system vs element</strong>
+model at two scopes:</p>
 <ol type="1">
-<li><strong>System-level commands</strong> (<code>system/*</code>) -
-control the device as a whole</li>
-<li><strong>Element-level commands</strong> (<code>element/*</code>) -
-control an individual element (typically a window tile)</li>
+<li><strong>Device scope, system-level</strong> -
+<code>kingkiosk/{device_id}/system/cmd</code></li>
+<li><strong>Device scope, element-level</strong> -
+<code>kingkiosk/{device_id}/element/{element_id}/cmd</code></li>
+<li><strong>Fleet scope, system-level</strong> -
+<code>kingkiosk/fleet/{fleet_id}/cmd</code></li>
+<li><strong>Fleet scope, element-level</strong> -
+<code>kingkiosk/fleet/{fleet_id}/element/{element_id}/cmd</code></li>
 </ol>
 <p>Legacy <strong>command ingress</strong> topic families (especially
 <code>.../command</code> and widget/window-scoped command paths) are
@@ -380,6 +385,10 @@ following as the stable MQTT API contract:</p>
 <code>kingkiosk/{device_id}/element/{element_id}/cmd</code> (first
 routed to registered element handlers, then unified dispatcher fallback
 when applicable)</li>
+<li>Fleet/system broadcast:
+<code>kingkiosk/fleet/{fleet_id}/cmd</code></li>
+<li>Fleet/element broadcast:
+<code>kingkiosk/fleet/{fleet_id}/element/{element_id}/cmd</code></li>
 </ul></li>
 <li><strong>Egress (responses)</strong>
 <ul>
@@ -400,15 +409,23 @@ when applicable)</li>
 (non-retained)</li>
 </ul></li>
 </ul>
-<p>Rules: - Prefer canonical topics; do not rely on legacy
-command-ingress families (<code>.../command</code>, widget/window-scoped
-command topics) for new integrations. - For any command, if
-<code>response_topic</code> is omitted, the app will default to the
-canonical system/element response topic based on the ingress topic. -
-For “full coverage” control surfaces (create windows, move/resize,
+<p>Rules:</p>
+<ul>
+<li>Prefer canonical topics; do not rely on legacy command-ingress
+families (<code>.../command</code>, widget/window-scoped command topics)
+for new integrations.</li>
+<li>For any command, if <code>response_topic</code> is omitted, the app
+will default to the canonical system/element response topic based on the
+ingress topic.</li>
+<li>For “full coverage” control surfaces (create windows, move/resize,
 tiling, etc.), rely on the <strong>System Commands</strong> section
 (system/cmd). Treat element commands as widget-specific
-enhancements.</p>
+enhancements.</li>
+<li>Fleet topics are command ingress only; each receiving device
+publishes responses on its own canonical response topics.</li>
+<li>For fleet element broadcasts, <code>{element_id}</code> is taken
+from the topic path and is authoritative.</li>
+</ul>
 <h2 data-number="1.2" id="table-of-contents"><span
 class="header-section-number">1.2</span> Table of Contents</h2>
 <ol type="1">
@@ -426,18 +443,32 @@ class="header-section-number">1.2</span> Table of Contents</h2>
 <hr />
 <h2 data-number="1.3" id="overview"><span
 class="header-section-number">1.3</span> Overview</h2>
-<p>The architecture provides two levels of MQTT control:</p>
+<p>The architecture has one command model (system vs element) at two
+scopes (device vs fleet):</p>
 <ol type="1">
-<li><strong>System-level commands</strong> - control the device as a
-whole (screen, tiling, etc.)</li>
-<li><strong>Element-level commands</strong> - direct control of an
-individual element/window</li>
+<li><strong>Device scope</strong>
+<ul>
+<li>System commands: control the whole device
+(<code>.../system/cmd</code>)</li>
+<li>Element commands: control one element/window
+(<code>.../element/{element_id}/cmd</code>)</li>
+</ul></li>
+<li><strong>Fleet scope</strong>
+<ul>
+<li>System commands: fan out one command to all subscribed devices
+(<code>.../fleet/{fleet_id}/cmd</code>)</li>
+<li>Element commands: fan out one command to the same element id on all
+subscribed devices
+(<code>.../fleet/{fleet_id}/element/{element_id}/cmd</code>)</li>
+</ul></li>
 </ol>
 <h3 data-number="1.3.1" id="key-benefits"><span
 class="header-section-number">1.3.1</span> Key Benefits</h3>
 <ul>
 <li><strong>Granular control</strong>: Send commands directly to a
 specific element</li>
+<li><strong>Fleet fan-out</strong>: Broadcast one system or element
+command to all subscribed devices</li>
 <li><strong>Automatic state publishing</strong>: Registered elements can
 publish their state automatically</li>
 <li><strong>Event streaming</strong>: Real-time events from registered
@@ -463,6 +494,10 @@ element-level commands via the registration-based router.
 <li><code>kingkiosk/{device_id}/system/cmd</code> is accepted by the app
 and is routed to the unified dispatcher when no explicit system handler
 is registered.</li>
+<li>Fleet subscriptions are opt-in via <code>subscribe_fleet</code>;
+devices can subscribe to layout (<code>.../layout</code>), fleet system
+commands (<code>.../cmd</code>), and fleet element commands
+(<code>.../element/+/cmd</code>).</li>
 <li>Some clients also subscribe to legacy
 <code>kingkiosk/{device_id}/window/+/command</code> for backward
 compatibility. Treat this as deprecated and use <code>system/cmd</code>
@@ -863,6 +898,19 @@ class="header-section-number">1.6.1</span> Command Topics
 <td>Canonical per-element commands</td>
 </tr>
 <tr>
+<td><code>kingkiosk/fleet/{fleet_id}/cmd</code></td>
+<td>Fleet system command bus (fan-out to subscribed devices)</td>
+</tr>
+<tr>
+<td><code>kingkiosk/fleet/{fleet_id}/element/{element_id}/cmd</code></td>
+<td>Fleet element command bus (topic-addressed element fan-out)</td>
+</tr>
+<tr>
+<td><code>kingkiosk/fleet/{fleet_id}/element/+/cmd</code></td>
+<td>Fleet element subscription filter used by
+<code>subscribe_fleet</code></td>
+</tr>
+<tr>
 <td><code>kingkiosk/{device_id}/window/{window_id}/command</code></td>
 <td>Legacy compatibility path (deprecated; prefer
 <code>system/cmd</code>)</td>
@@ -936,6 +984,11 @@ generated when omitted)</td>
 </tr>
 </tbody>
 </table>
+<p>Notes: - Fleet command topics (<code>.../fleet/{fleet_id}/cmd</code>
+and <code>.../fleet/{fleet_id}/element/{element_id}/cmd</code>) are
+ingress channels. - Responses for fleet-delivered commands still publish
+per device on canonical system/element response topics unless an allowed
+<code>response_topic</code> override is used.</p>
 <hr />
 <h2 data-number="1.7" id="element-commands"><span
 class="header-section-number">1.7</span> Element Commands</h2>
@@ -1190,9 +1243,10 @@ details.</li>
 <code>batch_status</code>, <code>wait</code></td>
 </tr>
 <tr>
-<td><strong>Fleet layout management</strong></td>
+<td><strong>Fleet management</strong></td>
 <td><code>replicate_layout</code>, <code>subscribe_fleet</code>,
-<code>unsubscribe_fleet</code></td>
+<code>unsubscribe_fleet</code>, <code>broadcast_fleet_command</code>,
+<code>publish_fleet_command</code></td>
 </tr>
 <tr>
 <td><strong>Screen schedule</strong></td>
@@ -5597,11 +5651,12 @@ the imported object).</td>
 </table>
 <hr />
 <h4 data-number="1.13.3.25"
-id="fleet-layout-replication-replicate_layout-subscribe_fleet-unsubscribe_fleet"><span
-class="header-section-number">1.13.3.25</span> Fleet Layout Replication
+id="fleet-management-replicate_layout-subscribe_fleet-unsubscribe_fleet-broadcast_fleet_command-publish_fleet_command"><span
+class="header-section-number">1.13.3.25</span> Fleet Management
 (<code>replicate_layout</code>, <code>subscribe_fleet</code>,
-<code>unsubscribe_fleet</code>)</h4>
-<p>Fleet management uses three topic layers:</p>
+<code>unsubscribe_fleet</code>, <code>broadcast_fleet_command</code>,
+<code>publish_fleet_command</code>)</h4>
+<p>Fleet management uses device control topics plus fleet buses:</p>
 <table>
 <colgroup>
 <col style="width: 23%" />
@@ -5620,19 +5675,37 @@ class="header-section-number">1.13.3.25</span> Fleet Layout Replication
 <td><code>kingkiosk/{device_id}/system/cmd</code></td>
 <td>Controller -&gt; device</td>
 <td>Send fleet control commands (<code>replicate_layout</code>,
-<code>subscribe_fleet</code>, <code>unsubscribe_fleet</code>)</td>
+<code>subscribe_fleet</code>, <code>unsubscribe_fleet</code>,
+<code>broadcast_fleet_command</code>)</td>
 </tr>
 <tr>
 <td><code>kingkiosk/{device_id}/system/response</code> (or valid
 <code>response_topic</code>)</td>
 <td>Device -&gt; controller</td>
-<td>Command ack/errors for fleet commands</td>
+<td>Ack/errors for fleet control commands</td>
 </tr>
 <tr>
 <td><code>kingkiosk/fleet/{fleet_id}/layout</code></td>
-<td>Device &lt;-&gt; fleet listeners</td>
+<td>Device/Controller -&gt; fleet listeners</td>
 <td>Shared fleet layout bus carrying <code>apply_layout</code>
 snapshots</td>
+</tr>
+<tr>
+<td><code>kingkiosk/fleet/{fleet_id}/cmd</code></td>
+<td>Device/Controller -&gt; fleet listeners</td>
+<td>Shared fleet system command bus</td>
+</tr>
+<tr>
+<td><code>kingkiosk/fleet/{fleet_id}/element/{element_id}/cmd</code></td>
+<td>Device/Controller -&gt; fleet listeners</td>
+<td>Shared fleet element command bus (topic-addressed element
+routing)</td>
+</tr>
+<tr>
+<td><code>kingkiosk/fleet/{fleet_id}/element/+/cmd</code></td>
+<td>Device subscription filter</td>
+<td>Wildcard filter devices subscribe to when command fan-out is
+enabled</td>
 </tr>
 </tbody>
 </table>
@@ -5640,10 +5713,17 @@ snapshots</td>
 <ul>
 <li><code>fleet_id</code> cannot be empty and cannot contain
 <code>/</code>, <code>+</code>, <code>#</code>, or NUL.</li>
+<li><code>element_id</code> (when used in a topic path) cannot be empty
+and cannot contain <code>/</code>, <code>+</code>, <code>#</code>, or
+NUL.</li>
 <li><code>target_topic</code> cannot be empty and cannot contain
 <code>+</code>, <code>#</code>, or NUL.</li>
-<li>Boolean keys (<code>retain</code>, <code>auto_apply</code>) accept
-bool, number (<code>0</code>/<code>1</code>), and common string values
+<li>If <code>target_topic</code> is a fleet element command topic, it
+must be exactly
+<code>kingkiosk/fleet/{fleet_id}/element/{element_id}/cmd</code>.</li>
+<li>Boolean keys (<code>retain</code>, <code>auto_apply</code>,
+subscribe/unsubscribe flags, allow-self flags) accept bool, number
+(<code>0</code>/<code>1</code>), and common string values
 (<code>true/false</code>, <code>yes/no</code>,
 <code>on/off</code>).</li>
 </ul>
@@ -5678,7 +5758,8 @@ class="header-section-number">1.13.3.25.1</span>
 <td><code>target_topic</code></td>
 <td>string</td>
 <td>-</td>
-<td>If set, publishes there instead of the default fleet topic.</td>
+<td>If set, publishes there instead of the default fleet layout
+topic.</td>
 </tr>
 <tr>
 <td><code>retain</code></td>
@@ -5741,6 +5822,26 @@ class="header-section-number">1.13.3.25.2</span>
 <td>If true, applies received layouts automatically.</td>
 </tr>
 <tr>
+<td><code>subscribe_layout</code> (<code>include_layout</code>)</td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Subscribe to <code>kingkiosk/fleet/{fleet_id}/layout</code>.</td>
+</tr>
+<tr>
+<td><code>subscribe_commands</code> (<code>include_commands</code>)</td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Subscribe to <code>kingkiosk/fleet/{fleet_id}/cmd</code> and
+<code>kingkiosk/fleet/{fleet_id}/element/+/cmd</code>.</td>
+</tr>
+<tr>
+<td><code>allow_self_commands</code> (<code>allow_self</code>)</td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>If false, ignore command messages where <code>source_device</code>
+equals this device.</td>
+</tr>
+<tr>
 <td><code>response_topic</code></td>
 <td>string</td>
 <td>-</td>
@@ -5755,13 +5856,19 @@ same device namespace when overridden.</td>
 </tr>
 </tbody>
 </table>
-<p>Subscribes to <code>kingkiosk/fleet/{fleet_id}/layout</code>.</p>
+<p>At least one of <code>subscribe_layout</code> or
+<code>subscribe_commands</code> must be <code>true</code>.</p>
 <p>Behavior after subscribe:</p>
 <ul>
 <li><code>auto_apply: true</code>: incoming fleet layouts are applied
 immediately.</li>
 <li><code>auto_apply: false</code>: layout messages are observed but not
 applied; device reports fleet update status only.</li>
+<li>Fleet command messages are normalized and executed through the same
+dispatcher path used for device commands.</li>
+<li>For fleet element topics, <code>{element_id}</code> is parsed from
+the topic path and injected as both <code>element_id</code> and
+<code>window_id</code>.</li>
 </ul>
 <h5 data-number="1.13.3.25.3" id="unsubscribe_fleet"><span
 class="header-section-number">1.13.3.25.3</span>
@@ -5769,14 +5876,16 @@ class="header-section-number">1.13.3.25.3</span>
 <p>Top-level keys:</p>
 <table>
 <colgroup>
-<col style="width: 29%" />
-<col style="width: 35%" />
-<col style="width: 35%" />
+<col style="width: 19%" />
+<col style="width: 23%" />
+<col style="width: 34%" />
+<col style="width: 23%" />
 </colgroup>
 <thead>
 <tr>
 <th>Key</th>
 <th>Type</th>
+<th>Default</th>
 <th>Notes</th>
 </tr>
 </thead>
@@ -5785,25 +5894,122 @@ class="header-section-number">1.13.3.25.3</span>
 <td><code>fleet_id</code></td>
 <td>string</td>
 <td>(required)</td>
+<td>Fleet id to unsubscribe from.</td>
+</tr>
+<tr>
+<td><code>unsubscribe_layout</code> (<code>include_layout</code>)</td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Unsubscribe from
+<code>kingkiosk/fleet/{fleet_id}/layout</code>.</td>
+</tr>
+<tr>
+<td><code>unsubscribe_commands</code>
+(<code>include_commands</code>)</td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Unsubscribe from both fleet command topics.</td>
 </tr>
 <tr>
 <td><code>response_topic</code></td>
 <td>string</td>
+<td>-</td>
 <td>Optional response topic for unsubscribe status. Must be inside the
 same device namespace when overridden.</td>
 </tr>
 <tr>
 <td><code>correlation_id</code></td>
 <td>string</td>
+<td>-</td>
 <td>Optional request/response correlation id.</td>
 </tr>
 </tbody>
 </table>
+<p>At least one of <code>unsubscribe_layout</code> or
+<code>unsubscribe_commands</code> must be <code>true</code>.</p>
+<h5 data-number="1.13.3.25.4"
+id="broadcast_fleet_command-alias-publish_fleet_command"><span
+class="header-section-number">1.13.3.25.4</span>
+<code>broadcast_fleet_command</code> (alias
+<code>publish_fleet_command</code>)</h5>
+<p>Top-level keys:</p>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 23%" />
+<col style="width: 34%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fleet_id</code></td>
+<td>string</td>
+<td>-</td>
+<td>Required unless <code>target_topic</code> is provided.</td>
+</tr>
+<tr>
+<td><code>target_topic</code></td>
+<td>string</td>
+<td>-</td>
+<td>Optional explicit publish topic. Default is
+<code>kingkiosk/fleet/{fleet_id}/cmd</code>.</td>
+</tr>
+<tr>
+<td><code>fleet_command</code>
+(<code>payload</code>/<code>message</code>)</td>
+<td>object</td>
+<td>(required)</td>
+<td>Nested command object. Must include <code>command</code>.</td>
+</tr>
+<tr>
+<td><code>retain</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Retained publish flag on fleet bus.</td>
+</tr>
+<tr>
+<td><code>response_topic</code></td>
+<td>string</td>
+<td>-</td>
+<td>Optional response topic for publish status. Must be inside the same
+device namespace when overridden.</td>
+</tr>
+<tr>
+<td><code>correlation_id</code></td>
+<td>string</td>
+<td>-</td>
+<td>Optional request/response correlation id.</td>
+</tr>
+</tbody>
+</table>
+<p>Behavior:</p>
+<ul>
+<li>If <code>target_topic</code> is omitted, publishes to
+<code>kingkiosk/fleet/{fleet_id}/cmd</code>.</li>
+<li>If <code>target_topic</code> points at a fleet element bus, it must
+be
+<code>kingkiosk/fleet/{fleet_id}/element/{element_id}/cmd</code>.</li>
+<li>For fleet element publish, <code>{element_id}</code> from the topic
+is authoritative and is injected into payload as <code>element_id</code>
+and <code>window_id</code> before publish.</li>
+<li>Published payload is normalized and enriched with
+<code>source_device</code>, <code>fleet_id</code>, and
+<code>broadcast_at</code> when omitted.</li>
+</ul>
 <p>Typical response statuses for fleet operations include:</p>
 <ul>
 <li><code>replicated</code></li>
 <li><code>subscribed</code></li>
 <li><code>unsubscribed</code></li>
+<li><code>broadcasted</code></li>
 <li><code>fleet_update</code></li>
 <li><code>applied</code></li>
 <li><code>error</code></li>
@@ -13692,6 +13898,10 @@ class="header-section-number">1.15</span> Canonical Topic Summary</h2>
 <code>kingkiosk/{device_id}/system/cmd</code></li>
 <li>Send element-scoped commands (when supported) to
 <code>kingkiosk/{device_id}/element/{element_id}/cmd</code></li>
+<li>Broadcast fleet system commands to
+<code>kingkiosk/fleet/{fleet_id}/cmd</code></li>
+<li>Broadcast fleet element commands to
+<code>kingkiosk/fleet/{fleet_id}/element/{element_id}/cmd</code></li>
 <li>Subscribe for responses on
 <code>kingkiosk/{device_id}/system/response</code> and/or
 <code>kingkiosk/{device_id}/element/{element_id}/response</code></li>
