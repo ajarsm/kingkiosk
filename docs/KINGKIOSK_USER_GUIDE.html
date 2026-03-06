@@ -65,6 +65,10 @@
     id="toc-platform-availability"><span
     class="toc-section-number">1.2.3</span> Platform
     Availability</a></li>
+    <li><a href="#how-widget-windows-work"
+    id="toc-how-widget-windows-work"><span
+    class="toc-section-number">1.2.4</span> How Widget Windows
+    Work</a></li>
     </ul></li>
     <li><a href="#getting-started" id="toc-getting-started"><span
     class="toc-section-number">1.3</span> 2. Getting Started</a>
@@ -468,6 +472,7 @@ class="header-section-number">1.1</span> Table of Contents</h2>
 <li><a href="#why-king-kiosk-is-different">Why King Kiosk is
 Different</a></li>
 <li><a href="#platform-availability">Platform Availability</a></li>
+<li><a href="#how-widget-windows-work">How Widget Windows Work</a></li>
 </ul></li>
 <li><a href="#2-getting-started">Getting Started</a>
 <ul>
@@ -708,6 +713,42 @@ href="#feature-server">Feature Server</a> (KingKiosk Core) to provide
 server-side rendering via Remote Browser. All other widgets run natively
 on every platform.</p>
 </blockquote>
+<h3 data-number="1.2.4" id="how-widget-windows-work"><span
+class="header-section-number">1.2.4</span> How Widget Windows Work</h3>
+<p>Every widget in King Kiosk lives inside a window, sometimes called a
+tile. That window is more than a frame around the widget. It is a shared
+layer that gives all widgets the same core layout behavior.</p>
+<p><strong>All widgets share the same window background
+system</strong></p>
+<p>You can give any widget window one of four background styles: -
+<code>transparent</code> - <code>color</code> - <code>gradient</code> -
+<code>image</code></p>
+<p>You can also control the background opacity separately from the whole
+window opacity: - <code>opacity</code> fades the entire window,
+including the widget itself - <code>background_opacity</code> only fades
+the background layer behind the widget</p>
+<p>This makes a big difference when you want to save space visually. For
+example, you can keep gauge text sharp and readable while making only
+the panel behind it translucent or fully transparent.</p>
+<p><strong>All widgets support proportion-aware resizing</strong></p>
+<p>In floating mode, the built-in resize handle keeps the window’s shape
+by default instead of stretching it freely. For most native King Kiosk
+widgets, the content inside also scales as one unit. That means the
+whole design stays in proportion, including text, icons, labels, and
+gauge readouts.</p>
+<p><strong>A small exception for browser and video style
+widgets</strong></p>
+<p>Browser, PDF, video, remote browser, and call-style widgets still use
+the shared window background system, and their windows still keep their
+proportions by default. But full content scaling is not forced on those
+widget types because embedded platform views can render badly when
+transformed. In other words, the window still behaves consistently, but
+King Kiosk avoids breaking the content technology inside it.</p>
+<p><strong>Why this matters for future widgets</strong></p>
+<p>These behaviors now live in the shared window layer instead of being
+reimplemented widget by widget. That means new widgets inherit the same
+background and scaling rules automatically unless they intentionally opt
+into something special.</p>
 <hr />
 <h2 data-number="1.3" id="getting-started"><span
 class="header-section-number">1.3</span> 2. Getting Started</h2>
@@ -975,10 +1016,16 @@ height)</strong> - How large the window is - <strong>Movement Animation
 (<code>animate</code>)</strong> - MQTT move/update commands animate by
 default; set <code>"animate": false</code> to snap instantly -
 <strong>Opacity</strong> - Transparency level (0.0 = invisible, 1.0 =
-fully visible) - <strong>Stacking Order (Z-Index)</strong> - Which
-window appears on top when they overlap (higher numbers appear on top,
-like stacking papers) - <strong>Background Mode</strong> - Many widgets
-support transparent backgrounds</p>
+fully visible) - <strong>Background Surface</strong> - Every widget
+window supports <code>transparent</code>, <code>color</code>,
+<code>gradient</code>, or <code>image</code> - <strong>Background
+Opacity</strong> - Separate from the overall window opacity -
+<strong>Preserve Aspect Ratio</strong> - On by default when you drag the
+resize handle in floating mode - <strong>Scale Content Together</strong>
+- Most native widgets scale the whole design, so text and graphics stay
+in proportion - <strong>Stacking Order (Z-Index)</strong> - Which window
+appears on top when they overlap (higher numbers appear on top, like
+stacking papers)</p>
 <p><strong>Setting Opacity When Creating Windows:</strong></p>
 <p>Most widget creation commands accept an <code>opacity</code>
 parameter:</p>
@@ -990,18 +1037,28 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="dv">100</span><span class="fu">,</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="dv">100</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p>Many widgets also support transparent backgrounds with
-<code>background_mode</code> and <code>background_opacity</code>:</p>
+<p>Every widget window also supports a shared window surface
+configuration. This is the preferred way to set the outer window
+background consistently across all widgets:</p>
 <div class="sourceCode" id="cb9"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;open_clock&quot;</span><span class="fu">,</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;transparent-clock&quot;</span><span class="fu">,</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;background_mode&quot;</span><span class="fu">:</span> <span class="st">&quot;transparent&quot;</span><span class="fu">,</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;background_opacity&quot;</span><span class="fu">:</span> <span class="fl">0.6</span><span class="fu">,</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;theme&quot;</span><span class="fu">:</span> <span class="st">&quot;dark&quot;</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p>Background modes include: <code>transparent</code>,
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;create_gauge&quot;</span><span class="fu">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;transparent-gauge&quot;</span><span class="fu">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;gauge_id&quot;</span><span class="fu">:</span> <span class="st">&quot;transparent-gauge&quot;</span><span class="fu">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;surface&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;background_mode&quot;</span><span class="fu">:</span> <span class="st">&quot;transparent&quot;</span><span class="fu">,</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;background_opacity&quot;</span><span class="fu">:</span> <span class="fl">0.6</span><span class="fu">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;preserve_aspect_ratio&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;scale_content&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Background modes include <code>transparent</code>,
 <code>color</code>, <code>gradient</code>, and <code>image</code>.</p>
+<p>Use <code>surface</code> when you want a consistent outer window
+background across widget types. Some widgets, such as Clock, Carousel,
+Canvas, Animated Text, and RSS, also have their own internal background
+settings. Those still work, but they style the widget itself rather than
+the shared outer window.</p>
 <p><strong>Controlling Z-Index (Window Stacking Order):</strong></p>
 <p>New windows are automatically placed on top. To change stacking order
 for existing windows, use the <code>bring_to_front</code> and
@@ -1097,6 +1154,10 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href=
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="dv">400</span><span class="fu">,</span></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="dv">400</span></span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>When you resize by dragging the on-screen handle, King Kiosk
+preserves the window’s aspect ratio by default. For most built-in
+widgets, the whole widget content also scales proportionally inside the
+window so labels, text, and graphics stay matched.</p>
 <p><strong>Closing a Window:</strong></p>
 <div class="sourceCode" id="cb17"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
@@ -2598,6 +2659,11 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb148-1"><a href
 <p>Gauge types: <code>linear</code>, <code>circular</code>,
 <code>radial</code>, <code>semicircular</code>,
 <code>thermostat</code></p>
+<p>If you want the whole gauge window to be transparent, colored,
+gradient-backed, or image-backed, use the shared window
+<code>surface</code> settings described in <a
+href="#4-the-windowing-system">The Windowing System</a>. That outer
+window background is separate from the gauge’s own internal styling.</p>
 <p><strong>Create a thermostat from Home Assistant climate state
 (current + heat + cool + optional humidity):</strong></p>
 <div class="sourceCode" id="cb149"><pre
@@ -5359,6 +5425,45 @@ simultaneous video streams - Use appropriate image sizes (don’t load 4K
 images for thumbnail displays) - Close unused widgets to free memory -
 Use the <code>reset_media</code> command if playback becomes
 sluggish</p>
+<h4 data-number="1.11.1.1" id="understanding-performance-mode"><span
+class="header-section-number">1.11.1.1</span> Understanding Performance
+Mode</h4>
+<p>King Kiosk includes a <strong>Performance Mode</strong> setting in
+App Settings with three choices:</p>
+<ul>
+<li><strong>Auto (recommended)</strong> - King Kiosk chooses the
+effective mode based on device RAM and current memory pressure</li>
+<li><strong>Forced Standard</strong> - keeps full visuals and normal
+behavior even on weaker hardware</li>
+<li><strong>Forced Low-Memory</strong> - prioritizes stability and lower
+idle load over visual polish</li>
+</ul>
+<p>The dropdown is an override. If you choose <strong>Forced
+Standard</strong> or <strong>Forced Low-Memory</strong>, that choice
+wins until you change it back to <strong>Auto</strong>.</p>
+<p><strong>What Low-Memory mode changes:</strong> - Reduces image cache
+size to lower RAM use - Disables halo effects - Removes or shortens
+decorative UI animations where possible - Uses cheaper clock behavior,
+including slower split-flap updates - Stops nonessential pulsing effects
+such as the notification chip pulse</p>
+<p><strong>What Low-Memory mode does not do:</strong> - It does not
+magically make expensive content cheap - Live video, camera capture,
+face recognition, web views, and multiple active widgets can still
+overwhelm weak hardware - It does not reduce network bandwidth
+requirements for media streams</p>
+<p><strong>Pros of Low-Memory mode:</strong> - Lower idle CPU usage -
+Lower memory pressure - Better stability on Raspberry Pi, low-end
+Android tablets, and older phones - Less chance of jank, watchdog kills,
+or thermal throttling</p>
+<p><strong>Cons of Low-Memory mode:</strong> - Less visual polish -
+Fewer animated effects - Some UI transitions become instant instead of
+smooth - Visual widgets may feel more utilitarian</p>
+<p><strong>Practical guidance:</strong> - On a modern desktop, keep
+<strong>Auto</strong> - On a Raspberry Pi Zero 2 W, older tablet, or any
+device that feels borderline, start with <strong>Forced
+Low-Memory</strong> - If a weak device is still struggling, also turn
+off unused services, avoid camera/face features, and keep the number of
+open widgets low</p>
 <p><strong>For battery-powered devices:</strong> - Reduce screen
 brightness - Extend carousel intervals - Disable unnecessary sensors -
 Use screen schedules to dim displays during off-hours</p>
