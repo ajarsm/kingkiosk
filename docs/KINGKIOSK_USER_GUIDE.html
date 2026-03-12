@@ -433,16 +433,56 @@
     class="toc-section-number">1.13.6</span> Home Assistant MQTT
     Bridge</a></li>
     </ul></li>
+    <li><a href="#detection-recognition-motion"
+    id="toc-detection-recognition-motion"><span
+    class="toc-section-number">1.14</span> 13. Detection, Recognition
+    &amp; Motion</a>
+    <ul>
+    <li><a href="#detection-overview" id="toc-detection-overview"><span
+    class="toc-section-number">1.14.1</span> Detection Overview</a></li>
+    <li><a href="#on-device-vs-feature-server-detection"
+    id="toc-on-device-vs-feature-server-detection"><span
+    class="toc-section-number">1.14.2</span> On-Device vs Feature Server
+    Detection</a></li>
+    <li><a href="#person-object-detection"
+    id="toc-person-object-detection"><span
+    class="toc-section-number">1.14.3</span> Person &amp; Object
+    Detection</a></li>
+    <li><a href="#facial-recognition" id="toc-facial-recognition"><span
+    class="toc-section-number">1.14.4</span> Facial Recognition</a></li>
+    <li><a href="#face-training-enrollment"
+    id="toc-face-training-enrollment"><span
+    class="toc-section-number">1.14.5</span> Face Training
+    (Enrollment)</a></li>
+    <li><a href="#motion-detection" id="toc-motion-detection"><span
+    class="toc-section-number">1.14.6</span> Motion Detection</a></li>
+    <li><a href="#camera-snapshots-motion-triggered"
+    id="toc-camera-snapshots-motion-triggered"><span
+    class="toc-section-number">1.14.7</span> Camera Snapshots
+    (Motion-Triggered)</a></li>
+    <li><a href="#detection-mqtt-topics-reference"
+    id="toc-detection-mqtt-topics-reference"><span
+    class="toc-section-number">1.14.8</span> Detection MQTT Topics
+    Reference</a></li>
+    <li><a href="#detection-home-assistant-integration"
+    id="toc-detection-home-assistant-integration"><span
+    class="toc-section-number">1.14.9</span> Detection Home Assistant
+    Integration</a></li>
+    <li><a href="#detection-automation-examples"
+    id="toc-detection-automation-examples"><span
+    class="toc-section-number">1.14.10</span> Detection Automation
+    Examples</a></li>
+    </ul></li>
     <li><a href="#quick-reference-card"
     id="toc-quick-reference-card"><span
-    class="toc-section-number">1.14</span> 13. Quick Reference Card</a>
+    class="toc-section-number">1.15</span> 14. Quick Reference Card</a>
     <ul>
     <li><a href="#essential-topics" id="toc-essential-topics"><span
-    class="toc-section-number">1.14.1</span> Essential Topics</a></li>
+    class="toc-section-number">1.15.1</span> Essential Topics</a></li>
     <li><a href="#most-used-commands" id="toc-most-used-commands"><span
-    class="toc-section-number">1.14.2</span> Most-Used Commands</a></li>
+    class="toc-section-number">1.15.2</span> Most-Used Commands</a></li>
     <li><a href="#widget-types" id="toc-widget-types"><span
-    class="toc-section-number">1.14.3</span> Widget Types</a></li>
+    class="toc-section-number">1.15.3</span> Widget Types</a></li>
     </ul></li>
     </ul></li>
     </ul>
@@ -641,7 +681,30 @@ Server?</a></li>
 Bridge</a></li>
 </ul>
 <ol start="13" type="1">
-<li><a href="#13-quick-reference-card">Quick Reference Card</a></li>
+<li><a href="#13-detection-recognition--motion">Detection, Recognition
+&amp; Motion</a></li>
+</ol>
+<ul>
+<li><a href="#detection-overview">Overview</a></li>
+<li><a href="#on-device-vs-feature-server-detection">On-Device vs
+Feature Server Detection</a></li>
+<li><a href="#person--object-detection">Person &amp; Object
+Detection</a></li>
+<li><a href="#facial-recognition">Facial Recognition</a></li>
+<li><a href="#face-training-enrollment">Face Training
+(Enrollment)</a></li>
+<li><a href="#motion-detection">Motion Detection</a></li>
+<li><a href="#camera-snapshots-motion-triggered">Camera Snapshots
+(Motion-Triggered)</a></li>
+<li><a href="#detection-mqtt-topics-reference">MQTT Topics
+Reference</a></li>
+<li><a href="#detection-home-assistant-integration">Home Assistant
+Integration</a></li>
+<li><a href="#detection-automation-examples">Automation
+Examples</a></li>
+</ul>
+<ol start="14" type="1">
+<li><a href="#14-quick-reference-card">Quick Reference Card</a></li>
 </ol>
 <ul>
 <li><a href="#remote-browser-full-web-on-your-tv">Remote Browser: Full
@@ -6573,10 +6636,699 @@ domains, disable registry/attribute publishing if you only need
 states.</li>
 </ul>
 <hr />
-<h2 data-number="1.14" id="quick-reference-card"><span
-class="header-section-number">1.14</span> 13. Quick Reference Card</h2>
-<h3 data-number="1.14.1" id="essential-topics"><span
-class="header-section-number">1.14.1</span> Essential Topics</h3>
+<h2 data-number="1.14" id="detection-recognition-motion"><span
+class="header-section-number">1.14</span> 13. Detection, Recognition
+&amp; Motion</h2>
+<p>King Kiosk turns any screen with a camera into an intelligent sensing
+device. It can detect people, recognize faces, identify objects, and
+sense motion — then publish all of that to MQTT so your smart home
+automations can react in real-time. Walk into a room and have the lights
+turn on, see who’s at the front door without opening an app, or trigger
+a dashboard change when nobody’s watching.</p>
+<h3 data-number="1.14.1" id="detection-overview"><span
+class="header-section-number">1.14.1</span> Detection Overview</h3>
+<p>King Kiosk provides four detection capabilities:</p>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 30%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What It Does</th>
+<th>Example Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Person Detection</strong></td>
+<td>Detects human figures in the camera frame</td>
+<td>Turn on lights when someone enters a room</td>
+</tr>
+<tr>
+<td><strong>Object Detection</strong></td>
+<td>Identifies and classifies objects (person, dog, car, etc.)</td>
+<td>Count people in a space, detect pets</td>
+</tr>
+<tr>
+<td><strong>Facial Recognition</strong></td>
+<td>Identifies <em>who</em> a person is from trained faces</td>
+<td>Personalized greetings, access control</td>
+</tr>
+<tr>
+<td><strong>Motion Detection</strong></td>
+<td>Detects pixel-level changes between frames</td>
+<td>Security monitoring, activity alerts</td>
+</tr>
+</tbody>
+</table>
+<p>All four publish their results to MQTT topics that Home Assistant
+auto-discovers as sensors, so you can build automations without any
+manual configuration.</p>
+<h3 data-number="1.14.2"
+id="on-device-vs-feature-server-detection"><span
+class="header-section-number">1.14.2</span> On-Device vs Feature Server
+Detection</h3>
+<p>King Kiosk supports two detection engines. They produce identical
+MQTT output — your automations work the same regardless of which engine
+is running.</p>
+<p><strong>On-Device Detection</strong> runs TensorFlow Lite models
+directly on the device. It works on Android, iOS, macOS, Windows, Linux,
+and Raspberry Pi without any server. Processing runs in a background
+thread so the UI stays smooth. This is the default when no Feature
+Server is connected.</p>
+<p><strong>Feature Server Detection</strong> offloads processing to
+KingKiosk Core3, which can use GPU acceleration for faster, more
+accurate results. When a Feature Server is connected, on-device ML is
+automatically disabled and the server takes over. This is the only
+option for tvOS and Web, which lack on-device ML support.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>On-Device</th>
+<th>Feature Server</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Requires server</strong></td>
+<td>No</td>
+<td>Yes (KingKiosk Core3)</td>
+</tr>
+<tr>
+<td><strong>Platforms</strong></td>
+<td>Android, iOS, macOS, Windows, Linux, RPi</td>
+<td>All platforms including tvOS, Web</td>
+</tr>
+<tr>
+<td><strong>Processing</strong></td>
+<td>Background isolate on device CPU</td>
+<td>Server-side (GPU if available)</td>
+</tr>
+<tr>
+<td><strong>Accuracy</strong></td>
+<td>Good (MobileNet SSD, BlazeFace)</td>
+<td>Better (server models)</td>
+</tr>
+<tr>
+<td><strong>Latency</strong></td>
+<td>~2 seconds per frame</td>
+<td>~2 seconds (network dependent)</td>
+</tr>
+<tr>
+<td><strong>Switchover</strong></td>
+<td>Automatic — no config needed</td>
+<td>Automatic when Feature Server connects</td>
+</tr>
+</tbody>
+</table>
+<p>You don’t need to choose between them. When the Feature Server is
+available, detection routes through it automatically. When it’s not,
+on-device processing kicks in. Your MQTT topics and Home Assistant
+sensors stay the same either way.</p>
+<h3 data-number="1.14.3" id="person-object-detection"><span
+class="header-section-number">1.14.3</span> Person &amp; Object
+Detection</h3>
+<p>Person detection identifies human figures in the camera frame. Object
+detection goes further, classifying what each detected object is
+(person, dog, cat, car, etc.) and reporting bounding box
+coordinates.</p>
+<h4 data-number="1.14.3.1" id="enabling-person-detection"><span
+class="header-section-number">1.14.3.1</span> Enabling Person
+Detection</h4>
+<p><strong>From Settings:</strong> Go to <strong>Settings &gt;
+AI</strong> and toggle <strong>Enable Person Detection</strong>.</p>
+<p><strong>Via MQTT:</strong> Send to
+<code>kingkiosk/{device_id}/system/cmd</code>:</p>
+<div class="sourceCode" id="cb304"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb304-1"><a href="#cb304-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;person_detection&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;enable&quot;</span><span class="fu">}</span></span></code></pre></div>
+<p>The <code>action</code> field accepts: <code>enable</code>,
+<code>disable</code>, <code>toggle</code>, or <code>status</code>.</p>
+<p>Add <code>"confirm": true</code> to receive a confirmation on the
+response topic.</p>
+<h4 data-number="1.14.3.2" id="what-gets-published"><span
+class="header-section-number">1.14.3.2</span> What Gets Published</h4>
+<p>When person detection is active, two MQTT topics are continuously
+updated:</p>
+<p><strong>Person Presence</strong>
+(<code>kingkiosk/{device_id}/person_presence</code>):</p>
+<div class="sourceCode" id="cb305"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb305-1"><a href="#cb305-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb305-2"><a href="#cb305-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;person_present&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb305-3"><a href="#cb305-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;confidence&quot;</span><span class="fu">:</span> <span class="fl">0.92</span><span class="fu">,</span></span>
+<span id="cb305-4"><a href="#cb305-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;frames_processed&quot;</span><span class="fu">:</span> <span class="dv">1547</span><span class="fu">,</span></span>
+<span id="cb305-5"><a href="#cb305-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-03-12T14:30:00.000Z&quot;</span></span>
+<span id="cb305-6"><a href="#cb305-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Object Detection</strong>
+(<code>kingkiosk/{device_id}/object_detection</code>):</p>
+<div class="sourceCode" id="cb306"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb306-1"><a href="#cb306-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb306-2"><a href="#cb306-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;total_objects&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb306-3"><a href="#cb306-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;objects&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb306-4"><a href="#cb306-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb306-5"><a href="#cb306-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;class&quot;</span><span class="fu">:</span> <span class="st">&quot;person&quot;</span><span class="fu">,</span></span>
+<span id="cb306-6"><a href="#cb306-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confidence&quot;</span><span class="fu">:</span> <span class="fl">0.92</span><span class="fu">,</span></span>
+<span id="cb306-7"><a href="#cb306-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="fl">0.25</span><span class="fu">,</span> <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="fl">0.1</span><span class="fu">,</span> <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="fl">0.3</span><span class="fu">,</span> <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="fl">0.8</span><span class="fu">},</span></span>
+<span id="cb306-8"><a href="#cb306-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;person&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb306-9"><a href="#cb306-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb306-10"><a href="#cb306-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb306-11"><a href="#cb306-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;class&quot;</span><span class="fu">:</span> <span class="st">&quot;dog&quot;</span><span class="fu">,</span></span>
+<span id="cb306-12"><a href="#cb306-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confidence&quot;</span><span class="fu">:</span> <span class="fl">0.78</span><span class="fu">,</span></span>
+<span id="cb306-13"><a href="#cb306-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="fl">0.6</span><span class="fu">,</span> <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="fl">0.5</span><span class="fu">,</span> <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="fl">0.2</span><span class="fu">,</span> <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="fl">0.3</span><span class="fu">},</span></span>
+<span id="cb306-14"><a href="#cb306-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;person&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb306-15"><a href="#cb306-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb306-16"><a href="#cb306-16" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb306-17"><a href="#cb306-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-03-12T14:30:00.000Z&quot;</span></span>
+<span id="cb306-18"><a href="#cb306-18" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Bounding box coordinates are normalized to 0-1 (where 0,0 is top-left
+and 1,1 is bottom-right), so they work regardless of camera
+resolution.</p>
+<h4 data-number="1.14.3.3" id="tuning-detection"><span
+class="header-section-number">1.14.3.3</span> Tuning Detection</h4>
+<p>The detection pipeline has three confidence thresholds you can
+adjust:</p>
+<ul>
+<li><strong>Detection threshold</strong> (default 0.3) — minimum
+confidence for an object to be detected at all</li>
+<li><strong>Base confidence threshold</strong> (default 0.5) — general
+processing threshold</li>
+<li><strong>MQTT publishing threshold</strong> (default 0.7) — only
+detections above this confidence are published to MQTT, reducing noise
+for automations</li>
+</ul>
+<p>The processing interval defaults to 2 seconds between frames. On less
+powerful devices, it adapts automatically (2-10 seconds) to avoid
+impacting UI performance.</p>
+<h3 data-number="1.14.4" id="facial-recognition"><span
+class="header-section-number">1.14.4</span> Facial Recognition</h3>
+<p>Facial recognition builds on person detection. When a person is
+detected, King Kiosk extracts their face and compares it against a
+database of known faces. It reports <em>who</em> is present, not just
+<em>that</em> someone is present.</p>
+<p>Facial recognition requires person detection to be enabled — it won’t
+work without it.</p>
+<h4 data-number="1.14.4.1" id="enabling-facial-recognition"><span
+class="header-section-number">1.14.4.1</span> Enabling Facial
+Recognition</h4>
+<p><strong>Via MQTT provisioning:</strong></p>
+<div class="sourceCode" id="cb307"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb307-1"><a href="#cb307-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb307-2"><a href="#cb307-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;provision&quot;</span><span class="fu">,</span></span>
+<span id="cb307-3"><a href="#cb307-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;settings&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb307-4"><a href="#cb307-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;personDetectionEnabled&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb307-5"><a href="#cb307-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;facialRecognitionEnabled&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb307-6"><a href="#cb307-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb307-7"><a href="#cb307-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 data-number="1.14.4.2" id="what-gets-published-1"><span
+class="header-section-number">1.14.4.2</span> What Gets Published</h4>
+<p><strong>Face Presence</strong>
+(<code>kingkiosk/{device_id}/face_presence</code>):</p>
+<div class="sourceCode" id="cb308"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb308-1"><a href="#cb308-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb308-2"><a href="#cb308-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;faces_present&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb308-3"><a href="#cb308-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;faces_count&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb308-4"><a href="#cb308-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;known_faces&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb308-5"><a href="#cb308-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;unknown_faces&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb308-6"><a href="#cb308-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-03-12T14:30:00.000Z&quot;</span><span class="fu">,</span></span>
+<span id="cb308-7"><a href="#cb308-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;faces_detail&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb308-8"><a href="#cb308-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb308-9"><a href="#cb308-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x1&quot;</span><span class="fu">:</span> <span class="fl">0.3</span><span class="fu">,</span> <span class="dt">&quot;y1&quot;</span><span class="fu">:</span> <span class="fl">0.1</span><span class="fu">,</span> <span class="dt">&quot;x2&quot;</span><span class="fu">:</span> <span class="fl">0.5</span><span class="fu">,</span> <span class="dt">&quot;y2&quot;</span><span class="fu">:</span> <span class="fl">0.4</span><span class="fu">},</span></span>
+<span id="cb308-10"><a href="#cb308-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;detection_confidence&quot;</span><span class="fu">:</span> <span class="fl">0.95</span><span class="fu">,</span></span>
+<span id="cb308-11"><a href="#cb308-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;recognized&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb308-12"><a href="#cb308-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Raj&quot;</span><span class="fu">,</span></span>
+<span id="cb308-13"><a href="#cb308-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;similarity&quot;</span><span class="fu">:</span> <span class="fl">0.82</span><span class="fu">,</span></span>
+<span id="cb308-14"><a href="#cb308-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;threshold&quot;</span><span class="fu">:</span> <span class="fl">0.70</span></span>
+<span id="cb308-15"><a href="#cb308-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb308-16"><a href="#cb308-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb308-17"><a href="#cb308-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x1&quot;</span><span class="fu">:</span> <span class="fl">0.6</span><span class="fu">,</span> <span class="dt">&quot;y1&quot;</span><span class="fu">:</span> <span class="fl">0.15</span><span class="fu">,</span> <span class="dt">&quot;x2&quot;</span><span class="fu">:</span> <span class="fl">0.75</span><span class="fu">,</span> <span class="dt">&quot;y2&quot;</span><span class="fu">:</span> <span class="fl">0.45</span><span class="fu">},</span></span>
+<span id="cb308-18"><a href="#cb308-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;detection_confidence&quot;</span><span class="fu">:</span> <span class="fl">0.88</span><span class="fu">,</span></span>
+<span id="cb308-19"><a href="#cb308-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;recognized&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb308-20"><a href="#cb308-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;unknown&quot;</span><span class="fu">,</span></span>
+<span id="cb308-21"><a href="#cb308-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;similarity&quot;</span><span class="fu">:</span> <span class="fl">0.0</span><span class="fu">,</span></span>
+<span id="cb308-22"><a href="#cb308-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;threshold&quot;</span><span class="fu">:</span> <span class="fl">0.70</span></span>
+<span id="cb308-23"><a href="#cb308-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb308-24"><a href="#cb308-24" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb308-25"><a href="#cb308-25" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>The <code>faces_detail</code> array gives you per-face information
+including bounding boxes, whether the face was recognized, the matched
+name, and the similarity score. A face is considered recognized when its
+similarity exceeds the verification threshold (default 0.70).</p>
+<h4 data-number="1.14.4.3" id="recognition-thresholds"><span
+class="header-section-number">1.14.4.3</span> Recognition
+Thresholds</h4>
+<p>Facial recognition uses a multi-layered verification system to
+minimize false positives:</p>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 31%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Threshold</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Verification</td>
+<td>0.70</td>
+<td>Similarity must exceed this for a positive match</td>
+</tr>
+<tr>
+<td>Rejection</td>
+<td>0.55</td>
+<td>Below this, definitely not a match</td>
+</tr>
+<tr>
+<td>Identity separation margin</td>
+<td>0.04</td>
+<td>Gap required between best match and runner-up</td>
+</tr>
+<tr>
+<td>Temporal verification frames</td>
+<td>2</td>
+<td>Consecutive frames that must agree on identity</td>
+</tr>
+</tbody>
+</table>
+<p>The system also applies per-person cooldowns (default 60 seconds) to
+avoid flooding your automations with repeated notifications for the same
+person standing in view.</p>
+<h3 data-number="1.14.5" id="face-training-enrollment"><span
+class="header-section-number">1.14.5</span> Face Training
+(Enrollment)</h3>
+<p>Before King Kiosk can recognize someone, you need to train it with
+their face. Training captures multiple samples from different angles to
+build a reliable face profile.</p>
+<h4 data-number="1.14.5.1" id="starting-training-via-mqtt"><span
+class="header-section-number">1.14.5.1</span> Starting Training via
+MQTT</h4>
+<p>Send to <code>kingkiosk/{device_id}/system/cmd</code>:</p>
+<div class="sourceCode" id="cb309"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb309-1"><a href="#cb309-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb309-2"><a href="#cb309-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;start_face_training&quot;</span><span class="fu">,</span></span>
+<span id="cb309-3"><a href="#cb309-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Raj&quot;</span><span class="fu">,</span></span>
+<span id="cb309-4"><a href="#cb309-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target_samples&quot;</span><span class="fu">:</span> <span class="dv">20</span></span>
+<span id="cb309-5"><a href="#cb309-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 22%" />
+<col style="width: 33%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command</code></td>
+<td>string</td>
+<td>required</td>
+<td><code>start_face_training</code> or <code>enroll_face</code> (both
+work)</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>required</td>
+<td>Person’s name (also accepts <code>person_name</code>,
+<code>label</code>, or <code>person</code>)</td>
+</tr>
+<tr>
+<td><code>target_samples</code></td>
+<td>int</td>
+<td>20</td>
+<td>Number of face samples to capture (also accepts
+<code>samples</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>The person should slowly turn their head during training to capture
+different angles. The system provides quality feedback including face
+position, lighting, and sharpness checks.</p>
+<p>Training automatically completes after collecting the target number
+of samples. You’ll receive a response on the system response topic:</p>
+<div class="sourceCode" id="cb310"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb310-1"><a href="#cb310-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb310-2"><a href="#cb310-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;success&quot;</span><span class="fu">,</span></span>
+<span id="cb310-3"><a href="#cb310-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Face training started&quot;</span><span class="fu">,</span></span>
+<span id="cb310-4"><a href="#cb310-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Raj&quot;</span><span class="fu">,</span></span>
+<span id="cb310-5"><a href="#cb310-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target_samples&quot;</span><span class="fu">:</span> <span class="dv">20</span></span>
+<span id="cb310-6"><a href="#cb310-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 data-number="1.14.5.2" id="cancelling-training"><span
+class="header-section-number">1.14.5.2</span> Cancelling Training</h4>
+<div class="sourceCode" id="cb311"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb311-1"><a href="#cb311-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;cancel_face_training&quot;</span><span class="fu">}</span></span></code></pre></div>
+<h4 data-number="1.14.5.3" id="passive-enrichment"><span
+class="header-section-number">1.14.5.3</span> Passive Enrichment</h4>
+<p>After initial training, King Kiosk automatically improves its model
+over time. When it recognizes someone with high confidence (above 0.72)
+and the face looks sufficiently different from existing samples, it
+silently adds the new embedding. This means recognition accuracy
+improves naturally as the system sees someone in different lighting
+conditions, angles, and over time.</p>
+<h4 data-number="1.14.5.4" id="feature-server-face-training"><span
+class="header-section-number">1.14.5.4</span> Feature Server Face
+Training</h4>
+<p>When a Feature Server is connected, training commands are
+transparently routed to the server. The MQTT interface stays identical —
+your automations and scripts don’t need to change. The server stores
+face data in its own database and can share trained faces across
+multiple King Kiosk devices.</p>
+<h3 data-number="1.14.6" id="motion-detection"><span
+class="header-section-number">1.14.6</span> Motion Detection</h3>
+<p>Motion detection uses frame-differencing to detect pixel-level
+changes between camera frames. It’s lightweight, works independently of
+person detection, and is useful for security monitoring and
+activity-based triggers.</p>
+<h4 data-number="1.14.6.1" id="enabling-motion-detection"><span
+class="header-section-number">1.14.6.1</span> Enabling Motion
+Detection</h4>
+<p><strong>Via MQTT provisioning:</strong></p>
+<div class="sourceCode" id="cb312"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb312-1"><a href="#cb312-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb312-2"><a href="#cb312-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;provision&quot;</span><span class="fu">,</span></span>
+<span id="cb312-3"><a href="#cb312-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;settings&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb312-4"><a href="#cb312-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;motionDetectionEnabled&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb312-5"><a href="#cb312-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb312-6"><a href="#cb312-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 data-number="1.14.6.2" id="what-gets-published-2"><span
+class="header-section-number">1.14.6.2</span> What Gets Published</h4>
+<p><strong>Motion Result</strong>
+(<code>kingkiosk/{device_id}/motion/result</code>):</p>
+<div class="sourceCode" id="cb313"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb313-1"><a href="#cb313-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb313-2"><a href="#cb313-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;event&quot;</span><span class="fu">:</span> <span class="st">&quot;motionDetection&quot;</span><span class="fu">,</span></span>
+<span id="cb313-3"><a href="#cb313-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;score&quot;</span><span class="fu">:</span> <span class="fl">0.45</span><span class="fu">,</span></span>
+<span id="cb313-4"><a href="#cb313-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;regions&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb313-5"><a href="#cb313-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb313-6"><a href="#cb313-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="fl">0.25</span><span class="fu">,</span></span>
+<span id="cb313-7"><a href="#cb313-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="fl">0.33</span><span class="fu">,</span></span>
+<span id="cb313-8"><a href="#cb313-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="fl">0.125</span><span class="fu">,</span></span>
+<span id="cb313-9"><a href="#cb313-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="fl">0.167</span><span class="fu">,</span></span>
+<span id="cb313-10"><a href="#cb313-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;changed_ratio&quot;</span><span class="fu">:</span> <span class="fl">0.12</span></span>
+<span id="cb313-11"><a href="#cb313-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb313-12"><a href="#cb313-12" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb313-13"><a href="#cb313-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="dv">1710252600000</span></span>
+<span id="cb313-14"><a href="#cb313-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>The <code>score</code> is a 0-1 value representing overall motion
+intensity. The <code>regions</code> array breaks the frame into a grid
+and reports which areas have activity and how much change occurred in
+each. This lets you distinguish between a door opening in one corner vs
+full-frame motion.</p>
+<h4 data-number="1.14.6.3" id="tuning-motion-sensitivity"><span
+class="header-section-number">1.14.6.3</span> Tuning Motion
+Sensitivity</h4>
+<ul>
+<li><strong>Sensitivity threshold</strong> (default 0.018) — ratio of
+changed pixels needed to count as motion. Lower = more sensitive.</li>
+<li><strong>Analysis interval</strong> (default 700ms) — how often
+frames are compared.</li>
+<li><strong>Pixel delta threshold</strong> (18) — minimum per-pixel
+brightness change to count as different.</li>
+</ul>
+<p>MQTT publishes are throttled to at most once every 2 seconds to avoid
+flooding your broker.</p>
+<h3 data-number="1.14.7" id="camera-snapshots-motion-triggered"><span
+class="header-section-number">1.14.7</span> Camera Snapshots
+(Motion-Triggered)</h3>
+<p>King Kiosk can automatically capture camera snapshots when motion is
+detected, giving you visual evidence of what triggered the motion
+alert.</p>
+<h4 data-number="1.14.7.1" id="enable-motion-triggered-snapshots"><span
+class="header-section-number">1.14.7.1</span> Enable Motion-Triggered
+Snapshots</h4>
+<div class="sourceCode" id="cb314"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb314-1"><a href="#cb314-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;camera_snapshot&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;set_motion_trigger&quot;</span><span class="fu">,</span> <span class="dt">&quot;enabled&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">}</span></span></code></pre></div>
+<p>You can also set periodic snapshots:</p>
+<div class="sourceCode" id="cb315"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb315-1"><a href="#cb315-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;camera_snapshot&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;enable&quot;</span><span class="fu">,</span> <span class="dt">&quot;interval&quot;</span><span class="fu">:</span> <span class="dv">30</span><span class="fu">}</span></span></code></pre></div>
+<p>Or capture a one-off snapshot:</p>
+<div class="sourceCode" id="cb316"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb316-1"><a href="#cb316-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;camera_snapshot&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;capture&quot;</span><span class="fu">}</span></span></code></pre></div>
+<p>Snapshots are published as raw JPEG bytes to
+<code>kingkiosk/{device_id}/camera/snapshot</code>, with metadata on
+<code>kingkiosk/{device_id}/camera/state</code>. Home Assistant
+auto-discovers this as a camera entity.</p>
+<h3 data-number="1.14.8" id="detection-mqtt-topics-reference"><span
+class="header-section-number">1.14.8</span> Detection MQTT Topics
+Reference</h3>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 39%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Payload Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kingkiosk/{id}/person_presence</code></td>
+<td>JSON</td>
+<td>Person present (bool), confidence</td>
+</tr>
+<tr>
+<td><code>kingkiosk/{id}/object_detection</code></td>
+<td>JSON</td>
+<td>Detected objects with classes and bounding boxes</td>
+</tr>
+<tr>
+<td><code>kingkiosk/{id}/face_presence</code></td>
+<td>JSON</td>
+<td>Face count, known/unknown faces, per-face details</td>
+</tr>
+<tr>
+<td><code>kingkiosk/{id}/motion/result</code></td>
+<td>JSON</td>
+<td>Motion score (0-1), active regions</td>
+</tr>
+<tr>
+<td><code>kingkiosk/{id}/camera/snapshot</code></td>
+<td>JPEG bytes</td>
+<td>Raw camera snapshot image</td>
+</tr>
+<tr>
+<td><code>kingkiosk/{id}/camera/state</code></td>
+<td>JSON</td>
+<td>Snapshot metadata (timestamp, size, format)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Command topics</strong> (send to
+<code>kingkiosk/{id}/system/cmd</code>):</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>person_detection</code></td>
+<td>Enable/disable/toggle person &amp; object detection</td>
+</tr>
+<tr>
+<td><code>start_face_training</code></td>
+<td>Begin face enrollment for a named person</td>
+</tr>
+<tr>
+<td><code>enroll_face</code></td>
+<td>Alias for <code>start_face_training</code></td>
+</tr>
+<tr>
+<td><code>cancel_face_training</code></td>
+<td>Cancel an in-progress training session</td>
+</tr>
+<tr>
+<td><code>camera_snapshot</code></td>
+<td>Capture, enable periodic, or enable motion-triggered snapshots</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="1.14.9" id="detection-home-assistant-integration"><span
+class="header-section-number">1.14.9</span> Detection Home Assistant
+Integration</h3>
+<p>When Home Assistant MQTT Discovery is enabled, King Kiosk
+automatically registers four detection sensors:</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 33%" />
+<col style="width: 19%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th>HA Entity</th>
+<th>Sensor Type</th>
+<th>Value</th>
+<th>Icon</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sensor.{device}_object_detection</code></td>
+<td>Count</td>
+<td>Number of detected objects</td>
+<td><code>mdi:eye</code></td>
+</tr>
+<tr>
+<td><code>sensor.{device}_person_presence</code></td>
+<td>Occupancy</td>
+<td>ON/OFF</td>
+<td><code>mdi:human</code></td>
+</tr>
+<tr>
+<td><code>sensor.{device}_face_detection</code></td>
+<td>Count</td>
+<td>Number of faces (0 when none)</td>
+<td><code>mdi:face-recognition</code></td>
+</tr>
+<tr>
+<td><code>sensor.{device}_motion_detection</code></td>
+<td>Percentage</td>
+<td>Motion score as 0-100%</td>
+<td><code>mdi:run-fast</code></td>
+</tr>
+</tbody>
+</table>
+<p>Each sensor also exposes the full JSON payload as attributes, so you
+can access details like individual face names, object classes, or motion
+regions in your templates.</p>
+<p>To enable auto-discovery, go to <strong>Settings &gt; MQTT</strong>
+and toggle <strong>Home Assistant Discovery</strong>, or provision via
+MQTT:</p>
+<div class="sourceCode" id="cb317"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb317-1"><a href="#cb317-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb317-2"><a href="#cb317-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;provision&quot;</span><span class="fu">,</span></span>
+<span id="cb317-3"><a href="#cb317-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;settings&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb317-4"><a href="#cb317-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;mqtt_ha_discovery&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb317-5"><a href="#cb317-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb317-6"><a href="#cb317-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 data-number="1.14.10" id="detection-automation-examples"><span
+class="header-section-number">1.14.10</span> Detection Automation
+Examples</h3>
+<h4 data-number="1.14.10.1"
+id="home-assistant-turn-on-lights-when-someone-enters"><span
+class="header-section-number">1.14.10.1</span> Home Assistant: Turn on
+lights when someone enters</h4>
+<div class="sourceCode" id="cb318"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb318-1"><a href="#cb318-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
+<span id="cb318-2"><a href="#cb318-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Lights on when person detected&quot;</span></span>
+<span id="cb318-3"><a href="#cb318-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
+<span id="cb318-4"><a href="#cb318-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> state</span></span>
+<span id="cb318-5"><a href="#cb318-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> sensor.kitchen_tablet_person_presence</span></span>
+<span id="cb318-6"><a href="#cb318-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;ON&quot;</span></span>
+<span id="cb318-7"><a href="#cb318-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
+<span id="cb318-8"><a href="#cb318-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> light.turn_on</span></span>
+<span id="cb318-9"><a href="#cb318-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb318-10"><a href="#cb318-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> light.kitchen</span></span></code></pre></div>
+<h4 data-number="1.14.10.2"
+id="home-assistant-greet-a-recognized-person"><span
+class="header-section-number">1.14.10.2</span> Home Assistant: Greet a
+recognized person</h4>
+<div class="sourceCode" id="cb319"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb319-1"><a href="#cb319-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
+<span id="cb319-2"><a href="#cb319-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Welcome home greeting&quot;</span></span>
+<span id="cb319-3"><a href="#cb319-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
+<span id="cb319-4"><a href="#cb319-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> state</span></span>
+<span id="cb319-5"><a href="#cb319-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> sensor.front_door_tablet_face_detection</span></span>
+<span id="cb319-6"><a href="#cb319-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">condition</span><span class="kw">:</span></span>
+<span id="cb319-7"><a href="#cb319-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">condition</span><span class="kw">:</span><span class="at"> template</span></span>
+<span id="cb319-8"><a href="#cb319-8" aria-hidden="true" tabindex="-1"></a><span class="fu">        value_template</span><span class="kw">: </span><span class="ch">&gt;</span></span>
+<span id="cb319-9"><a href="#cb319-9" aria-hidden="true" tabindex="-1"></a>          {{ state_attr(&#39;sensor.front_door_tablet_face_detection&#39;, &#39;faces_detail&#39;)</span>
+<span id="cb319-10"><a href="#cb319-10" aria-hidden="true" tabindex="-1"></a>             | selectattr(&#39;recognized&#39;, &#39;equalto&#39;, true) | list | count &gt; 0 }}</span>
+<span id="cb319-11"><a href="#cb319-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
+<span id="cb319-12"><a href="#cb319-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
+<span id="cb319-13"><a href="#cb319-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb319-14"><a href="#cb319-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/front_door_tablet/system/cmd&quot;</span></span>
+<span id="cb319-15"><a href="#cb319-15" aria-hidden="true" tabindex="-1"></a><span class="fu">          payload</span><span class="kw">: </span><span class="ch">&gt;</span></span>
+<span id="cb319-16"><a href="#cb319-16" aria-hidden="true" tabindex="-1"></a>            {&quot;command&quot;: &quot;tts&quot;, &quot;text&quot;: &quot;Welcome home, {{ state_attr(&#39;sensor.front_door_tablet_face_detection&#39;, &#39;faces_detail&#39;)</span>
+<span id="cb319-17"><a href="#cb319-17" aria-hidden="true" tabindex="-1"></a>            | selectattr(&#39;recognized&#39;, &#39;equalto&#39;, true) | map(attribute=&#39;name&#39;) | first }}!&quot;}</span></code></pre></div>
+<h4 data-number="1.14.10.3"
+id="home-assistant-motion-triggered-security-snapshot"><span
+class="header-section-number">1.14.10.3</span> Home Assistant:
+Motion-triggered security snapshot</h4>
+<div class="sourceCode" id="cb320"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb320-1"><a href="#cb320-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
+<span id="cb320-2"><a href="#cb320-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Capture snapshot on motion&quot;</span></span>
+<span id="cb320-3"><a href="#cb320-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
+<span id="cb320-4"><a href="#cb320-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> numeric_state</span></span>
+<span id="cb320-5"><a href="#cb320-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> sensor.hallway_tablet_motion_detection</span></span>
+<span id="cb320-6"><a href="#cb320-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">above</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
+<span id="cb320-7"><a href="#cb320-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
+<span id="cb320-8"><a href="#cb320-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
+<span id="cb320-9"><a href="#cb320-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb320-10"><a href="#cb320-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/hallway_tablet/system/cmd&quot;</span></span>
+<span id="cb320-11"><a href="#cb320-11" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;: &quot;camera_snapshot&quot;, &quot;action&quot;: &quot;capture&quot;}&#39;</span></span>
+<span id="cb320-12"><a href="#cb320-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> notify.mobile_app</span></span>
+<span id="cb320-13"><a href="#cb320-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb320-14"><a href="#cb320-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">message</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Motion detected in hallway ({{ states(&#39;sensor.hallway_tablet_motion_detection&#39;) }}%)&quot;</span></span></code></pre></div>
+<h4 data-number="1.14.10.4"
+id="node-red-object-counting-dashboard"><span
+class="header-section-number">1.14.10.4</span> Node-RED: Object counting
+dashboard</h4>
+<p>In Node-RED, subscribe to
+<code>kingkiosk/{device_id}/object_detection</code> with an MQTT-in
+node. Parse the JSON and use <code>msg.payload.objects</code> to filter
+by class:</p>
+<div class="sourceCode" id="cb321"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb321-1"><a href="#cb321-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Function node: count specific object types</span></span>
+<span id="cb321-2"><a href="#cb321-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> objects <span class="op">=</span> msg<span class="op">.</span><span class="at">payload</span><span class="op">.</span><span class="at">objects</span> <span class="op">||</span> []<span class="op">;</span></span>
+<span id="cb321-3"><a href="#cb321-3" aria-hidden="true" tabindex="-1"></a>msg<span class="op">.</span><span class="at">people</span> <span class="op">=</span> objects<span class="op">.</span><span class="fu">filter</span>(o <span class="kw">=&gt;</span> o<span class="op">.</span><span class="at">class</span> <span class="op">===</span> <span class="st">&#39;person&#39;</span>)<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb321-4"><a href="#cb321-4" aria-hidden="true" tabindex="-1"></a>msg<span class="op">.</span><span class="at">pets</span> <span class="op">=</span> objects<span class="op">.</span><span class="fu">filter</span>(o <span class="kw">=&gt;</span> o<span class="op">.</span><span class="at">class</span> <span class="op">===</span> <span class="st">&#39;dog&#39;</span> <span class="op">||</span> o<span class="op">.</span><span class="at">class</span> <span class="op">===</span> <span class="st">&#39;cat&#39;</span>)<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb321-5"><a href="#cb321-5" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> msg<span class="op">;</span></span></code></pre></div>
+<h4 data-number="1.14.10.5"
+id="node-red-face-based-scene-switching"><span
+class="header-section-number">1.14.10.5</span> Node-RED: Face-based
+scene switching</h4>
+<p>Subscribe to <code>kingkiosk/{device_id}/face_presence</code> and
+route based on who’s recognized:</p>
+<div class="sourceCode" id="cb322"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb322-1"><a href="#cb322-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Function node: trigger different layouts per person</span></span>
+<span id="cb322-2"><a href="#cb322-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> faces <span class="op">=</span> msg<span class="op">.</span><span class="at">payload</span><span class="op">.</span><span class="at">faces_detail</span> <span class="op">||</span> []<span class="op">;</span></span>
+<span id="cb322-3"><a href="#cb322-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> known <span class="op">=</span> faces<span class="op">.</span><span class="fu">filter</span>(f <span class="kw">=&gt;</span> f<span class="op">.</span><span class="at">recognized</span>)<span class="op">.</span><span class="fu">map</span>(f <span class="kw">=&gt;</span> f<span class="op">.</span><span class="at">name</span>)<span class="op">;</span></span>
+<span id="cb322-4"><a href="#cb322-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb322-5"><a href="#cb322-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (known<span class="op">.</span><span class="fu">includes</span>(<span class="st">&#39;Kids&#39;</span>)) {</span>
+<span id="cb322-6"><a href="#cb322-6" aria-hidden="true" tabindex="-1"></a>    msg<span class="op">.</span><span class="at">payload</span> <span class="op">=</span> {<span class="st">&quot;command&quot;</span><span class="op">:</span> <span class="st">&quot;load_screen_state&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;kids-dashboard&quot;</span>}<span class="op">;</span></span>
+<span id="cb322-7"><a href="#cb322-7" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (known<span class="op">.</span><span class="at">length</span> <span class="op">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb322-8"><a href="#cb322-8" aria-hidden="true" tabindex="-1"></a>    msg<span class="op">.</span><span class="at">payload</span> <span class="op">=</span> {<span class="st">&quot;command&quot;</span><span class="op">:</span> <span class="st">&quot;load_screen_state&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;family-dashboard&quot;</span>}<span class="op">;</span></span>
+<span id="cb322-9"><a href="#cb322-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb322-10"><a href="#cb322-10" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> msg<span class="op">;</span></span></code></pre></div>
+<p>Then connect to an MQTT-out node publishing to
+<code>kingkiosk/{device_id}/system/cmd</code>.</p>
+<hr />
+<h2 data-number="1.15" id="quick-reference-card"><span
+class="header-section-number">1.15</span> 14. Quick Reference Card</h2>
+<h3 data-number="1.15.1" id="essential-topics"><span
+class="header-section-number">1.15.1</span> Essential Topics</h3>
 <table>
 <colgroup>
 <col style="width: 56%" />
@@ -6631,8 +7383,8 @@ class="header-section-number">1.14.1</span> Essential Topics</h3>
 </tr>
 </tbody>
 </table>
-<h3 data-number="1.14.2" id="most-used-commands"><span
-class="header-section-number">1.14.2</span> Most-Used Commands</h3>
+<h3 data-number="1.15.2" id="most-used-commands"><span
+class="header-section-number">1.15.2</span> Most-Used Commands</h3>
 <table>
 <colgroup>
 <col style="width: 47%" />
@@ -6723,8 +7475,8 @@ class="header-section-number">1.14.2</span> Most-Used Commands</h3>
 </tr>
 </tbody>
 </table>
-<h3 data-number="1.14.3" id="widget-types"><span
-class="header-section-number">1.14.3</span> Widget Types</h3>
+<h3 data-number="1.15.3" id="widget-types"><span
+class="header-section-number">1.15.3</span> Widget Types</h3>
 <table>
 <colgroup>
 <col style="width: 20%" />
