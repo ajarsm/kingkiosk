@@ -3192,6 +3192,11 @@ states change — tap an object to send a command, and watch it update
 when the state changes. This makes canvases ideal for interactive smart
 home dashboards, network monitoring displays, and other live
 visualizations.</p>
+<p>For reusable canvases, tap-publish bindings can target the local
+device by using <code>kingkiosk/{device_id}/system/cmd</code> in
+<code>mqtt.publish.topic</code>. Camera nodes can publish a
+<code>webrtc_player</code> payload with <code>centered: true</code> to
+open a modal-style WHEP preview without hardcoding the kiosk ID.</p>
 <h3 data-number="1.8.12" id="animated-text"><span
 class="header-section-number">1.8.12</span> Animated Text</h3>
 <p>Display text with stunning animations.</p>

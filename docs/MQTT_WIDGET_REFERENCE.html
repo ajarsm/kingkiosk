@@ -8082,6 +8082,16 @@ specified topic.</p>
 </tr>
 </tbody>
 </table>
+<p>Template variables: - <code>publish.topic</code> and string values
+anywhere under <code>publish.payload</code> support
+<code>{device_id}</code>, <code>{device}</code>,
+<code>{window_id}</code>, <code>{object_id}</code>, and
+<code>{canvas_id}</code>. - Exact-match placeholders like
+<code>{device_id}</code> or <code>{{device_id}}</code> keep the original
+value type when the variable is non-string; inline replacements render
+as strings. - This is useful for reusable canvases that need to publish
+local system commands such as
+<code>kingkiosk/{device_id}/system/cmd</code>.</p>
 <p><strong>Subscribe (live inbound updates):</strong></p>
 <p>If <code>mqtt.subscribe</code> is set (an array), the client
 subscribes to each listed topic and updates the object’s visual
@@ -12860,6 +12870,11 @@ class="header-section-number">1.14.16.2</span>
 <td>(auto)</td>
 </tr>
 <tr>
+<td><code>centered</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+</tr>
+<tr>
 <td><code>opacity</code>, <code>x</code>, <code>y</code>,
 <code>width</code>, <code>height</code></td>
 <td>number</td>
@@ -12873,11 +12888,10 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb72-1"><a href=
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;webrtc_player&quot;</span><span class="fu">,</span></span>
 <span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;url&quot;</span><span class="fu">:</span> <span class="st">&quot;http://192.168.0.199:1984/webrtc.html?src=Backyard_Camera&quot;</span><span class="fu">,</span></span>
 <span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Backyard Camera&quot;</span><span class="fu">,</span></span>
-<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="dv">100</span><span class="fu">,</span></span>
-<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="dv">100</span><span class="fu">,</span></span>
-<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="dv">640</span><span class="fu">,</span></span>
-<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="dv">480</span></span>
-<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;centered&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="dv">640</span><span class="fu">,</span></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="dv">480</span></span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <h4 data-number="1.14.16.3" id="open_pdf"><span
 class="header-section-number">1.14.16.3</span>
 <code>open_pdf</code></h4>
