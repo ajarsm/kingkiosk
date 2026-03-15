@@ -1442,6 +1442,86 @@ code { font-family: 'JetBrains Mono', monospace; }
     .footer-links { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* === Demo Reel Video === */
+.demo-reel {
+    padding: 80px 0 100px;
+    background: var(--bg);
+}
+
+.demo-reel-player {
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+}
+
+.demo-reel-frame {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    background: #000;
+    box-shadow:
+        0 0 60px -12px var(--accent-glow),
+        0 4px 32px rgba(0, 0, 0, 0.5);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.demo-reel-frame:hover {
+    border-color: var(--border-hover);
+    box-shadow:
+        0 0 80px -8px var(--accent-glow),
+        0 4px 40px rgba(0, 0, 0, 0.6);
+}
+
+.demo-reel-frame video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.demo-reel-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.4s ease, transform 0.3s ease;
+    z-index: 2;
+}
+
+.demo-reel-play svg {
+    width: 80px;
+    height: 80px;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+    transition: transform 0.3s ease;
+}
+
+.demo-reel-play:hover svg {
+    transform: scale(1.1);
+}
+
+.demo-reel-play.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .demo-reel-frame {
+        border-radius: var(--radius);
+    }
+    .demo-reel-play svg {
+        width: 60px;
+        height: 60px;
+    }
+}
+
 /* === Responsive === */
 @media (max-width: 600px) {
     .section { padding: 80px 0; }
@@ -1449,4 +1529,6 @@ code { font-family: 'JetBrains Mono', monospace; }
     .hero-stats { gap: 20px; }
     .stat-number { font-size: 2rem; }
     .stat-divider { height: 30px; }
+    .demo-reel { padding: 60px 0 80px; }
+    .demo-reel-play svg { width: 48px; height: 48px; }
 }

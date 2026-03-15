@@ -20,6 +20,7 @@
                 <span class="logo-text">KingKiosk</span>
             </a>
             <div class="nav-links" id="navLinks">
+                <a href="#demo">Demo</a>
                 <a href="#features">Features</a>
                 <a href="#platforms">Platforms</a>
                 <a href="#widgets">Widgets</a>
@@ -134,6 +135,35 @@
         </div>
         <div class="scroll-indicator">
             <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Demo Reel -->
+    <section class="section demo-reel" id="demo">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">See It In Action</span>
+                <h2 class="section-title">90 seconds. The whole platform.</h2>
+            </div>
+            <div class="demo-reel-player reveal">
+                <div class="demo-reel-frame">
+                    <video
+                        id="demoVideo"
+                        poster="video/poster.jpg"
+                        preload="metadata"
+                        playsinline
+                        muted
+                    >
+                        <source src="video/demo.mp4" type="video/mp4">
+                    </video>
+                    <button class="demo-reel-play" id="demoPlayBtn" aria-label="Play demo video">
+                        <svg viewBox="0 0 80 80" fill="none">
+                            <circle cx="40" cy="40" r="39" fill="rgba(0,0,0,0.45)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+                            <polygon points="32,22 32,58 60,40" fill="white"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
     </section>
 

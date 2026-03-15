@@ -225,6 +225,54 @@ function initMockClock() {
     setInterval(updateClock, 30000);
 }
 
+/* === Demo Reel Video === */
+(function initDemoVideo() {
+    const video = document.getElementById('demoVideo');
+    const playBtn = document.getElementById('demoPlayBtn');
+    if (!video || !playBtn) return;
+
+    // Click play button: unmute, play from start, hide button
+    playBtn.addEventListener('click', () => {
+        video.muted = false;
+        video.currentTime = 0;
+        video.play();
+        playBtn.classList.add('hidden');
+    });
+
+    // Click video: toggle play/pause
+    video.addEventListener('click', () => {
+        if (video.paused) {
+            video.play();
+            playBtn.classList.add('hidden');
+        } else {
+            video.pause();
+            playBtn.classList.remove('hidden');
+        }
+    });
+
+    // Video ended: show play button again
+    video.addEventListener('ended', () => {
+        playBtn.classList.remove('hidden');
+    });
+
+    // Autoplay muted when scrolled into view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                if (video.paused && video.muted) {
+                    video.play().catch(() => {});
+                }
+            } else {
+                if (!video.paused && video.muted) {
+                    video.pause();
+                }
+            }
+        });
+    }, { threshold: 0.5 });
+
+    observer.observe(video);
+})();
+
 /* === Particle / Ambient Effects === */
 (function initAmbient() {
     // Subtle mouse-follow glow on hero
