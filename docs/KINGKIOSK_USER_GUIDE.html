@@ -6209,8 +6209,9 @@ class="header-section-number">1.13.1</span> What You Need</h3>
 currently built and tested for the <strong>Sunton
 ESP32-3248S035C</strong> — a 3.5” 480x320 capacitive touchscreen panel
 with an ST7796 display and GT911 touch controller, available for ~$15 on
-AliExpress. Other ESP32 boards with SPI displays can be supported by
-adding a board-specific BSP file (see the developer docs).</li>
+AliExpress. Other ESP32 boards with SPI displays can be supported —
+contact KallInnovations support at support@kallinnovations.com for board
+compatibility questions.</li>
 <li>A WiFi network (2.4 GHz — the ESP32 does not support 5 GHz)</li>
 <li>An MQTT broker (Mosquitto, the one built into Home Assistant, or any
 standard broker)</li>
@@ -6304,8 +6305,10 @@ ignored</td>
 </table>
 <p>The metaphor is simple: <strong>green pen = you can edit</strong>,
 <strong>red eye = you can only look</strong>. The lock button auto-hides
-after 8 seconds of inactivity and reappears when you touch the
-screen.</p>
+after 8 seconds of inactivity to keep your display clean. Just touch
+anywhere on the screen and it reappears. This means on a wall-mounted
+panel showing a dashboard, you’ll see only your content — the lock
+button stays out of the way until you need it.</p>
 <p><strong>Notification Badge</strong>: When notifications arrive, a
 small blue badge appears in the top-right corner showing the unread
 count. Tap it to open the Notification Center — a scrollable panel
@@ -6467,14 +6470,23 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb289-1"><a href
 <span id="cb289-22"><a href="#cb289-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;close_all_windows&quot;}&#39;</span></span></code></pre></div>
 <h3 data-number="1.13.6" id="the-tile-system"><span
 class="header-section-number">1.13.6</span> The Tile System</h3>
-<p>Widgets display in <strong>tiles</strong> — rectangular areas that
-auto-arrange in a grid. Open one widget and it fills the screen. Open
-two and they split 50/50. Open four and you get a 2x2 grid. Up to 8
-tiles are supported.</p>
-<p>Every tile can be individually closed, and the remaining tiles
-automatically resize to fill the space. The layout is saved to flash
-memory and restored on reboot — your panel looks the same after a power
-outage.</p>
+<p>Widgets display in <strong>tiles</strong> — rectangular areas on
+screen. KingKiosk Pico supports two layout modes:</p>
+<p><strong>Grid Mode</strong> (default) — Tiles auto-arrange in an
+intelligent grid. Open one widget and it fills the screen. Open two and
+they split 50/50. Open four and you get a 2x2 grid. Close a tile and the
+others expand to fill the gap. Up to 8 tiles are supported.</p>
+<p><strong>Floating Mode</strong> — Position tiles anywhere with exact
+pixel coordinates. Specify <code>x</code>, <code>y</code>,
+<code>width</code>, and <code>height</code> in your command to place
+widgets precisely. Tiles can overlap, and you control the z-order with
+<code>bring_to_front</code>. Perfect for custom dashboard layouts.</p>
+<p>Switch modes with:</p>
+<div class="sourceCode" id="cb290"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb290-1"><a href="#cb290-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;set_window_mode&quot;,&quot;mode&quot;:&quot;floating&quot;}&#39;</span></span>
+<span id="cb290-2"><a href="#cb290-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;set_window_mode&quot;,&quot;mode&quot;:&quot;grid&quot;}&#39;</span></span></code></pre></div>
+<p>In either mode, the layout is saved to flash memory and restored on
+reboot — your panel looks the same after a power outage.</p>
 <h3 data-number="1.13.7" id="security-locking-your-panel"><span
 class="header-section-number">1.13.7</span> Security: Locking Your
 Panel</h3>
@@ -6487,15 +6499,15 @@ semi-transparent shield covers the display. Perfect for wall-mounted
 panels where passersby might bump the screen.</p>
 <p>You can lock/unlock from the touchscreen (tap the lock button) or
 remotely via MQTT:</p>
-<div class="sourceCode" id="cb290"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb290-1"><a href="#cb290-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Toggle lock state remotely</span></span>
-<span id="cb290-2"><a href="#cb290-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;lock&quot;}&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb291"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb291-1"><a href="#cb291-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Toggle lock state remotely</span></span>
+<span id="cb291-2"><a href="#cb291-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;lock&quot;}&#39;</span></span></code></pre></div>
 <p>To unlock from the touchscreen, you’ll need to enter your PIN.
 <strong>Setting up a PIN is required</strong> for the lock/unlock
 workflow to function:</p>
-<div class="sourceCode" id="cb291"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb291-1"><a href="#cb291-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set a 4-digit PIN (do this first!)</span></span>
-<span id="cb291-2"><a href="#cb291-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;set_pin&quot;,&quot;pin&quot;:&quot;1234&quot;}&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb292"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb292-1"><a href="#cb292-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set a 4-digit PIN (do this first!)</span></span>
+<span id="cb292-2"><a href="#cb292-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;set_pin&quot;,&quot;pin&quot;:&quot;1234&quot;}&#39;</span></span></code></pre></div>
 <p>Once set, tapping the red lock icon on-screen brings up a PIN keypad.
 Enter your 4-digit PIN to unlock. Wrong PIN shows a red error message;
 correct PIN unlocks immediately with a confirmation beep.</p>
@@ -6503,16 +6515,16 @@ correct PIN unlocks immediately with a confirmation beep.</p>
 unauthorized configuration changes. When settings are locked, the
 <code>provision</code> command requires the PIN before it will modify
 WiFi, MQTT, or device settings.</p>
-<div class="sourceCode" id="cb292"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb292-1"><a href="#cb292-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lock settings (requires PIN to be set first)</span></span>
-<span id="cb292-2"><a href="#cb292-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;lock_settings&quot;}&#39;</span></span>
-<span id="cb292-3"><a href="#cb292-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb292-4"><a href="#cb292-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Unlock settings remotely</span></span>
-<span id="cb292-5"><a href="#cb292-5" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;unlock_settings&quot;}&#39;</span></span></code></pre></div>
-<p><strong>Changing the PIN:</strong></p>
 <div class="sourceCode" id="cb293"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb293-1"><a href="#cb293-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change to a new PIN (works anytime, even when locked)</span></span>
-<span id="cb293-2"><a href="#cb293-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;set_pin&quot;,&quot;pin&quot;:&quot;5678&quot;}&#39;</span></span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb293-1"><a href="#cb293-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lock settings (requires PIN to be set first)</span></span>
+<span id="cb293-2"><a href="#cb293-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;lock_settings&quot;}&#39;</span></span>
+<span id="cb293-3"><a href="#cb293-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb293-4"><a href="#cb293-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Unlock settings remotely</span></span>
+<span id="cb293-5"><a href="#cb293-5" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;unlock_settings&quot;}&#39;</span></span></code></pre></div>
+<p><strong>Changing the PIN:</strong></p>
+<div class="sourceCode" id="cb294"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb294-1"><a href="#cb294-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change to a new PIN (works anytime, even when locked)</span></span>
+<span id="cb294-2"><a href="#cb294-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;set_pin&quot;,&quot;pin&quot;:&quot;5678&quot;}&#39;</span></span></code></pre></div>
 <blockquote>
 <p><strong>Tip</strong>: Set a PIN immediately after first-time setup.
 Without a PIN, anyone who touches the screen can lock/unlock the panel
@@ -6523,8 +6535,8 @@ class="header-section-number">1.13.8</span> OTA Updates</h3>
 <p>KingKiosk Pico supports over-the-air firmware updates. Point it at an
 HTTP URL with the new firmware and it downloads, verifies, and installs
 automatically — with rollback protection if something goes wrong.</p>
-<div class="sourceCode" id="cb294"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb294-1"><a href="#cb294-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;update_firmware&quot;,&quot;url&quot;:&quot;http://your-server/firmware.bin&quot;}&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb295"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb295-1"><a href="#cb295-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mosquitto_pub</span> ... <span class="at">-m</span> <span class="st">&#39;{&quot;command&quot;:&quot;update_firmware&quot;,&quot;url&quot;:&quot;http://your-server/firmware.bin&quot;}&#39;</span></span></code></pre></div>
 <h3 data-number="1.13.9" id="esp32-tips-and-best-practices"><span
 class="header-section-number">1.13.9</span> ESP32 Tips and Best
 Practices</h3>
@@ -6550,32 +6562,12 @@ status with QR code for guest WiFi</p>
 <p><strong>Automation Ideas:</strong></p>
 <p><em>Morning dashboard — show weather and calendar at
 sunrise:</em></p>
-<div class="sourceCode" id="cb295"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb295-1"><a href="#cb295-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
-<span id="cb295-2"><a href="#cb295-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Morning Dashboard&quot;</span></span>
-<span id="cb295-3"><a href="#cb295-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
-<span id="cb295-4"><a href="#cb295-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> sun</span></span>
-<span id="cb295-5"><a href="#cb295-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">event</span><span class="kw">:</span><span class="at"> sunrise</span></span>
-<span id="cb295-6"><a href="#cb295-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
-<span id="cb295-7"><a href="#cb295-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
-<span id="cb295-8"><a href="#cb295-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
-<span id="cb295-9"><a href="#cb295-9" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kingpico-f23438/system/cmd&quot;</span></span>
-<span id="cb295-10"><a href="#cb295-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;:&quot;close_all_windows&quot;}&#39;</span></span>
-<span id="cb295-11"><a href="#cb295-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
-<span id="cb295-12"><a href="#cb295-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
-<span id="cb295-13"><a href="#cb295-13" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kingpico-f23438/system/cmd&quot;</span></span>
-<span id="cb295-14"><a href="#cb295-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;:&quot;open_clock&quot;,&quot;window_id&quot;:&quot;clock&quot;,&quot;mode&quot;:&quot;digital&quot;}&#39;</span></span>
-<span id="cb295-15"><a href="#cb295-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
-<span id="cb295-16"><a href="#cb295-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
-<span id="cb295-17"><a href="#cb295-17" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kingpico-f23438/system/cmd&quot;</span></span>
-<span id="cb295-18"><a href="#cb295-18" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;:&quot;open_weather_client&quot;,&quot;window_id&quot;:&quot;weather&quot;}&#39;</span></span></code></pre></div>
-<p><em>Bedtime mode — dim and show clock only:</em></p>
 <div class="sourceCode" id="cb296"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb296-1"><a href="#cb296-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
-<span id="cb296-2"><a href="#cb296-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Bedtime Panel&quot;</span></span>
+<span id="cb296-2"><a href="#cb296-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Morning Dashboard&quot;</span></span>
 <span id="cb296-3"><a href="#cb296-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
-<span id="cb296-4"><a href="#cb296-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> time</span></span>
-<span id="cb296-5"><a href="#cb296-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;22:00:00&quot;</span></span>
+<span id="cb296-4"><a href="#cb296-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> sun</span></span>
+<span id="cb296-5"><a href="#cb296-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">event</span><span class="kw">:</span><span class="at"> sunrise</span></span>
 <span id="cb296-6"><a href="#cb296-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
 <span id="cb296-7"><a href="#cb296-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
 <span id="cb296-8"><a href="#cb296-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
@@ -6584,11 +6576,31 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb296-1"><a href
 <span id="cb296-11"><a href="#cb296-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
 <span id="cb296-12"><a href="#cb296-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
 <span id="cb296-13"><a href="#cb296-13" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kingpico-f23438/system/cmd&quot;</span></span>
-<span id="cb296-14"><a href="#cb296-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;:&quot;set_brightness&quot;,&quot;value&quot;:20}&#39;</span></span>
+<span id="cb296-14"><a href="#cb296-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;:&quot;open_clock&quot;,&quot;window_id&quot;:&quot;clock&quot;,&quot;mode&quot;:&quot;digital&quot;}&#39;</span></span>
 <span id="cb296-15"><a href="#cb296-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
 <span id="cb296-16"><a href="#cb296-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
 <span id="cb296-17"><a href="#cb296-17" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kingpico-f23438/system/cmd&quot;</span></span>
-<span id="cb296-18"><a href="#cb296-18" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;:&quot;open_clock&quot;,&quot;window_id&quot;:&quot;night-clock&quot;,&quot;mode&quot;:&quot;digital&quot;}&#39;</span></span></code></pre></div>
+<span id="cb296-18"><a href="#cb296-18" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;:&quot;open_weather_client&quot;,&quot;window_id&quot;:&quot;weather&quot;}&#39;</span></span></code></pre></div>
+<p><em>Bedtime mode — dim and show clock only:</em></p>
+<div class="sourceCode" id="cb297"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb297-1"><a href="#cb297-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
+<span id="cb297-2"><a href="#cb297-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Bedtime Panel&quot;</span></span>
+<span id="cb297-3"><a href="#cb297-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
+<span id="cb297-4"><a href="#cb297-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> time</span></span>
+<span id="cb297-5"><a href="#cb297-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;22:00:00&quot;</span></span>
+<span id="cb297-6"><a href="#cb297-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
+<span id="cb297-7"><a href="#cb297-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
+<span id="cb297-8"><a href="#cb297-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb297-9"><a href="#cb297-9" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kingpico-f23438/system/cmd&quot;</span></span>
+<span id="cb297-10"><a href="#cb297-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;:&quot;close_all_windows&quot;}&#39;</span></span>
+<span id="cb297-11"><a href="#cb297-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
+<span id="cb297-12"><a href="#cb297-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb297-13"><a href="#cb297-13" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kingpico-f23438/system/cmd&quot;</span></span>
+<span id="cb297-14"><a href="#cb297-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;:&quot;set_brightness&quot;,&quot;value&quot;:20}&#39;</span></span>
+<span id="cb297-15"><a href="#cb297-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
+<span id="cb297-16"><a href="#cb297-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb297-17"><a href="#cb297-17" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kingpico-f23438/system/cmd&quot;</span></span>
+<span id="cb297-18"><a href="#cb297-18" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;:&quot;open_clock&quot;,&quot;window_id&quot;:&quot;night-clock&quot;,&quot;mode&quot;:&quot;digital&quot;}&#39;</span></span></code></pre></div>
 <hr />
 <h2 data-number="1.14" id="feature-server"><span
 class="header-section-number">1.14</span> 13. Feature Server</h2>
@@ -6600,6 +6612,13 @@ Home Assistant, and bridging your entire Home Assistant enabled smart
 home to MQTT.</p>
 <p>Think of it as the brain that connects all your King Kiosk devices
 together and ties them into your broader smart home ecosystem.</p>
+<blockquote>
+<p><strong>Note</strong>: Feature Server capabilities (intercom, remote
+browser, RTSP export, AI/ML) are available on the Flutter-based
+KingKiosk clients (Android, iOS, macOS, Windows, Linux, tvOS) only.
+KingKiosk Pico (ESP32) does not connect to the Feature Server due to the
+microcontroller’s hardware constraints.</p>
+</blockquote>
 <h3 data-number="1.14.1" id="what-is-the-feature-server"><span
 class="header-section-number">1.14.1</span> What is the Feature
 Server?</h3>
@@ -6719,55 +6738,55 @@ offline.</li>
 <h4 data-number="1.14.2.2" id="choosing-a-voice"><span
 class="header-section-number">1.14.2.2</span> Choosing a Voice</h4>
 <p>First, discover what voices are available:</p>
-<div class="sourceCode" id="cb297"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb297-1"><a href="#cb297-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb297-2"><a href="#cb297-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;tts&quot;</span><span class="fu">,</span></span>
-<span id="cb297-3"><a href="#cb297-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;getVoices&quot;</span><span class="fu">,</span></span>
-<span id="cb297-4"><a href="#cb297-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;language&quot;</span><span class="fu">:</span> <span class="st">&quot;en_US&quot;</span><span class="fu">,</span></span>
-<span id="cb297-5"><a href="#cb297-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;response_topic&quot;</span><span class="fu">:</span> <span class="st">&quot;kingkiosk/my_device/system/response&quot;</span></span>
-<span id="cb297-6"><a href="#cb297-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p>The response includes voice details like <code>voiceId</code>,
-<code>quality</code>, and whether the voice is already installed. Then
-use a voice in your speak commands:</p>
 <div class="sourceCode" id="cb298"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb298-1"><a href="#cb298-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb298-2"><a href="#cb298-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;tts&quot;</span><span class="fu">,</span></span>
-<span id="cb298-3"><a href="#cb298-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;text&quot;</span><span class="fu">:</span> <span class="st">&quot;Dinner is ready!&quot;</span><span class="fu">,</span></span>
-<span id="cb298-4"><a href="#cb298-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;voice&quot;</span><span class="fu">:</span> <span class="st">&quot;en_US-lessac-medium&quot;</span></span>
-<span id="cb298-5"><a href="#cb298-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<h4 data-number="1.14.2.3" id="installing-voices"><span
-class="header-section-number">1.14.2.3</span> Installing Voices</h4>
-<p>If a voice isn’t installed yet, you can pull it:</p>
+<span id="cb298-3"><a href="#cb298-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;getVoices&quot;</span><span class="fu">,</span></span>
+<span id="cb298-4"><a href="#cb298-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;language&quot;</span><span class="fu">:</span> <span class="st">&quot;en_US&quot;</span><span class="fu">,</span></span>
+<span id="cb298-5"><a href="#cb298-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;response_topic&quot;</span><span class="fu">:</span> <span class="st">&quot;kingkiosk/my_device/system/response&quot;</span></span>
+<span id="cb298-6"><a href="#cb298-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>The response includes voice details like <code>voiceId</code>,
+<code>quality</code>, and whether the voice is already installed. Then
+use a voice in your speak commands:</p>
 <div class="sourceCode" id="cb299"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb299-1"><a href="#cb299-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb299-2"><a href="#cb299-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;tts&quot;</span><span class="fu">,</span></span>
-<span id="cb299-3"><a href="#cb299-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;voice_pull&quot;</span><span class="fu">,</span></span>
+<span id="cb299-3"><a href="#cb299-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;text&quot;</span><span class="fu">:</span> <span class="st">&quot;Dinner is ready!&quot;</span><span class="fu">,</span></span>
 <span id="cb299-4"><a href="#cb299-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;voice&quot;</span><span class="fu">:</span> <span class="st">&quot;en_US-lessac-medium&quot;</span></span>
 <span id="cb299-5"><a href="#cb299-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 data-number="1.14.2.3" id="installing-voices"><span
+class="header-section-number">1.14.2.3</span> Installing Voices</h4>
+<p>If a voice isn’t installed yet, you can pull it:</p>
+<div class="sourceCode" id="cb300"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb300-1"><a href="#cb300-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb300-2"><a href="#cb300-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;tts&quot;</span><span class="fu">,</span></span>
+<span id="cb300-3"><a href="#cb300-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;voice_pull&quot;</span><span class="fu">,</span></span>
+<span id="cb300-4"><a href="#cb300-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;voice&quot;</span><span class="fu">:</span> <span class="st">&quot;en_US-lessac-medium&quot;</span></span>
+<span id="cb300-5"><a href="#cb300-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>If <code>auto_download</code> is enabled in the server config, voices
 are downloaded automatically on first use.</p>
 <h4 data-number="1.14.2.4"
 id="home-assistant-automation-example-1"><span
 class="header-section-number">1.14.2.4</span> Home Assistant Automation
 Example</h4>
-<div class="sourceCode" id="cb300"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb300-1"><a href="#cb300-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
-<span id="cb300-2"><a href="#cb300-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Announce Front Door&quot;</span></span>
-<span id="cb300-3"><a href="#cb300-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
-<span id="cb300-4"><a href="#cb300-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> state</span></span>
-<span id="cb300-5"><a href="#cb300-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> binary_sensor.front_door</span></span>
-<span id="cb300-6"><a href="#cb300-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">to</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;on&#39;</span></span>
-<span id="cb300-7"><a href="#cb300-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
-<span id="cb300-8"><a href="#cb300-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
-<span id="cb300-9"><a href="#cb300-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
-<span id="cb300-10"><a href="#cb300-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kitchen_tablet/system/cmd&quot;</span></span>
-<span id="cb300-11"><a href="#cb300-11" aria-hidden="true" tabindex="-1"></a><span class="fu">          payload</span><span class="kw">: </span><span class="ch">&gt;</span></span>
-<span id="cb300-12"><a href="#cb300-12" aria-hidden="true" tabindex="-1"></a>            {</span>
-<span id="cb300-13"><a href="#cb300-13" aria-hidden="true" tabindex="-1"></a>              &quot;command&quot;: &quot;tts&quot;,</span>
-<span id="cb300-14"><a href="#cb300-14" aria-hidden="true" tabindex="-1"></a>              &quot;text&quot;: &quot;The front door just opened.&quot;,</span>
-<span id="cb300-15"><a href="#cb300-15" aria-hidden="true" tabindex="-1"></a>              &quot;voice&quot;: &quot;en_US-lessac-medium&quot;,</span>
-<span id="cb300-16"><a href="#cb300-16" aria-hidden="true" tabindex="-1"></a>              &quot;volume&quot;: 0.8</span>
-<span id="cb300-17"><a href="#cb300-17" aria-hidden="true" tabindex="-1"></a>            }</span></code></pre></div>
+<div class="sourceCode" id="cb301"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb301-1"><a href="#cb301-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
+<span id="cb301-2"><a href="#cb301-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Announce Front Door&quot;</span></span>
+<span id="cb301-3"><a href="#cb301-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
+<span id="cb301-4"><a href="#cb301-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> state</span></span>
+<span id="cb301-5"><a href="#cb301-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> binary_sensor.front_door</span></span>
+<span id="cb301-6"><a href="#cb301-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">to</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;on&#39;</span></span>
+<span id="cb301-7"><a href="#cb301-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
+<span id="cb301-8"><a href="#cb301-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
+<span id="cb301-9"><a href="#cb301-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb301-10"><a href="#cb301-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kitchen_tablet/system/cmd&quot;</span></span>
+<span id="cb301-11"><a href="#cb301-11" aria-hidden="true" tabindex="-1"></a><span class="fu">          payload</span><span class="kw">: </span><span class="ch">&gt;</span></span>
+<span id="cb301-12"><a href="#cb301-12" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb301-13"><a href="#cb301-13" aria-hidden="true" tabindex="-1"></a>              &quot;command&quot;: &quot;tts&quot;,</span>
+<span id="cb301-14"><a href="#cb301-14" aria-hidden="true" tabindex="-1"></a>              &quot;text&quot;: &quot;The front door just opened.&quot;,</span>
+<span id="cb301-15"><a href="#cb301-15" aria-hidden="true" tabindex="-1"></a>              &quot;voice&quot;: &quot;en_US-lessac-medium&quot;,</span>
+<span id="cb301-16"><a href="#cb301-16" aria-hidden="true" tabindex="-1"></a>              &quot;volume&quot;: 0.8</span>
+<span id="cb301-17"><a href="#cb301-17" aria-hidden="true" tabindex="-1"></a>            }</span></code></pre></div>
 <hr />
 <h3 data-number="1.14.3" id="intercom-broadcast"><span
 class="header-section-number">1.14.3</span> Intercom &amp;
@@ -6830,21 +6849,21 @@ to Your Kiosk</h4>
 <p>The easiest way to use intercom is to add a dedicated toggle button
 directly on your kiosk screen. This creates a tap-to-talk button that
 turns green when broadcasting and gray when idle:</p>
-<div class="sourceCode" id="cb302"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb302-1"><a href="#cb302-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb302-2"><a href="#cb302-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;mqtt_button&quot;</span><span class="fu">,</span></span>
-<span id="cb302-3"><a href="#cb302-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;configure&quot;</span><span class="fu">,</span></span>
-<span id="cb302-4"><a href="#cb302-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;intercom_btn&quot;</span><span class="fu">,</span></span>
-<span id="cb302-5"><a href="#cb302-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;mode&quot;</span><span class="fu">:</span> <span class="st">&quot;icon_button&quot;</span><span class="fu">,</span></span>
-<span id="cb302-6"><a href="#cb302-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;publish_topic&quot;</span><span class="fu">:</span> <span class="st">&quot;kingkiosk/{deviceId}/intercom/toggle&quot;</span><span class="fu">,</span></span>
-<span id="cb302-7"><a href="#cb302-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;subscription_topic&quot;</span><span class="fu">:</span> <span class="st">&quot;kingkiosk/{deviceId}/intercom/status&quot;</span><span class="fu">,</span></span>
-<span id="cb302-8"><a href="#cb302-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status_path&quot;</span><span class="fu">:</span> <span class="st">&quot;broadcasting&quot;</span><span class="fu">,</span></span>
-<span id="cb302-9"><a href="#cb302-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;icon_on&quot;</span><span class="fu">:</span> <span class="st">&quot;mic&quot;</span><span class="fu">,</span></span>
-<span id="cb302-10"><a href="#cb302-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;icon_off&quot;</span><span class="fu">:</span> <span class="st">&quot;mic_off&quot;</span><span class="fu">,</span></span>
-<span id="cb302-11"><a href="#cb302-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;color_on&quot;</span><span class="fu">:</span> <span class="st">&quot;0xFF4CAF50&quot;</span><span class="fu">,</span></span>
-<span id="cb302-12"><a href="#cb302-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;color_off&quot;</span><span class="fu">:</span> <span class="st">&quot;0xFF757575&quot;</span><span class="fu">,</span></span>
-<span id="cb302-13"><a href="#cb302-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;label&quot;</span><span class="fu">:</span> <span class="st">&quot;Intercom&quot;</span></span>
-<span id="cb302-14"><a href="#cb302-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb303"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb303-1"><a href="#cb303-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb303-2"><a href="#cb303-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;mqtt_button&quot;</span><span class="fu">,</span></span>
+<span id="cb303-3"><a href="#cb303-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;configure&quot;</span><span class="fu">,</span></span>
+<span id="cb303-4"><a href="#cb303-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;intercom_btn&quot;</span><span class="fu">,</span></span>
+<span id="cb303-5"><a href="#cb303-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;mode&quot;</span><span class="fu">:</span> <span class="st">&quot;icon_button&quot;</span><span class="fu">,</span></span>
+<span id="cb303-6"><a href="#cb303-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;publish_topic&quot;</span><span class="fu">:</span> <span class="st">&quot;kingkiosk/{deviceId}/intercom/toggle&quot;</span><span class="fu">,</span></span>
+<span id="cb303-7"><a href="#cb303-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;subscription_topic&quot;</span><span class="fu">:</span> <span class="st">&quot;kingkiosk/{deviceId}/intercom/status&quot;</span><span class="fu">,</span></span>
+<span id="cb303-8"><a href="#cb303-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status_path&quot;</span><span class="fu">:</span> <span class="st">&quot;broadcasting&quot;</span><span class="fu">,</span></span>
+<span id="cb303-9"><a href="#cb303-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;icon_on&quot;</span><span class="fu">:</span> <span class="st">&quot;mic&quot;</span><span class="fu">,</span></span>
+<span id="cb303-10"><a href="#cb303-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;icon_off&quot;</span><span class="fu">:</span> <span class="st">&quot;mic_off&quot;</span><span class="fu">,</span></span>
+<span id="cb303-11"><a href="#cb303-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;color_on&quot;</span><span class="fu">:</span> <span class="st">&quot;0xFF4CAF50&quot;</span><span class="fu">,</span></span>
+<span id="cb303-12"><a href="#cb303-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;color_off&quot;</span><span class="fu">:</span> <span class="st">&quot;0xFF757575&quot;</span><span class="fu">,</span></span>
+<span id="cb303-13"><a href="#cb303-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;label&quot;</span><span class="fu">:</span> <span class="st">&quot;Intercom&quot;</span></span>
+<span id="cb303-14"><a href="#cb303-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>Replace <code>{deviceId}</code> with your device’s ID. Tap the button
 to start broadcasting, tap again to stop. The icon and color update
 automatically based on the intercom status.</p>
@@ -6857,22 +6876,22 @@ id="home-assistant-automation-example-2"><span
 class="header-section-number">1.14.3.5</span> Home Assistant Automation
 Example</h4>
 <p>Broadcast “dinner’s ready” when a button is pressed:</p>
-<div class="sourceCode" id="cb303"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb303-1"><a href="#cb303-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
-<span id="cb303-2"><a href="#cb303-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Dinner Announcement&quot;</span></span>
-<span id="cb303-3"><a href="#cb303-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
-<span id="cb303-4"><a href="#cb303-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> state</span></span>
-<span id="cb303-5"><a href="#cb303-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> input_button.dinner_ready</span></span>
-<span id="cb303-6"><a href="#cb303-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
-<span id="cb303-7"><a href="#cb303-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
-<span id="cb303-8"><a href="#cb303-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
-<span id="cb303-9"><a href="#cb303-9" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kitchen-kiosk/intercom/start&quot;</span></span>
-<span id="cb303-10"><a href="#cb303-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;group&quot;: &quot;default&quot;}&#39;</span></span>
-<span id="cb303-11"><a href="#cb303-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">delay</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;00:00:10&quot;</span></span>
-<span id="cb303-12"><a href="#cb303-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
-<span id="cb303-13"><a href="#cb303-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
-<span id="cb303-14"><a href="#cb303-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kitchen-kiosk/intercom/stop&quot;</span></span>
-<span id="cb303-15"><a href="#cb303-15" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{}&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb304"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb304-1"><a href="#cb304-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
+<span id="cb304-2"><a href="#cb304-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Dinner Announcement&quot;</span></span>
+<span id="cb304-3"><a href="#cb304-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
+<span id="cb304-4"><a href="#cb304-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> state</span></span>
+<span id="cb304-5"><a href="#cb304-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> input_button.dinner_ready</span></span>
+<span id="cb304-6"><a href="#cb304-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
+<span id="cb304-7"><a href="#cb304-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
+<span id="cb304-8"><a href="#cb304-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb304-9"><a href="#cb304-9" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kitchen-kiosk/intercom/start&quot;</span></span>
+<span id="cb304-10"><a href="#cb304-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;group&quot;: &quot;default&quot;}&#39;</span></span>
+<span id="cb304-11"><a href="#cb304-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">delay</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;00:00:10&quot;</span></span>
+<span id="cb304-12"><a href="#cb304-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
+<span id="cb304-13"><a href="#cb304-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb304-14"><a href="#cb304-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/kitchen-kiosk/intercom/stop&quot;</span></span>
+<span id="cb304-15"><a href="#cb304-15" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{}&#39;</span></span></code></pre></div>
 <h4 data-number="1.14.3.6" id="common-use-cases-1"><span
 class="header-section-number">1.14.3.6</span> Common Use Cases</h4>
 <ul>
@@ -6940,13 +6959,13 @@ class="header-section-number">1.14.4.3</span> Creating a Remote
 Browser</h4>
 <p>Send this MQTT command to your device’s system topic to open a remote
 browser window:</p>
-<div class="sourceCode" id="cb305"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb305-1"><a href="#cb305-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb305-2"><a href="#cb305-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;create_remote_browser&quot;</span><span class="fu">,</span></span>
-<span id="cb305-3"><a href="#cb305-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;browser_1&quot;</span><span class="fu">,</span></span>
-<span id="cb305-4"><a href="#cb305-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;initial_url&quot;</span><span class="fu">:</span> <span class="st">&quot;https://www.google.com&quot;</span><span class="fu">,</span></span>
-<span id="cb305-5"><a href="#cb305-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;auto_connect&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
-<span id="cb305-6"><a href="#cb305-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb306"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb306-1"><a href="#cb306-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb306-2"><a href="#cb306-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;create_remote_browser&quot;</span><span class="fu">,</span></span>
+<span id="cb306-3"><a href="#cb306-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;browser_1&quot;</span><span class="fu">,</span></span>
+<span id="cb306-4"><a href="#cb306-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;initial_url&quot;</span><span class="fu">:</span> <span class="st">&quot;https://www.google.com&quot;</span><span class="fu">,</span></span>
+<span id="cb306-5"><a href="#cb306-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;auto_connect&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb306-6"><a href="#cb306-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <table>
 <colgroup>
 <col style="width: 32%" />
@@ -7000,12 +7019,12 @@ fallback).</p>
 <h4 data-number="1.14.4.4" id="navigating-to-a-url"><span
 class="header-section-number">1.14.4.4</span> Navigating to a URL</h4>
 <p>Once a remote browser session is running, you can navigate it:</p>
-<div class="sourceCode" id="cb306"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb306-1"><a href="#cb306-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb306-2"><a href="#cb306-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;navigate_remote_browser&quot;</span><span class="fu">,</span></span>
-<span id="cb306-3"><a href="#cb306-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;browser_1&quot;</span><span class="fu">,</span></span>
-<span id="cb306-4"><a href="#cb306-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;url&quot;</span><span class="fu">:</span> <span class="st">&quot;https://youtube.com&quot;</span></span>
-<span id="cb306-5"><a href="#cb306-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb307"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb307-1"><a href="#cb307-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb307-2"><a href="#cb307-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;navigate_remote_browser&quot;</span><span class="fu">,</span></span>
+<span id="cb307-3"><a href="#cb307-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;window_id&quot;</span><span class="fu">:</span> <span class="st">&quot;browser_1&quot;</span><span class="fu">,</span></span>
+<span id="cb307-4"><a href="#cb307-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;url&quot;</span><span class="fu">:</span> <span class="st">&quot;https://youtube.com&quot;</span></span>
+<span id="cb307-5"><a href="#cb307-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <h4 data-number="1.14.4.5" id="controlling-the-browser"><span
 class="header-section-number">1.14.4.5</span> Controlling the
 Browser</h4>
@@ -7080,11 +7099,11 @@ Assistant add-on users, go to Settings &gt; Add-ons &gt; KingKiosk Core
 <code>rtsp://your-go2rtc-ip:8554</code> - <code>go2rtc_api_url</code>:
 <code>http://your-go2rtc-ip:1984</code></p>
 <p>For standalone users, add to <code>config.toml</code>:</p>
-<div class="sourceCode" id="cb308"><pre
-class="sourceCode toml"><code class="sourceCode toml"><span id="cb308-1"><a href="#cb308-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[gstreamer]</span></span>
-<span id="cb308-2"><a href="#cb308-2" aria-hidden="true" tabindex="-1"></a><span class="dt">go2rtc_url</span> <span class="op">=</span> <span class="st">&quot;rtsp://192.168.1.100:8554&quot;</span></span>
-<span id="cb308-3"><a href="#cb308-3" aria-hidden="true" tabindex="-1"></a><span class="dt">go2rtc_api_url</span> <span class="op">=</span> <span class="st">&quot;http://192.168.1.100:1984&quot;</span></span>
-<span id="cb308-4"><a href="#cb308-4" aria-hidden="true" tabindex="-1"></a><span class="dt">go2rtc_manage_streams</span> <span class="op">=</span> <span class="cn">true</span></span></code></pre></div>
+<div class="sourceCode" id="cb309"><pre
+class="sourceCode toml"><code class="sourceCode toml"><span id="cb309-1"><a href="#cb309-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[gstreamer]</span></span>
+<span id="cb309-2"><a href="#cb309-2" aria-hidden="true" tabindex="-1"></a><span class="dt">go2rtc_url</span> <span class="op">=</span> <span class="st">&quot;rtsp://192.168.1.100:8554&quot;</span></span>
+<span id="cb309-3"><a href="#cb309-3" aria-hidden="true" tabindex="-1"></a><span class="dt">go2rtc_api_url</span> <span class="op">=</span> <span class="st">&quot;http://192.168.1.100:1984&quot;</span></span>
+<span id="cb309-4"><a href="#cb309-4" aria-hidden="true" tabindex="-1"></a><span class="dt">go2rtc_manage_streams</span> <span class="op">=</span> <span class="cn">true</span></span></code></pre></div>
 <p><strong>Step 3:</strong> Enable RTSP Export in KingKiosk’s Feature
 Server Settings and turn the toggle on.</p>
 <p><strong>Step 4:</strong> Your device automatically appears in go2rtc
@@ -7097,19 +7116,19 @@ Assistant</h4>
 &gt; Add Integration &gt; Generic Camera. Enter
 <code>rtsp://your-go2rtc:8554/kitchen-tablet</code>.</p>
 <p><strong>Frigate:</strong></p>
-<div class="sourceCode" id="cb309"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb309-1"><a href="#cb309-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cameras</span><span class="kw">:</span></span>
-<span id="cb309-2"><a href="#cb309-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">kitchen_tablet</span><span class="kw">:</span></span>
-<span id="cb309-3"><a href="#cb309-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ffmpeg</span><span class="kw">:</span></span>
-<span id="cb309-4"><a href="#cb309-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">inputs</span><span class="kw">:</span></span>
-<span id="cb309-5"><a href="#cb309-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">path</span><span class="kw">:</span><span class="at"> rtsp://your-go2rtc:8554/kitchen-tablet</span></span>
-<span id="cb309-6"><a href="#cb309-6" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">roles</span><span class="kw">:</span></span>
-<span id="cb309-7"><a href="#cb309-7" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="kw">-</span><span class="at"> detect</span></span>
-<span id="cb309-8"><a href="#cb309-8" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="kw">-</span><span class="at"> record</span></span></code></pre></div>
-<p><strong>WebRTC Camera Card (lowest latency):</strong></p>
 <div class="sourceCode" id="cb310"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb310-1"><a href="#cb310-1" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span><span class="kw">:</span><span class="at"> custom:webrtc-camera</span></span>
-<span id="cb310-2"><a href="#cb310-2" aria-hidden="true" tabindex="-1"></a><span class="fu">url</span><span class="kw">:</span><span class="at"> kitchen-tablet</span></span></code></pre></div>
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb310-1"><a href="#cb310-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cameras</span><span class="kw">:</span></span>
+<span id="cb310-2"><a href="#cb310-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">kitchen_tablet</span><span class="kw">:</span></span>
+<span id="cb310-3"><a href="#cb310-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ffmpeg</span><span class="kw">:</span></span>
+<span id="cb310-4"><a href="#cb310-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">inputs</span><span class="kw">:</span></span>
+<span id="cb310-5"><a href="#cb310-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">path</span><span class="kw">:</span><span class="at"> rtsp://your-go2rtc:8554/kitchen-tablet</span></span>
+<span id="cb310-6"><a href="#cb310-6" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">roles</span><span class="kw">:</span></span>
+<span id="cb310-7"><a href="#cb310-7" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="kw">-</span><span class="at"> detect</span></span>
+<span id="cb310-8"><a href="#cb310-8" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="kw">-</span><span class="at"> record</span></span></code></pre></div>
+<p><strong>WebRTC Camera Card (lowest latency):</strong></p>
+<div class="sourceCode" id="cb311"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb311-1"><a href="#cb311-1" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span><span class="kw">:</span><span class="at"> custom:webrtc-camera</span></span>
+<span id="cb311-2"><a href="#cb311-2" aria-hidden="true" tabindex="-1"></a><span class="fu">url</span><span class="kw">:</span><span class="at"> kitchen-tablet</span></span></code></pre></div>
 <h4 data-number="1.14.5.5" id="snapshots-vs.-rtsp-export"><span
 class="header-section-number">1.14.5.5</span> Snapshots vs. RTSP
 Export</h4>
@@ -7251,21 +7270,21 @@ Token. Go to your HA profile &gt; Long-Lived Access Tokens &gt; Create
 Token.</p>
 <p><strong>Step 2:</strong> Configure the bridge in your
 <code>config.toml</code>:</p>
-<div class="sourceCode" id="cb311"><pre
-class="sourceCode toml"><code class="sourceCode toml"><span id="cb311-1"><a href="#cb311-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[home_assistant_bridge]</span></span>
-<span id="cb311-2"><a href="#cb311-2" aria-hidden="true" tabindex="-1"></a><span class="dt">enabled</span> <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb311-3"><a href="#cb311-3" aria-hidden="true" tabindex="-1"></a><span class="dt">ha_url</span> <span class="op">=</span> <span class="st">&quot;http://homeassistant.local:8123&quot;</span></span>
-<span id="cb311-4"><a href="#cb311-4" aria-hidden="true" tabindex="-1"></a><span class="dt">ha_token</span> <span class="op">=</span> <span class="st">&quot;YOUR_LONG_LIVED_TOKEN_HERE&quot;</span></span>
-<span id="cb311-5"><a href="#cb311-5" aria-hidden="true" tabindex="-1"></a><span class="dt">mqtt_prefix</span> <span class="op">=</span> <span class="st">&quot;kingkiosk/ha&quot;</span></span>
-<span id="cb311-6"><a href="#cb311-6" aria-hidden="true" tabindex="-1"></a><span class="dt">publish_registry</span> <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb311-7"><a href="#cb311-7" aria-hidden="true" tabindex="-1"></a><span class="dt">publish_services</span> <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb311-8"><a href="#cb311-8" aria-hidden="true" tabindex="-1"></a><span class="dt">publish_attributes</span> <span class="op">=</span> <span class="cn">true</span></span>
-<span id="cb311-9"><a href="#cb311-9" aria-hidden="true" tabindex="-1"></a><span class="dt">retain_state</span> <span class="op">=</span> <span class="cn">true</span></span></code></pre></div>
+<div class="sourceCode" id="cb312"><pre
+class="sourceCode toml"><code class="sourceCode toml"><span id="cb312-1"><a href="#cb312-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[home_assistant_bridge]</span></span>
+<span id="cb312-2"><a href="#cb312-2" aria-hidden="true" tabindex="-1"></a><span class="dt">enabled</span> <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb312-3"><a href="#cb312-3" aria-hidden="true" tabindex="-1"></a><span class="dt">ha_url</span> <span class="op">=</span> <span class="st">&quot;http://homeassistant.local:8123&quot;</span></span>
+<span id="cb312-4"><a href="#cb312-4" aria-hidden="true" tabindex="-1"></a><span class="dt">ha_token</span> <span class="op">=</span> <span class="st">&quot;YOUR_LONG_LIVED_TOKEN_HERE&quot;</span></span>
+<span id="cb312-5"><a href="#cb312-5" aria-hidden="true" tabindex="-1"></a><span class="dt">mqtt_prefix</span> <span class="op">=</span> <span class="st">&quot;kingkiosk/ha&quot;</span></span>
+<span id="cb312-6"><a href="#cb312-6" aria-hidden="true" tabindex="-1"></a><span class="dt">publish_registry</span> <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb312-7"><a href="#cb312-7" aria-hidden="true" tabindex="-1"></a><span class="dt">publish_services</span> <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb312-8"><a href="#cb312-8" aria-hidden="true" tabindex="-1"></a><span class="dt">publish_attributes</span> <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb312-9"><a href="#cb312-9" aria-hidden="true" tabindex="-1"></a><span class="dt">retain_state</span> <span class="op">=</span> <span class="cn">true</span></span></code></pre></div>
 <p><strong>Step 3 (optional):</strong> Filter what gets shared if you
 have many devices:</p>
-<div class="sourceCode" id="cb312"><pre
-class="sourceCode toml"><code class="sourceCode toml"><span id="cb312-1"><a href="#cb312-1" aria-hidden="true" tabindex="-1"></a><span class="dt">include_domains</span> <span class="op">=</span> <span class="op">[</span><span class="st">&quot;light&quot;</span><span class="op">,</span> <span class="st">&quot;switch&quot;</span><span class="op">,</span> <span class="st">&quot;sensor&quot;</span><span class="op">]</span></span>
-<span id="cb312-2"><a href="#cb312-2" aria-hidden="true" tabindex="-1"></a><span class="dt">exclude_entity_globs</span> <span class="op">=</span> <span class="op">[</span><span class="st">&quot;*_battery&quot;</span><span class="op">]</span></span></code></pre></div>
+<div class="sourceCode" id="cb313"><pre
+class="sourceCode toml"><code class="sourceCode toml"><span id="cb313-1"><a href="#cb313-1" aria-hidden="true" tabindex="-1"></a><span class="dt">include_domains</span> <span class="op">=</span> <span class="op">[</span><span class="st">&quot;light&quot;</span><span class="op">,</span> <span class="st">&quot;switch&quot;</span><span class="op">,</span> <span class="st">&quot;sensor&quot;</span><span class="op">]</span></span>
+<span id="cb313-2"><a href="#cb313-2" aria-hidden="true" tabindex="-1"></a><span class="dt">exclude_entity_globs</span> <span class="op">=</span> <span class="op">[</span><span class="st">&quot;*_battery&quot;</span><span class="op">]</span></span></code></pre></div>
 <h4 data-number="1.14.6.5" id="reading-device-states"><span
 class="header-section-number">1.14.6.5</span> Reading Device States</h4>
 <p>Subscribe to MQTT topics following this pattern:</p>
@@ -7273,28 +7292,28 @@ class="header-section-number">1.14.6.5</span> Reading Device States</h4>
 <p>Example — living room light:</p>
 <pre><code>kingkiosk/ha/state/light/living_room</code></pre>
 <p>Returns:</p>
-<div class="sourceCode" id="cb315"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb315-1"><a href="#cb315-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb315-2"><a href="#cb315-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;entity_id&quot;</span><span class="fu">:</span> <span class="st">&quot;light.living_room&quot;</span><span class="fu">,</span></span>
-<span id="cb315-3"><a href="#cb315-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;on&quot;</span><span class="fu">,</span></span>
-<span id="cb315-4"><a href="#cb315-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;attributes&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb315-5"><a href="#cb315-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;brightness&quot;</span><span class="fu">:</span> <span class="dv">200</span><span class="fu">,</span></span>
-<span id="cb315-6"><a href="#cb315-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;friendly_name&quot;</span><span class="fu">:</span> <span class="st">&quot;Living Room Light&quot;</span></span>
-<span id="cb315-7"><a href="#cb315-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb315-8"><a href="#cb315-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb316"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb316-1"><a href="#cb316-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb316-2"><a href="#cb316-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;entity_id&quot;</span><span class="fu">:</span> <span class="st">&quot;light.living_room&quot;</span><span class="fu">,</span></span>
+<span id="cb316-3"><a href="#cb316-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;on&quot;</span><span class="fu">,</span></span>
+<span id="cb316-4"><a href="#cb316-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;attributes&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb316-5"><a href="#cb316-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;brightness&quot;</span><span class="fu">:</span> <span class="dv">200</span><span class="fu">,</span></span>
+<span id="cb316-6"><a href="#cb316-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;friendly_name&quot;</span><span class="fu">:</span> <span class="st">&quot;Living Room Light&quot;</span></span>
+<span id="cb316-7"><a href="#cb316-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb316-8"><a href="#cb316-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <h4 data-number="1.14.6.6" id="controlling-devices"><span
 class="header-section-number">1.14.6.6</span> Controlling Devices</h4>
 <p>Send commands to:</p>
 <pre><code>kingkiosk/ha/command/{domain}/{object_id}</code></pre>
 <p><strong>Turn on a light:</strong></p>
-<div class="sourceCode" id="cb317"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb317-1"><a href="#cb317-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;service&quot;</span><span class="fu">:</span> <span class="st">&quot;turn_on&quot;</span><span class="fu">,</span> <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;brightness&quot;</span><span class="fu">:</span> <span class="dv">255</span><span class="fu">}}</span></span></code></pre></div>
-<p><strong>Set thermostat temperature:</strong></p>
 <div class="sourceCode" id="cb318"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb318-1"><a href="#cb318-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;service&quot;</span><span class="fu">:</span> <span class="st">&quot;set_temperature&quot;</span><span class="fu">,</span> <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;temperature&quot;</span><span class="fu">:</span> <span class="dv">72</span><span class="fu">}}</span></span></code></pre></div>
-<p><strong>Turn off a switch:</strong></p>
+class="sourceCode json"><code class="sourceCode json"><span id="cb318-1"><a href="#cb318-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;service&quot;</span><span class="fu">:</span> <span class="st">&quot;turn_on&quot;</span><span class="fu">,</span> <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;brightness&quot;</span><span class="fu">:</span> <span class="dv">255</span><span class="fu">}}</span></span></code></pre></div>
+<p><strong>Set thermostat temperature:</strong></p>
 <div class="sourceCode" id="cb319"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb319-1"><a href="#cb319-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;service&quot;</span><span class="fu">:</span> <span class="st">&quot;turn_off&quot;</span><span class="fu">}</span></span></code></pre></div>
+class="sourceCode json"><code class="sourceCode json"><span id="cb319-1"><a href="#cb319-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;service&quot;</span><span class="fu">:</span> <span class="st">&quot;set_temperature&quot;</span><span class="fu">,</span> <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;temperature&quot;</span><span class="fu">:</span> <span class="dv">72</span><span class="fu">}}</span></span></code></pre></div>
+<p><strong>Turn off a switch:</strong></p>
+<div class="sourceCode" id="cb320"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb320-1"><a href="#cb320-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;service&quot;</span><span class="fu">:</span> <span class="st">&quot;turn_off&quot;</span><span class="fu">}</span></span></code></pre></div>
 <p>Command results are published to
 <code>kingkiosk/ha/command/{domain}/{object_id}/result</code>.</p>
 <h4 data-number="1.14.6.7" id="quick-reference"><span
@@ -7480,8 +7499,8 @@ Detection</h4>
 AI</strong> and toggle <strong>Enable Person Detection</strong>.</p>
 <p><strong>Via MQTT:</strong> Send to
 <code>kingkiosk/{device_id}/system/cmd</code>:</p>
-<div class="sourceCode" id="cb320"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb320-1"><a href="#cb320-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;person_detection&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;enable&quot;</span><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb321"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb321-1"><a href="#cb321-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;person_detection&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;enable&quot;</span><span class="fu">}</span></span></code></pre></div>
 <p>The <code>action</code> field accepts: <code>enable</code>,
 <code>disable</code>, <code>toggle</code>, or <code>status</code>.</p>
 <p>Add <code>"confirm": true</code> to receive a confirmation on the
@@ -7492,34 +7511,34 @@ class="header-section-number">1.15.3.2</span> What Gets Published</h4>
 updated:</p>
 <p><strong>Person Presence</strong>
 (<code>kingkiosk/{device_id}/person_presence</code>):</p>
-<div class="sourceCode" id="cb321"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb321-1"><a href="#cb321-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb321-2"><a href="#cb321-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;person_present&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb321-3"><a href="#cb321-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;confidence&quot;</span><span class="fu">:</span> <span class="fl">0.92</span><span class="fu">,</span></span>
-<span id="cb321-4"><a href="#cb321-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;frames_processed&quot;</span><span class="fu">:</span> <span class="dv">1547</span><span class="fu">,</span></span>
-<span id="cb321-5"><a href="#cb321-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-03-12T14:30:00.000Z&quot;</span></span>
-<span id="cb321-6"><a href="#cb321-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p><strong>Object Detection</strong>
-(<code>kingkiosk/{device_id}/object_detection</code>):</p>
 <div class="sourceCode" id="cb322"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb322-1"><a href="#cb322-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb322-2"><a href="#cb322-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;total_objects&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
-<span id="cb322-3"><a href="#cb322-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;objects&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb322-4"><a href="#cb322-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb322-5"><a href="#cb322-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;class&quot;</span><span class="fu">:</span> <span class="st">&quot;person&quot;</span><span class="fu">,</span></span>
-<span id="cb322-6"><a href="#cb322-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confidence&quot;</span><span class="fu">:</span> <span class="fl">0.92</span><span class="fu">,</span></span>
-<span id="cb322-7"><a href="#cb322-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="fl">0.25</span><span class="fu">,</span> <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="fl">0.1</span><span class="fu">,</span> <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="fl">0.3</span><span class="fu">,</span> <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="fl">0.8</span><span class="fu">},</span></span>
-<span id="cb322-8"><a href="#cb322-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;person&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
-<span id="cb322-9"><a href="#cb322-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb322-10"><a href="#cb322-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb322-11"><a href="#cb322-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;class&quot;</span><span class="fu">:</span> <span class="st">&quot;dog&quot;</span><span class="fu">,</span></span>
-<span id="cb322-12"><a href="#cb322-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confidence&quot;</span><span class="fu">:</span> <span class="fl">0.78</span><span class="fu">,</span></span>
-<span id="cb322-13"><a href="#cb322-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="fl">0.6</span><span class="fu">,</span> <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="fl">0.5</span><span class="fu">,</span> <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="fl">0.2</span><span class="fu">,</span> <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="fl">0.3</span><span class="fu">},</span></span>
-<span id="cb322-14"><a href="#cb322-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;person&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
-<span id="cb322-15"><a href="#cb322-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb322-16"><a href="#cb322-16" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb322-17"><a href="#cb322-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-03-12T14:30:00.000Z&quot;</span></span>
-<span id="cb322-18"><a href="#cb322-18" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<span id="cb322-2"><a href="#cb322-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;person_present&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb322-3"><a href="#cb322-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;confidence&quot;</span><span class="fu">:</span> <span class="fl">0.92</span><span class="fu">,</span></span>
+<span id="cb322-4"><a href="#cb322-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;frames_processed&quot;</span><span class="fu">:</span> <span class="dv">1547</span><span class="fu">,</span></span>
+<span id="cb322-5"><a href="#cb322-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-03-12T14:30:00.000Z&quot;</span></span>
+<span id="cb322-6"><a href="#cb322-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Object Detection</strong>
+(<code>kingkiosk/{device_id}/object_detection</code>):</p>
+<div class="sourceCode" id="cb323"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb323-1"><a href="#cb323-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb323-2"><a href="#cb323-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;total_objects&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb323-3"><a href="#cb323-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;objects&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb323-4"><a href="#cb323-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb323-5"><a href="#cb323-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;class&quot;</span><span class="fu">:</span> <span class="st">&quot;person&quot;</span><span class="fu">,</span></span>
+<span id="cb323-6"><a href="#cb323-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confidence&quot;</span><span class="fu">:</span> <span class="fl">0.92</span><span class="fu">,</span></span>
+<span id="cb323-7"><a href="#cb323-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="fl">0.25</span><span class="fu">,</span> <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="fl">0.1</span><span class="fu">,</span> <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="fl">0.3</span><span class="fu">,</span> <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="fl">0.8</span><span class="fu">},</span></span>
+<span id="cb323-8"><a href="#cb323-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;person&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb323-9"><a href="#cb323-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb323-10"><a href="#cb323-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb323-11"><a href="#cb323-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;class&quot;</span><span class="fu">:</span> <span class="st">&quot;dog&quot;</span><span class="fu">,</span></span>
+<span id="cb323-12"><a href="#cb323-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confidence&quot;</span><span class="fu">:</span> <span class="fl">0.78</span><span class="fu">,</span></span>
+<span id="cb323-13"><a href="#cb323-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="fl">0.6</span><span class="fu">,</span> <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="fl">0.5</span><span class="fu">,</span> <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="fl">0.2</span><span class="fu">,</span> <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="fl">0.3</span><span class="fu">},</span></span>
+<span id="cb323-14"><a href="#cb323-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;person&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb323-15"><a href="#cb323-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb323-16"><a href="#cb323-16" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb323-17"><a href="#cb323-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-03-12T14:30:00.000Z&quot;</span></span>
+<span id="cb323-18"><a href="#cb323-18" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>Bounding box coordinates are normalized to 0-1 (where 0,0 is top-left
 and 1,1 is bottom-right), so they work regardless of camera
 resolution.</p>
@@ -7551,44 +7570,44 @@ work without it.</p>
 class="header-section-number">1.15.4.1</span> Enabling Facial
 Recognition</h4>
 <p><strong>Via MQTT provisioning:</strong></p>
-<div class="sourceCode" id="cb323"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb323-1"><a href="#cb323-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb323-2"><a href="#cb323-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;provision&quot;</span><span class="fu">,</span></span>
-<span id="cb323-3"><a href="#cb323-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;settings&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb323-4"><a href="#cb323-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;personDetectionEnabled&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb323-5"><a href="#cb323-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;facialRecognitionEnabled&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
-<span id="cb323-6"><a href="#cb323-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb323-7"><a href="#cb323-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb324"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb324-1"><a href="#cb324-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb324-2"><a href="#cb324-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;provision&quot;</span><span class="fu">,</span></span>
+<span id="cb324-3"><a href="#cb324-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;settings&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb324-4"><a href="#cb324-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;personDetectionEnabled&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb324-5"><a href="#cb324-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;facialRecognitionEnabled&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb324-6"><a href="#cb324-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb324-7"><a href="#cb324-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <h4 data-number="1.15.4.2" id="what-gets-published-1"><span
 class="header-section-number">1.15.4.2</span> What Gets Published</h4>
 <p><strong>Face Presence</strong>
 (<code>kingkiosk/{device_id}/face_presence</code>):</p>
-<div class="sourceCode" id="cb324"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb324-1"><a href="#cb324-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb324-2"><a href="#cb324-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;faces_present&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb324-3"><a href="#cb324-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;faces_count&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
-<span id="cb324-4"><a href="#cb324-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;known_faces&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
-<span id="cb324-5"><a href="#cb324-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;unknown_faces&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
-<span id="cb324-6"><a href="#cb324-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-03-12T14:30:00.000Z&quot;</span><span class="fu">,</span></span>
-<span id="cb324-7"><a href="#cb324-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;faces_detail&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb324-8"><a href="#cb324-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb324-9"><a href="#cb324-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x1&quot;</span><span class="fu">:</span> <span class="fl">0.3</span><span class="fu">,</span> <span class="dt">&quot;y1&quot;</span><span class="fu">:</span> <span class="fl">0.1</span><span class="fu">,</span> <span class="dt">&quot;x2&quot;</span><span class="fu">:</span> <span class="fl">0.5</span><span class="fu">,</span> <span class="dt">&quot;y2&quot;</span><span class="fu">:</span> <span class="fl">0.4</span><span class="fu">},</span></span>
-<span id="cb324-10"><a href="#cb324-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;detection_confidence&quot;</span><span class="fu">:</span> <span class="fl">0.95</span><span class="fu">,</span></span>
-<span id="cb324-11"><a href="#cb324-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;recognized&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb324-12"><a href="#cb324-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Raj&quot;</span><span class="fu">,</span></span>
-<span id="cb324-13"><a href="#cb324-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;similarity&quot;</span><span class="fu">:</span> <span class="fl">0.82</span><span class="fu">,</span></span>
-<span id="cb324-14"><a href="#cb324-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;threshold&quot;</span><span class="fu">:</span> <span class="fl">0.70</span></span>
-<span id="cb324-15"><a href="#cb324-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb324-16"><a href="#cb324-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb324-17"><a href="#cb324-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x1&quot;</span><span class="fu">:</span> <span class="fl">0.6</span><span class="fu">,</span> <span class="dt">&quot;y1&quot;</span><span class="fu">:</span> <span class="fl">0.15</span><span class="fu">,</span> <span class="dt">&quot;x2&quot;</span><span class="fu">:</span> <span class="fl">0.75</span><span class="fu">,</span> <span class="dt">&quot;y2&quot;</span><span class="fu">:</span> <span class="fl">0.45</span><span class="fu">},</span></span>
-<span id="cb324-18"><a href="#cb324-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;detection_confidence&quot;</span><span class="fu">:</span> <span class="fl">0.88</span><span class="fu">,</span></span>
-<span id="cb324-19"><a href="#cb324-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;recognized&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
-<span id="cb324-20"><a href="#cb324-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;unknown&quot;</span><span class="fu">,</span></span>
-<span id="cb324-21"><a href="#cb324-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;similarity&quot;</span><span class="fu">:</span> <span class="fl">0.0</span><span class="fu">,</span></span>
-<span id="cb324-22"><a href="#cb324-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;threshold&quot;</span><span class="fu">:</span> <span class="fl">0.70</span></span>
-<span id="cb324-23"><a href="#cb324-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb324-24"><a href="#cb324-24" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
-<span id="cb324-25"><a href="#cb324-25" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb325"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb325-1"><a href="#cb325-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb325-2"><a href="#cb325-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;faces_present&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb325-3"><a href="#cb325-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;faces_count&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb325-4"><a href="#cb325-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;known_faces&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb325-5"><a href="#cb325-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;unknown_faces&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb325-6"><a href="#cb325-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-03-12T14:30:00.000Z&quot;</span><span class="fu">,</span></span>
+<span id="cb325-7"><a href="#cb325-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;faces_detail&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb325-8"><a href="#cb325-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb325-9"><a href="#cb325-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x1&quot;</span><span class="fu">:</span> <span class="fl">0.3</span><span class="fu">,</span> <span class="dt">&quot;y1&quot;</span><span class="fu">:</span> <span class="fl">0.1</span><span class="fu">,</span> <span class="dt">&quot;x2&quot;</span><span class="fu">:</span> <span class="fl">0.5</span><span class="fu">,</span> <span class="dt">&quot;y2&quot;</span><span class="fu">:</span> <span class="fl">0.4</span><span class="fu">},</span></span>
+<span id="cb325-10"><a href="#cb325-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;detection_confidence&quot;</span><span class="fu">:</span> <span class="fl">0.95</span><span class="fu">,</span></span>
+<span id="cb325-11"><a href="#cb325-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;recognized&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb325-12"><a href="#cb325-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Raj&quot;</span><span class="fu">,</span></span>
+<span id="cb325-13"><a href="#cb325-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;similarity&quot;</span><span class="fu">:</span> <span class="fl">0.82</span><span class="fu">,</span></span>
+<span id="cb325-14"><a href="#cb325-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;threshold&quot;</span><span class="fu">:</span> <span class="fl">0.70</span></span>
+<span id="cb325-15"><a href="#cb325-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb325-16"><a href="#cb325-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb325-17"><a href="#cb325-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;bbox&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;x1&quot;</span><span class="fu">:</span> <span class="fl">0.6</span><span class="fu">,</span> <span class="dt">&quot;y1&quot;</span><span class="fu">:</span> <span class="fl">0.15</span><span class="fu">,</span> <span class="dt">&quot;x2&quot;</span><span class="fu">:</span> <span class="fl">0.75</span><span class="fu">,</span> <span class="dt">&quot;y2&quot;</span><span class="fu">:</span> <span class="fl">0.45</span><span class="fu">},</span></span>
+<span id="cb325-18"><a href="#cb325-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;detection_confidence&quot;</span><span class="fu">:</span> <span class="fl">0.88</span><span class="fu">,</span></span>
+<span id="cb325-19"><a href="#cb325-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;recognized&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb325-20"><a href="#cb325-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;unknown&quot;</span><span class="fu">,</span></span>
+<span id="cb325-21"><a href="#cb325-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;similarity&quot;</span><span class="fu">:</span> <span class="fl">0.0</span><span class="fu">,</span></span>
+<span id="cb325-22"><a href="#cb325-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;threshold&quot;</span><span class="fu">:</span> <span class="fl">0.70</span></span>
+<span id="cb325-23"><a href="#cb325-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb325-24"><a href="#cb325-24" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb325-25"><a href="#cb325-25" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>The <code>faces_detail</code> array gives you per-face information
 including bounding boxes, whether the face was recognized, the matched
 name, and the similarity score. A face is considered recognized when its
@@ -7647,12 +7666,12 @@ build a reliable face profile.</p>
 class="header-section-number">1.15.5.1</span> Starting Training via
 MQTT</h4>
 <p>Send to <code>kingkiosk/{device_id}/system/cmd</code>:</p>
-<div class="sourceCode" id="cb325"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb325-1"><a href="#cb325-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb325-2"><a href="#cb325-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;start_face_training&quot;</span><span class="fu">,</span></span>
-<span id="cb325-3"><a href="#cb325-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Raj&quot;</span><span class="fu">,</span></span>
-<span id="cb325-4"><a href="#cb325-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target_samples&quot;</span><span class="fu">:</span> <span class="dv">20</span></span>
-<span id="cb325-5"><a href="#cb325-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb326"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb326-1"><a href="#cb326-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb326-2"><a href="#cb326-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;start_face_training&quot;</span><span class="fu">,</span></span>
+<span id="cb326-3"><a href="#cb326-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Raj&quot;</span><span class="fu">,</span></span>
+<span id="cb326-4"><a href="#cb326-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target_samples&quot;</span><span class="fu">:</span> <span class="dv">20</span></span>
+<span id="cb326-5"><a href="#cb326-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <table>
 <colgroup>
 <col style="width: 18%" />
@@ -7697,17 +7716,17 @@ different angles. The system provides quality feedback including face
 position, lighting, and sharpness checks.</p>
 <p>Training automatically completes after collecting the target number
 of samples. You’ll receive a response on the system response topic:</p>
-<div class="sourceCode" id="cb326"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb326-1"><a href="#cb326-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb326-2"><a href="#cb326-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;success&quot;</span><span class="fu">,</span></span>
-<span id="cb326-3"><a href="#cb326-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Face training started&quot;</span><span class="fu">,</span></span>
-<span id="cb326-4"><a href="#cb326-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Raj&quot;</span><span class="fu">,</span></span>
-<span id="cb326-5"><a href="#cb326-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target_samples&quot;</span><span class="fu">:</span> <span class="dv">20</span></span>
-<span id="cb326-6"><a href="#cb326-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb327"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb327-1"><a href="#cb327-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb327-2"><a href="#cb327-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;success&quot;</span><span class="fu">,</span></span>
+<span id="cb327-3"><a href="#cb327-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Face training started&quot;</span><span class="fu">,</span></span>
+<span id="cb327-4"><a href="#cb327-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Raj&quot;</span><span class="fu">,</span></span>
+<span id="cb327-5"><a href="#cb327-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;target_samples&quot;</span><span class="fu">:</span> <span class="dv">20</span></span>
+<span id="cb327-6"><a href="#cb327-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <h4 data-number="1.15.5.2" id="cancelling-training"><span
 class="header-section-number">1.15.5.2</span> Cancelling Training</h4>
-<div class="sourceCode" id="cb327"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb327-1"><a href="#cb327-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;cancel_face_training&quot;</span><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb328"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb328-1"><a href="#cb328-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;cancel_face_training&quot;</span><span class="fu">}</span></span></code></pre></div>
 <h4 data-number="1.15.5.3" id="passive-enrichment"><span
 class="header-section-number">1.15.5.3</span> Passive Enrichment</h4>
 <p>After initial training, King Kiosk automatically improves its model
@@ -7734,32 +7753,32 @@ activity-based triggers.</p>
 class="header-section-number">1.15.6.1</span> Enabling Motion
 Detection</h4>
 <p><strong>Via MQTT provisioning:</strong></p>
-<div class="sourceCode" id="cb328"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb328-1"><a href="#cb328-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb328-2"><a href="#cb328-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;provision&quot;</span><span class="fu">,</span></span>
-<span id="cb328-3"><a href="#cb328-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;settings&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb328-4"><a href="#cb328-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;motionDetectionEnabled&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
-<span id="cb328-5"><a href="#cb328-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb328-6"><a href="#cb328-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb329"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb329-1"><a href="#cb329-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb329-2"><a href="#cb329-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;provision&quot;</span><span class="fu">,</span></span>
+<span id="cb329-3"><a href="#cb329-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;settings&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb329-4"><a href="#cb329-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;motionDetectionEnabled&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb329-5"><a href="#cb329-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb329-6"><a href="#cb329-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <h4 data-number="1.15.6.2" id="what-gets-published-2"><span
 class="header-section-number">1.15.6.2</span> What Gets Published</h4>
 <p><strong>Motion Result</strong>
 (<code>kingkiosk/{device_id}/motion/result</code>):</p>
-<div class="sourceCode" id="cb329"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb329-1"><a href="#cb329-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb329-2"><a href="#cb329-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;event&quot;</span><span class="fu">:</span> <span class="st">&quot;motionDetection&quot;</span><span class="fu">,</span></span>
-<span id="cb329-3"><a href="#cb329-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;score&quot;</span><span class="fu">:</span> <span class="fl">0.45</span><span class="fu">,</span></span>
-<span id="cb329-4"><a href="#cb329-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;regions&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb329-5"><a href="#cb329-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb329-6"><a href="#cb329-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="fl">0.25</span><span class="fu">,</span></span>
-<span id="cb329-7"><a href="#cb329-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="fl">0.33</span><span class="fu">,</span></span>
-<span id="cb329-8"><a href="#cb329-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="fl">0.125</span><span class="fu">,</span></span>
-<span id="cb329-9"><a href="#cb329-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="fl">0.167</span><span class="fu">,</span></span>
-<span id="cb329-10"><a href="#cb329-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;changed_ratio&quot;</span><span class="fu">:</span> <span class="fl">0.12</span></span>
-<span id="cb329-11"><a href="#cb329-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb329-12"><a href="#cb329-12" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb329-13"><a href="#cb329-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="dv">1710252600000</span></span>
-<span id="cb329-14"><a href="#cb329-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb330"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb330-1"><a href="#cb330-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb330-2"><a href="#cb330-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;event&quot;</span><span class="fu">:</span> <span class="st">&quot;motionDetection&quot;</span><span class="fu">,</span></span>
+<span id="cb330-3"><a href="#cb330-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;score&quot;</span><span class="fu">:</span> <span class="fl">0.45</span><span class="fu">,</span></span>
+<span id="cb330-4"><a href="#cb330-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;regions&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb330-5"><a href="#cb330-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb330-6"><a href="#cb330-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="fl">0.25</span><span class="fu">,</span></span>
+<span id="cb330-7"><a href="#cb330-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="fl">0.33</span><span class="fu">,</span></span>
+<span id="cb330-8"><a href="#cb330-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;width&quot;</span><span class="fu">:</span> <span class="fl">0.125</span><span class="fu">,</span></span>
+<span id="cb330-9"><a href="#cb330-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;height&quot;</span><span class="fu">:</span> <span class="fl">0.167</span><span class="fu">,</span></span>
+<span id="cb330-10"><a href="#cb330-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;changed_ratio&quot;</span><span class="fu">:</span> <span class="fl">0.12</span></span>
+<span id="cb330-11"><a href="#cb330-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb330-12"><a href="#cb330-12" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb330-13"><a href="#cb330-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="dv">1710252600000</span></span>
+<span id="cb330-14"><a href="#cb330-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>The <code>score</code> is a 0-1 value representing overall motion
 intensity. The <code>regions</code> array breaks the frame into a grid
 and reports which areas have activity and how much change occurred in
@@ -7787,14 +7806,14 @@ alert.</p>
 <h4 data-number="1.15.7.1" id="enable-motion-triggered-snapshots"><span
 class="header-section-number">1.15.7.1</span> Enable Motion-Triggered
 Snapshots</h4>
-<div class="sourceCode" id="cb330"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb330-1"><a href="#cb330-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;camera_snapshot&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;set_motion_trigger&quot;</span><span class="fu">,</span> <span class="dt">&quot;enabled&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">}</span></span></code></pre></div>
-<p>You can also set periodic snapshots:</p>
 <div class="sourceCode" id="cb331"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb331-1"><a href="#cb331-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;camera_snapshot&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;enable&quot;</span><span class="fu">,</span> <span class="dt">&quot;interval&quot;</span><span class="fu">:</span> <span class="dv">30</span><span class="fu">}</span></span></code></pre></div>
-<p>Or capture a one-off snapshot:</p>
+class="sourceCode json"><code class="sourceCode json"><span id="cb331-1"><a href="#cb331-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;camera_snapshot&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;set_motion_trigger&quot;</span><span class="fu">,</span> <span class="dt">&quot;enabled&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">}</span></span></code></pre></div>
+<p>You can also set periodic snapshots:</p>
 <div class="sourceCode" id="cb332"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb332-1"><a href="#cb332-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;camera_snapshot&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;capture&quot;</span><span class="fu">}</span></span></code></pre></div>
+class="sourceCode json"><code class="sourceCode json"><span id="cb332-1"><a href="#cb332-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;camera_snapshot&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;enable&quot;</span><span class="fu">,</span> <span class="dt">&quot;interval&quot;</span><span class="fu">:</span> <span class="dv">30</span><span class="fu">}</span></span></code></pre></div>
+<p>Or capture a one-off snapshot:</p>
+<div class="sourceCode" id="cb333"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb333-1"><a href="#cb333-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;camera_snapshot&quot;</span><span class="fu">,</span> <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;capture&quot;</span><span class="fu">}</span></span></code></pre></div>
 <p>Snapshots are published as raw JPEG bytes to
 <code>kingkiosk/{device_id}/camera/snapshot</code>, with metadata on
 <code>kingkiosk/{device_id}/camera/state</code>. Home Assistant
@@ -7937,13 +7956,13 @@ regions in your templates.</p>
 <p>To enable auto-discovery, go to <strong>Settings &gt; MQTT</strong>
 and toggle <strong>Home Assistant Discovery</strong>, or provision via
 MQTT:</p>
-<div class="sourceCode" id="cb333"><pre
-class="sourceCode json"><code class="sourceCode json"><span id="cb333-1"><a href="#cb333-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb333-2"><a href="#cb333-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;provision&quot;</span><span class="fu">,</span></span>
-<span id="cb333-3"><a href="#cb333-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;settings&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb333-4"><a href="#cb333-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;mqtt_ha_discovery&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
-<span id="cb333-5"><a href="#cb333-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb333-6"><a href="#cb333-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb334"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb334-1"><a href="#cb334-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb334-2"><a href="#cb334-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;provision&quot;</span><span class="fu">,</span></span>
+<span id="cb334-3"><a href="#cb334-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;settings&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb334-4"><a href="#cb334-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;mqtt_ha_discovery&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb334-5"><a href="#cb334-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb334-6"><a href="#cb334-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <h3 data-number="1.15.10" id="detection-automation-examples"><span
 class="header-section-number">1.15.10</span> Detection Automation
 Examples</h3>
@@ -7951,58 +7970,58 @@ Examples</h3>
 id="home-assistant-turn-on-lights-when-someone-enters"><span
 class="header-section-number">1.15.10.1</span> Home Assistant: Turn on
 lights when someone enters</h4>
-<div class="sourceCode" id="cb334"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb334-1"><a href="#cb334-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
-<span id="cb334-2"><a href="#cb334-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Lights on when person detected&quot;</span></span>
-<span id="cb334-3"><a href="#cb334-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
-<span id="cb334-4"><a href="#cb334-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> state</span></span>
-<span id="cb334-5"><a href="#cb334-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> sensor.kitchen_tablet_person_presence</span></span>
-<span id="cb334-6"><a href="#cb334-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;ON&quot;</span></span>
-<span id="cb334-7"><a href="#cb334-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
-<span id="cb334-8"><a href="#cb334-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> light.turn_on</span></span>
-<span id="cb334-9"><a href="#cb334-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span></span>
-<span id="cb334-10"><a href="#cb334-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> light.kitchen</span></span></code></pre></div>
+<div class="sourceCode" id="cb335"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb335-1"><a href="#cb335-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
+<span id="cb335-2"><a href="#cb335-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Lights on when person detected&quot;</span></span>
+<span id="cb335-3"><a href="#cb335-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
+<span id="cb335-4"><a href="#cb335-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> state</span></span>
+<span id="cb335-5"><a href="#cb335-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> sensor.kitchen_tablet_person_presence</span></span>
+<span id="cb335-6"><a href="#cb335-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;ON&quot;</span></span>
+<span id="cb335-7"><a href="#cb335-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
+<span id="cb335-8"><a href="#cb335-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> light.turn_on</span></span>
+<span id="cb335-9"><a href="#cb335-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb335-10"><a href="#cb335-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> light.kitchen</span></span></code></pre></div>
 <h4 data-number="1.15.10.2"
 id="home-assistant-greet-a-recognized-person"><span
 class="header-section-number">1.15.10.2</span> Home Assistant: Greet a
 recognized person</h4>
-<div class="sourceCode" id="cb335"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb335-1"><a href="#cb335-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
-<span id="cb335-2"><a href="#cb335-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Welcome home greeting&quot;</span></span>
-<span id="cb335-3"><a href="#cb335-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
-<span id="cb335-4"><a href="#cb335-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> state</span></span>
-<span id="cb335-5"><a href="#cb335-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> sensor.front_door_tablet_face_detection</span></span>
-<span id="cb335-6"><a href="#cb335-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">condition</span><span class="kw">:</span></span>
-<span id="cb335-7"><a href="#cb335-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">condition</span><span class="kw">:</span><span class="at"> template</span></span>
-<span id="cb335-8"><a href="#cb335-8" aria-hidden="true" tabindex="-1"></a><span class="fu">        value_template</span><span class="kw">: </span><span class="ch">&gt;</span></span>
-<span id="cb335-9"><a href="#cb335-9" aria-hidden="true" tabindex="-1"></a>          {{ state_attr(&#39;sensor.front_door_tablet_face_detection&#39;, &#39;faces_detail&#39;)</span>
-<span id="cb335-10"><a href="#cb335-10" aria-hidden="true" tabindex="-1"></a>             | selectattr(&#39;recognized&#39;, &#39;equalto&#39;, true) | list | count &gt; 0 }}</span>
-<span id="cb335-11"><a href="#cb335-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
-<span id="cb335-12"><a href="#cb335-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
-<span id="cb335-13"><a href="#cb335-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
-<span id="cb335-14"><a href="#cb335-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/front_door_tablet/system/cmd&quot;</span></span>
-<span id="cb335-15"><a href="#cb335-15" aria-hidden="true" tabindex="-1"></a><span class="fu">          payload</span><span class="kw">: </span><span class="ch">&gt;</span></span>
-<span id="cb335-16"><a href="#cb335-16" aria-hidden="true" tabindex="-1"></a>            {&quot;command&quot;: &quot;tts&quot;, &quot;text&quot;: &quot;Welcome home, {{ state_attr(&#39;sensor.front_door_tablet_face_detection&#39;, &#39;faces_detail&#39;)</span>
-<span id="cb335-17"><a href="#cb335-17" aria-hidden="true" tabindex="-1"></a>            | selectattr(&#39;recognized&#39;, &#39;equalto&#39;, true) | map(attribute=&#39;name&#39;) | first }}!&quot;}</span></code></pre></div>
+<div class="sourceCode" id="cb336"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb336-1"><a href="#cb336-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
+<span id="cb336-2"><a href="#cb336-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Welcome home greeting&quot;</span></span>
+<span id="cb336-3"><a href="#cb336-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
+<span id="cb336-4"><a href="#cb336-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> state</span></span>
+<span id="cb336-5"><a href="#cb336-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> sensor.front_door_tablet_face_detection</span></span>
+<span id="cb336-6"><a href="#cb336-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">condition</span><span class="kw">:</span></span>
+<span id="cb336-7"><a href="#cb336-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">condition</span><span class="kw">:</span><span class="at"> template</span></span>
+<span id="cb336-8"><a href="#cb336-8" aria-hidden="true" tabindex="-1"></a><span class="fu">        value_template</span><span class="kw">: </span><span class="ch">&gt;</span></span>
+<span id="cb336-9"><a href="#cb336-9" aria-hidden="true" tabindex="-1"></a>          {{ state_attr(&#39;sensor.front_door_tablet_face_detection&#39;, &#39;faces_detail&#39;)</span>
+<span id="cb336-10"><a href="#cb336-10" aria-hidden="true" tabindex="-1"></a>             | selectattr(&#39;recognized&#39;, &#39;equalto&#39;, true) | list | count &gt; 0 }}</span>
+<span id="cb336-11"><a href="#cb336-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
+<span id="cb336-12"><a href="#cb336-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
+<span id="cb336-13"><a href="#cb336-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb336-14"><a href="#cb336-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/front_door_tablet/system/cmd&quot;</span></span>
+<span id="cb336-15"><a href="#cb336-15" aria-hidden="true" tabindex="-1"></a><span class="fu">          payload</span><span class="kw">: </span><span class="ch">&gt;</span></span>
+<span id="cb336-16"><a href="#cb336-16" aria-hidden="true" tabindex="-1"></a>            {&quot;command&quot;: &quot;tts&quot;, &quot;text&quot;: &quot;Welcome home, {{ state_attr(&#39;sensor.front_door_tablet_face_detection&#39;, &#39;faces_detail&#39;)</span>
+<span id="cb336-17"><a href="#cb336-17" aria-hidden="true" tabindex="-1"></a>            | selectattr(&#39;recognized&#39;, &#39;equalto&#39;, true) | map(attribute=&#39;name&#39;) | first }}!&quot;}</span></code></pre></div>
 <h4 data-number="1.15.10.3"
 id="home-assistant-motion-triggered-security-snapshot"><span
 class="header-section-number">1.15.10.3</span> Home Assistant:
 Motion-triggered security snapshot</h4>
-<div class="sourceCode" id="cb336"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb336-1"><a href="#cb336-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
-<span id="cb336-2"><a href="#cb336-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Capture snapshot on motion&quot;</span></span>
-<span id="cb336-3"><a href="#cb336-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
-<span id="cb336-4"><a href="#cb336-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> numeric_state</span></span>
-<span id="cb336-5"><a href="#cb336-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> sensor.hallway_tablet_motion_detection</span></span>
-<span id="cb336-6"><a href="#cb336-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">above</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
-<span id="cb336-7"><a href="#cb336-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
-<span id="cb336-8"><a href="#cb336-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
-<span id="cb336-9"><a href="#cb336-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
-<span id="cb336-10"><a href="#cb336-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/hallway_tablet/system/cmd&quot;</span></span>
-<span id="cb336-11"><a href="#cb336-11" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;: &quot;camera_snapshot&quot;, &quot;action&quot;: &quot;capture&quot;}&#39;</span></span>
-<span id="cb336-12"><a href="#cb336-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> notify.mobile_app</span></span>
-<span id="cb336-13"><a href="#cb336-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
-<span id="cb336-14"><a href="#cb336-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">message</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Motion detected in hallway ({{ states(&#39;sensor.hallway_tablet_motion_detection&#39;) }}%)&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb337"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb337-1"><a href="#cb337-1" aria-hidden="true" tabindex="-1"></a><span class="fu">automation</span><span class="kw">:</span></span>
+<span id="cb337-2"><a href="#cb337-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">alias</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Capture snapshot on motion&quot;</span></span>
+<span id="cb337-3"><a href="#cb337-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">trigger</span><span class="kw">:</span></span>
+<span id="cb337-4"><a href="#cb337-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">platform</span><span class="kw">:</span><span class="at"> numeric_state</span></span>
+<span id="cb337-5"><a href="#cb337-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">entity_id</span><span class="kw">:</span><span class="at"> sensor.hallway_tablet_motion_detection</span></span>
+<span id="cb337-6"><a href="#cb337-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">above</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
+<span id="cb337-7"><a href="#cb337-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">action</span><span class="kw">:</span></span>
+<span id="cb337-8"><a href="#cb337-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> mqtt.publish</span></span>
+<span id="cb337-9"><a href="#cb337-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb337-10"><a href="#cb337-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">topic</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;kingkiosk/hallway_tablet/system/cmd&quot;</span></span>
+<span id="cb337-11"><a href="#cb337-11" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">payload</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{&quot;command&quot;: &quot;camera_snapshot&quot;, &quot;action&quot;: &quot;capture&quot;}&#39;</span></span>
+<span id="cb337-12"><a href="#cb337-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">service</span><span class="kw">:</span><span class="at"> notify.mobile_app</span></span>
+<span id="cb337-13"><a href="#cb337-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">data</span><span class="kw">:</span></span>
+<span id="cb337-14"><a href="#cb337-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">message</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Motion detected in hallway ({{ states(&#39;sensor.hallway_tablet_motion_detection&#39;) }}%)&quot;</span></span></code></pre></div>
 <h4 data-number="1.15.10.4"
 id="node-red-object-counting-dashboard"><span
 class="header-section-number">1.15.10.4</span> Node-RED: Object counting
@@ -8011,29 +8030,29 @@ dashboard</h4>
 <code>kingkiosk/{device_id}/object_detection</code> with an MQTT-in
 node. Parse the JSON and use <code>msg.payload.objects</code> to filter
 by class:</p>
-<div class="sourceCode" id="cb337"><pre
-class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb337-1"><a href="#cb337-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Function node: count specific object types</span></span>
-<span id="cb337-2"><a href="#cb337-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> objects <span class="op">=</span> msg<span class="op">.</span><span class="at">payload</span><span class="op">.</span><span class="at">objects</span> <span class="op">||</span> []<span class="op">;</span></span>
-<span id="cb337-3"><a href="#cb337-3" aria-hidden="true" tabindex="-1"></a>msg<span class="op">.</span><span class="at">people</span> <span class="op">=</span> objects<span class="op">.</span><span class="fu">filter</span>(o <span class="kw">=&gt;</span> o<span class="op">.</span><span class="at">class</span> <span class="op">===</span> <span class="st">&#39;person&#39;</span>)<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
-<span id="cb337-4"><a href="#cb337-4" aria-hidden="true" tabindex="-1"></a>msg<span class="op">.</span><span class="at">pets</span> <span class="op">=</span> objects<span class="op">.</span><span class="fu">filter</span>(o <span class="kw">=&gt;</span> o<span class="op">.</span><span class="at">class</span> <span class="op">===</span> <span class="st">&#39;dog&#39;</span> <span class="op">||</span> o<span class="op">.</span><span class="at">class</span> <span class="op">===</span> <span class="st">&#39;cat&#39;</span>)<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
-<span id="cb337-5"><a href="#cb337-5" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> msg<span class="op">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb338"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb338-1"><a href="#cb338-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Function node: count specific object types</span></span>
+<span id="cb338-2"><a href="#cb338-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> objects <span class="op">=</span> msg<span class="op">.</span><span class="at">payload</span><span class="op">.</span><span class="at">objects</span> <span class="op">||</span> []<span class="op">;</span></span>
+<span id="cb338-3"><a href="#cb338-3" aria-hidden="true" tabindex="-1"></a>msg<span class="op">.</span><span class="at">people</span> <span class="op">=</span> objects<span class="op">.</span><span class="fu">filter</span>(o <span class="kw">=&gt;</span> o<span class="op">.</span><span class="at">class</span> <span class="op">===</span> <span class="st">&#39;person&#39;</span>)<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb338-4"><a href="#cb338-4" aria-hidden="true" tabindex="-1"></a>msg<span class="op">.</span><span class="at">pets</span> <span class="op">=</span> objects<span class="op">.</span><span class="fu">filter</span>(o <span class="kw">=&gt;</span> o<span class="op">.</span><span class="at">class</span> <span class="op">===</span> <span class="st">&#39;dog&#39;</span> <span class="op">||</span> o<span class="op">.</span><span class="at">class</span> <span class="op">===</span> <span class="st">&#39;cat&#39;</span>)<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb338-5"><a href="#cb338-5" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> msg<span class="op">;</span></span></code></pre></div>
 <h4 data-number="1.15.10.5"
 id="node-red-face-based-scene-switching"><span
 class="header-section-number">1.15.10.5</span> Node-RED: Face-based
 scene switching</h4>
 <p>Subscribe to <code>kingkiosk/{device_id}/face_presence</code> and
 route based on who’s recognized:</p>
-<div class="sourceCode" id="cb338"><pre
-class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb338-1"><a href="#cb338-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Function node: trigger different layouts per person</span></span>
-<span id="cb338-2"><a href="#cb338-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> faces <span class="op">=</span> msg<span class="op">.</span><span class="at">payload</span><span class="op">.</span><span class="at">faces_detail</span> <span class="op">||</span> []<span class="op">;</span></span>
-<span id="cb338-3"><a href="#cb338-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> known <span class="op">=</span> faces<span class="op">.</span><span class="fu">filter</span>(f <span class="kw">=&gt;</span> f<span class="op">.</span><span class="at">recognized</span>)<span class="op">.</span><span class="fu">map</span>(f <span class="kw">=&gt;</span> f<span class="op">.</span><span class="at">name</span>)<span class="op">;</span></span>
-<span id="cb338-4"><a href="#cb338-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb338-5"><a href="#cb338-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (known<span class="op">.</span><span class="fu">includes</span>(<span class="st">&#39;Kids&#39;</span>)) {</span>
-<span id="cb338-6"><a href="#cb338-6" aria-hidden="true" tabindex="-1"></a>    msg<span class="op">.</span><span class="at">payload</span> <span class="op">=</span> {<span class="st">&quot;command&quot;</span><span class="op">:</span> <span class="st">&quot;load_screen_state&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;kids-dashboard&quot;</span>}<span class="op">;</span></span>
-<span id="cb338-7"><a href="#cb338-7" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (known<span class="op">.</span><span class="at">length</span> <span class="op">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb338-8"><a href="#cb338-8" aria-hidden="true" tabindex="-1"></a>    msg<span class="op">.</span><span class="at">payload</span> <span class="op">=</span> {<span class="st">&quot;command&quot;</span><span class="op">:</span> <span class="st">&quot;load_screen_state&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;family-dashboard&quot;</span>}<span class="op">;</span></span>
-<span id="cb338-9"><a href="#cb338-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb338-10"><a href="#cb338-10" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> msg<span class="op">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb339"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb339-1"><a href="#cb339-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Function node: trigger different layouts per person</span></span>
+<span id="cb339-2"><a href="#cb339-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> faces <span class="op">=</span> msg<span class="op">.</span><span class="at">payload</span><span class="op">.</span><span class="at">faces_detail</span> <span class="op">||</span> []<span class="op">;</span></span>
+<span id="cb339-3"><a href="#cb339-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> known <span class="op">=</span> faces<span class="op">.</span><span class="fu">filter</span>(f <span class="kw">=&gt;</span> f<span class="op">.</span><span class="at">recognized</span>)<span class="op">.</span><span class="fu">map</span>(f <span class="kw">=&gt;</span> f<span class="op">.</span><span class="at">name</span>)<span class="op">;</span></span>
+<span id="cb339-4"><a href="#cb339-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb339-5"><a href="#cb339-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (known<span class="op">.</span><span class="fu">includes</span>(<span class="st">&#39;Kids&#39;</span>)) {</span>
+<span id="cb339-6"><a href="#cb339-6" aria-hidden="true" tabindex="-1"></a>    msg<span class="op">.</span><span class="at">payload</span> <span class="op">=</span> {<span class="st">&quot;command&quot;</span><span class="op">:</span> <span class="st">&quot;load_screen_state&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;kids-dashboard&quot;</span>}<span class="op">;</span></span>
+<span id="cb339-7"><a href="#cb339-7" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (known<span class="op">.</span><span class="at">length</span> <span class="op">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb339-8"><a href="#cb339-8" aria-hidden="true" tabindex="-1"></a>    msg<span class="op">.</span><span class="at">payload</span> <span class="op">=</span> {<span class="st">&quot;command&quot;</span><span class="op">:</span> <span class="st">&quot;load_screen_state&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;family-dashboard&quot;</span>}<span class="op">;</span></span>
+<span id="cb339-9"><a href="#cb339-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb339-10"><a href="#cb339-10" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> msg<span class="op">;</span></span></code></pre></div>
 <p>Then connect to an MQTT-out node publishing to
 <code>kingkiosk/{device_id}/system/cmd</code>.</p>
 <hr />
