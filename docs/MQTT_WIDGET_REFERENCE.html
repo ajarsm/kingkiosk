@@ -353,6 +353,32 @@
     <li><a href="#performance-tips" id="toc-performance-tips"><span
     class="toc-section-number">1.18.8</span> Performance Tips</a></li>
     </ul></li>
+    <li><a href="#kingkiosk-pico-edition-specific-commands"
+    id="toc-kingkiosk-pico-edition-specific-commands"><span
+    class="toc-section-number">1.19</span> KingKiosk Pico Edition —
+    Specific Commands</a>
+    <ul>
+    <li><a href="#start_ap_provisioning"
+    id="toc-start_ap_provisioning"><span
+    class="toc-section-number">1.19.1</span>
+    <code>start_ap_provisioning</code></a></li>
+    <li><a href="#ota-firmware-updates"
+    id="toc-ota-firmware-updates"><span
+    class="toc-section-number">1.19.2</span> OTA Firmware
+    Updates</a></li>
+    <li><a href="#alert-dialogs-with-confirmation-buttons"
+    id="toc-alert-dialogs-with-confirmation-buttons"><span
+    class="toc-section-number">1.19.3</span> Alert Dialogs with
+    Confirmation Buttons</a></li>
+    <li><a href="#pico-limitations-on-shared-commands"
+    id="toc-pico-limitations-on-shared-commands"><span
+    class="toc-section-number">1.19.4</span> Pico Limitations on Shared
+    Commands</a></li>
+    <li><a href="#features-not-available-on-pico"
+    id="toc-features-not-available-on-pico"><span
+    class="toc-section-number">1.19.5</span> Features Not Available on
+    Pico</a></li>
+    </ul></li>
     </ul></li>
     </ul>
   </aside>
@@ -15939,6 +15965,130 @@ unnecessary computation.</li>
 <li><strong>For very large grids (1000+ cells)</strong>, consider
 reducing <code>fps</code> to 15 and simplifying expressions. The engine
 processes all cells sequentially on the main thread.</li>
+</ul>
+<hr />
+<h2 data-number="1.19"
+id="kingkiosk-pico-edition-specific-commands"><span
+class="header-section-number">1.19</span> KingKiosk Pico Edition —
+Specific Commands</h2>
+<p>The following commands are <strong>specific to KingKiosk
+Pico</strong> (ESP32 microcontroller edition) and are not available on
+the Flutter-based clients. These reflect the unique constraints and
+capabilities of an embedded wall-panel device.</p>
+<h3 data-number="1.19.1" id="start_ap_provisioning"><span
+class="header-section-number">1.19.1</span>
+<code>start_ap_provisioning</code></h3>
+<p>Reboots the device into WiFi Access Point mode for first-time setup
+or reconfiguration. The device creates an open WiFi network (e.g.,
+<code>KingPico-F23438</code>) and serves a web form at
+<code>http://192.168.4.1</code> where WiFi, MQTT, and device settings
+can be configured.</p>
+<div class="sourceCode" id="cb98"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;start_ap_provisioning&quot;</span><span class="fu">}</span></span></code></pre></div>
+<p><strong>Also triggerable via a hidden 10-tap gesture</strong>: tap
+the screen 10 times within 5 seconds. A confirmation dialog appears
+showing current device info (name, MAC, WiFi/MQTT connection status with
+green/red indicators, timezone) before rebooting.</p>
+<p><strong>Auto-activates on first boot</strong> when no WiFi SSID is
+configured.</p>
+<hr />
+<h3 data-number="1.19.2" id="ota-firmware-updates"><span
+class="header-section-number">1.19.2</span> OTA Firmware Updates</h3>
+<p>Wall-mounted panels can’t be reflashed via USB. KingKiosk Pico
+supports MQTT-driven over-the-air updates with automatic rollback
+protection.</p>
+<h4 data-number="1.19.2.1" id="update_firmware"><span
+class="header-section-number">1.19.2.1</span>
+<code>update_firmware</code></h4>
+<div class="sourceCode" id="cb99"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;update_firmware&quot;</span><span class="fu">,</span> <span class="dt">&quot;url&quot;</span><span class="fu">:</span> <span class="st">&quot;http://your-server/firmware.bin&quot;</span><span class="fu">}</span></span></code></pre></div>
+<p>Downloads firmware from the URL, writes it to the inactive OTA
+partition, and reboots. Progress events are published to
+<code>kingkiosk/{device_id}/system/response</code>.</p>
+<h4 data-number="1.19.2.2" id="confirm_update"><span
+class="header-section-number">1.19.2.2</span>
+<code>confirm_update</code></h4>
+<div class="sourceCode" id="cb100"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;confirm_update&quot;</span><span class="fu">}</span></span></code></pre></div>
+<p>Marks the currently running firmware as stable. If not confirmed
+within 3 boots, the device automatically rolls back to the previous
+firmware.</p>
+<h4 data-number="1.19.2.3" id="rollback"><span
+class="header-section-number">1.19.2.3</span> <code>rollback</code></h4>
+<div class="sourceCode" id="cb101"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;rollback&quot;</span><span class="fu">}</span></span></code></pre></div>
+<p>Manually rolls back to the previous firmware partition and
+reboots.</p>
+<h4 data-number="1.19.2.4" id="get_ota_status"><span
+class="header-section-number">1.19.2.4</span>
+<code>get_ota_status</code></h4>
+<div class="sourceCode" id="cb102"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;get_ota_status&quot;</span><span class="fu">}</span></span></code></pre></div>
+<p>Returns the current OTA state: running partition, firmware version,
+whether a rollback is available, and whether the current firmware is
+confirmed.</p>
+<hr />
+<h3 data-number="1.19.3"
+id="alert-dialogs-with-confirmation-buttons"><span
+class="header-section-number">1.19.3</span> Alert Dialogs with
+Confirmation Buttons</h3>
+<p>While <code>alert</code> is available on all KingKiosk clients, the
+Pico edition implements the full confirmation button system with MQTT
+response — matching the Flutter client’s centered modal dialog
+behavior.</p>
+<div class="sourceCode" id="cb103"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;alert&quot;</span><span class="fu">,</span></span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Arm Security?&quot;</span><span class="fu">,</span></span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Arm the alarm system?&quot;</span><span class="fu">,</span></span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;warning&quot;</span><span class="fu">,</span></span>
+<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;confirmation&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>When the user presses a button, the response is published:</p>
+<div class="sourceCode" id="cb104"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;alert&quot;</span><span class="fu">,</span></span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;confirmation&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;selection_label&quot;</span><span class="fu">:</span> <span class="st">&quot;Yes&quot;</span><span class="fu">,</span></span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;selection_value&quot;</span><span class="fu">:</span> <span class="st">&quot;true&quot;</span></span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>This enables interactive automation workflows — ask the user a
+question on the wall panel and act on their response in Home Assistant
+or Node-RED.</p>
+<hr />
+<h3 data-number="1.19.4" id="pico-limitations-on-shared-commands"><span
+class="header-section-number">1.19.4</span> Pico Limitations on Shared
+Commands</h3>
+<p>Some commands that exist on both Flutter and Pico have reduced
+functionality on Pico due to hardware constraints:</p>
+<ul>
+<li><strong><code>set_background</code></strong>: Supports
+<code>color</code>, <code>icon</code> (crown watermark), and
+<code>none</code> modes only. No image URLs or custom image backgrounds
+— the ESP32 lacks the RAM and HTTP client to download and decode
+arbitrary images at runtime.</li>
+<li><strong><code>alert</code></strong>: Plain text only. Rich text,
+markdown, segments, and thumbnail images are not supported.</li>
+</ul>
+<h3 data-number="1.19.5" id="features-not-available-on-pico"><span
+class="header-section-number">1.19.5</span> Features Not Available on
+Pico</h3>
+<p>Due to the ESP32’s hardware constraints (~200KB RAM, no GPU, no
+browser engine), the following Flutter client features are <strong>not
+available</strong> on KingKiosk Pico:</p>
+<ul>
+<li>Feature Server integration (intercom, remote browser, RTSP
+export)</li>
+<li>AI/ML features (person detection, facial recognition, motion
+detection)</li>
+<li>TTS / STT (text-to-speech, speech recognition)</li>
+<li>Web browser / WebView widgets</li>
+<li>Media streaming (RTSP, DLNA, YouTube)</li>
+<li>Custom Widget SDK (JavaScript-based)</li>
+<li>Fleet management commands</li>
+<li>Screen scheduling</li>
+<li>Batch scripting</li>
 </ul>
       <footer class="doc-footer">
         <p>

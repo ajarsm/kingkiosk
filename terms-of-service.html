@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - KingKiosk</title>
+    <meta name="description" content="KingKiosk Terms of Service — the terms governing your use of the KingKiosk Programmable Display Runtime.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="kingkiosk-icon.svg" type="image/svg+xml">
+    <style>
+        .tos-hero {
+            padding: calc(var(--nav-height) + 4rem) 0 3rem;
+            text-align: center;
+        }
+        .tos-hero h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 0.5rem;
+        }
+        .tos-meta {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        .tos-body {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px 6rem;
+        }
+        .tos-body h2 {
+            font-size: 1.35rem;
+            margin-top: 2.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+        .tos-body p, .tos-body li {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        .tos-body ol {
+            padding-left: 1.5rem;
+        }
+        .tos-body ol li {
+            margin-bottom: 0.5rem;
+        }
+        .tos-body a {
+            color: var(--accent);
+        }
+        .tos-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: color var(--transition);
+        }
+        .tos-back:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="kingkiosk-icon.svg" alt="KingKiosk" class="logo-icon">
+                <span class="logo-text">KingKiosk</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html#features">Features</a>
+                <a href="index.html#platforms">Platforms</a>
+                <a href="index.html#widgets">Widgets</a>
+                <a href="index.html#pricing">Pricing</a>
+                <a href="https://ajarsm.github.io/kingkiosk/docs/" target="_blank">Documentation</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="tos-hero">
+        <div class="container">
+            <h1>Terms of Service</h1>
+            <p class="tos-meta">Last Updated: March 27, 2026 &middot; Version 1.1</p>
+        </div>
+    </div>
+
+    <div class="tos-body">
+        <a href="index.html" class="tos-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back to home
+        </a>
+
+        <p>By using KingKiosk ("the Software"), you agree to the following terms. If you do not agree, do not use the Software.</p>
+
+        <h2>1. Acceptance of Terms</h2>
+        <p>By installing, accessing, or using KingKiosk, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service and any applicable policies referenced herein.</p>
+
+        <h2>2. License Grant</h2>
+        <p>Kall Innovations LLC ("Company") grants you a limited, non-exclusive, non-transferable, revocable license to use KingKiosk in accordance with these terms and the applicable subscription or licensing plan. This license does not include the right to sublicense, sell, or distribute the Software.</p>
+
+        <h2>3. Intellectual Property</h2>
+        <p>KingKiosk, including its source code, design, architecture, algorithms, and documentation, is the proprietary property of Kall Innovations LLC. Patent pending. All rights not expressly granted herein are reserved by the Company. KingKiosk, the KingKiosk logo, and "Programmable Display Runtime" are trademarks of Kall Innovations LLC.</p>
+
+        <h2>4. Acceptable Use</h2>
+        <p>You agree not to:</p>
+        <ol type="a">
+            <li>Reverse-engineer, decompile, disassemble, or attempt to derive the source code of the Software;</li>
+            <li>Use the Software for any unlawful purpose or in violation of any applicable laws or regulations;</li>
+            <li>Attempt to circumvent any licensing, security, or access control mechanisms;</li>
+            <li>Redistribute, sublicense, rent, lease, or lend the Software without prior written authorization from the Company;</li>
+            <li>Remove, alter, or obscure any proprietary notices, labels, or marks on the Software.</li>
+        </ol>
+
+        <h2>5. Data Collection and Privacy</h2>
+        <p>KingKiosk may collect device telemetry, usage analytics, and diagnostic information to improve the product and provide support. No personally identifiable information is collected without your consent. MQTT communications occur between your devices and your configured broker; the Company does not access, intercept, or store your MQTT data. For camera and microphone features, data is processed locally on your device or transmitted only to endpoints you configure.</p>
+
+        <h2>6. Disclaimer of Warranties</h2>
+        <p>THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. THE COMPANY DOES NOT WARRANT THAT THE SOFTWARE WILL BE UNINTERRUPTED, ERROR-FREE, OR FREE OF HARMFUL COMPONENTS.</p>
+
+        <h2>7. Limitation of Liability</h2>
+        <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL KALL INNOVATIONS LLC, ITS OFFICERS, DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO YOUR USE OR INABILITY TO USE THE SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. THE COMPANY'S TOTAL AGGREGATE LIABILITY SHALL NOT EXCEED THE AMOUNT PAID BY YOU FOR THE SOFTWARE IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.</p>
+
+        <h2>8. Indemnification</h2>
+        <p>You agree to indemnify, defend, and hold harmless Kall Innovations LLC and its affiliates from any claims, damages, losses, liabilities, and expenses (including reasonable attorney's fees) arising from your use of the Software or violation of these Terms.</p>
+
+        <h2>9. Termination</h2>
+        <p>The Company may terminate or suspend your access to the Software at any time, with or without cause or notice. Upon termination, your license to use the Software ceases immediately, and you must destroy all copies in your possession.</p>
+
+        <h2>10. Payments, Refunds, and Cancellation</h2>
+        <p>All payments for KingKiosk subscriptions and licenses are processed by Paddle.com Market Limited ("Paddle"), which acts as the Merchant of Record for all transactions. By purchasing a subscription or license, you also agree to Paddle's Buyer Terms available at paddle.com. Paddle handles all billing, invoicing, payment processing, and sales tax compliance on behalf of Kall Innovations LLC.</p>
+        <p>Due to the digital nature of the Software and the immediate access granted upon purchase, all sales are final. No refunds will be issued once a subscription or license has been activated. You acknowledge that you have had the opportunity to evaluate the Software prior to purchase.</p>
+        <p>You may cancel your subscription at any time through your Paddle customer portal. Cancellation takes effect at the end of your current billing period. No partial or prorated refunds are provided for the remaining portion of a billing cycle. After cancellation, you retain access to the Software until the end of the period you have already paid for.</p>
+        <p>For billing inquiries, payment disputes, or issues with charges, contact Paddle directly through the receipt or invoice you received at the time of purchase. For product-related questions, contact <a href="mailto:support@kallinnovations.com">support@kallinnovations.com</a>.</p>
+        <p>Nothing in this section limits any statutory consumer rights that apply in your jurisdiction and cannot be waived by contract.</p>
+
+        <h2>11. Updates and Modifications</h2>
+        <p>The Company reserves the right to modify, update, or discontinue the Software or these Terms at any time. Continued use of the Software after changes to these Terms constitutes acceptance of the modified Terms. Material changes will be communicated through the Software or other reasonable means.</p>
+
+        <h2>12. Third-Party Services</h2>
+        <p>The Software may integrate with third-party services (including but not limited to Home Assistant, MQTT brokers, Paddle payment processing, and media servers). The Company is not responsible for the availability, accuracy, or practices of any third-party services. Your use of third-party services is subject to their respective terms and policies.</p>
+
+        <h2>13. Governing Law</h2>
+        <p>These Terms shall be governed by and construed in accordance with the laws of the State of Ohio, United States, without regard to conflict of law principles. Any disputes arising under these Terms shall be resolved in the courts located in Ohio.</p>
+
+        <h2>14. Severability</h2>
+        <p>If any provision of these Terms is found to be unenforceable or invalid, the remaining provisions shall continue in full force and effect.</p>
+
+        <h2>15. Entire Agreement</h2>
+        <p>These Terms constitute the entire agreement between you and Kall Innovations LLC regarding the use of the Software and supersede all prior agreements and understandings.</p>
+
+        <h2>16. Contact</h2>
+        <p>For questions about these Terms, contact: <a href="mailto:support@kallinnovations.com">support@kallinnovations.com</a></p>
+
+        <p style="margin-top: 3rem; color: var(--text-dim); font-size: 0.9rem;">&copy; 2026 Kall Innovations LLC. All rights reserved.</p>
+    </div>
+
+    <!-- Minimal script for mobile nav toggle -->
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                navToggle.classList.toggle('active');
+            });
+        }
+    </script>
+</body>
+</html>
