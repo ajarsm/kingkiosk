@@ -129,20 +129,20 @@
         <p><strong>All camera and microphone processing happens on your device.</strong> Images, video, and audio are not sent to our servers. If you configure integrations (such as an MQTT broker, Home Assistant, or a Feature Server), media may be transmitted to the services you choose to connect to — but only to those services and only when the relevant feature is active.</p>
 
         <h3>Facial Recognition Data</h3>
-        <p>If you use the facial recognition feature, face training data (mathematical representations of facial features, not photographs) is stored in encrypted local storage on your device. This data is never uploaded to our servers or shared with third parties. You can delete all stored face data at any time through the app's settings.</p>
+        <p>If you use the facial recognition feature, face training data (mathematical representations of facial features, not photographs) is stored locally on your device. This data is never uploaded to our servers or shared with third parties. You can delete all stored face data at any time through the app's settings.</p>
 
         <h3>Device Telemetry</h3>
         <p>KingKiosk collects basic device information locally, including battery level, CPU and memory usage, platform type, brightness, and volume. This information is used for on-screen status displays and performance optimization. It is only transmitted to your own MQTT broker if you have configured one — it is never sent to us or to any third-party service.</p>
         <p>If you enable the optional location feature, latitude and longitude may also be published to your MQTT broker. Location data is never sent to our servers.</p>
 
         <h3>Crash Reports and Diagnostics</h3>
-        <p>KingKiosk includes Sentry for crash reporting. <strong>This feature is off by default.</strong> If you choose to turn it on in Settings, the following data may be sent to Sentry when an error occurs:</p>
+        <p>KingKiosk can send anonymous crash reports and diagnostic data to help us improve the product. <strong>This feature is off by default.</strong> If you choose to turn it on in Settings, the following data may be sent when an error occurs:</p>
         <ul>
             <li>Error messages and stack traces</li>
             <li>Device platform and OS version</li>
             <li>App environment (development or production)</li>
         </ul>
-        <p>Before transmission, KingKiosk automatically strips API keys, tokens, passwords, and other sensitive values from error reports. No personally identifiable information is included. You can turn crash reporting on or off at any time in <strong>Settings &gt; General &gt; Crash Reports &amp; Diagnostics</strong>.</p>
+        <p>Before transmission, KingKiosk automatically strips API keys, tokens, passwords, and other sensitive values from reports. No personally identifiable information is included. You can turn this on or off at any time in <strong>Settings &gt; General &gt; Crash Reports &amp; Diagnostics</strong>.</p>
 
         <h3>Weather Data</h3>
         <p>If you use the weather widget, your location (latitude and longitude) and your OpenWeatherMap API key are sent to the OpenWeatherMap service to retrieve weather data. This is a direct connection between your device and OpenWeatherMap — we are not involved in that exchange. OpenWeatherMap's own privacy policy governs their handling of that data.</p>
@@ -170,7 +170,6 @@
             <li><strong>Home Assistant</strong> — For smart home integration and auto-discovery</li>
             <li><strong>OpenWeatherMap</strong> — For weather widget data</li>
             <li><strong>AI providers</strong> (Anthropic, OpenAI, Google, Ollama) — For voice and AI features, using API keys you provide</li>
-            <li><strong>Sentry</strong> — For crash reporting (opt-in only)</li>
             <li><strong>Paddle</strong> — For payment processing</li>
             <li><strong>Feature Server (KingKiosk Core)</strong> — Your self-hosted backend for WebRTC, remote browser, and TTS</li>
         </ul>
@@ -178,7 +177,7 @@
 
         <h2>Data Storage and Security</h2>
         <ul>
-            <li>Sensitive data (MQTT credentials, API keys, face embeddings) is stored using platform-native encrypted storage (Android EncryptedSharedPreferences, iOS Keychain, or equivalent).</li>
+            <li>Sensitive data (MQTT credentials and API keys) is stored using encrypted local storage on your device.</li>
             <li>No user data is stored on our servers. All app data lives on your device.</li>
             <li>MQTT command signing (HMAC-SHA256) is available for verifying the authenticity of commands sent to your device.</li>
         </ul>
