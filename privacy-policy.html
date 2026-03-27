@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - KingKiosk</title>
+    <meta name="description" content="KingKiosk Privacy Policy — how KingKiosk handles your data, what we collect, and the control you have.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="kingkiosk-icon.svg" type="image/svg+xml">
+    <style>
+        .tos-hero {
+            padding: calc(var(--nav-height) + 4rem) 0 3rem;
+            text-align: center;
+        }
+        .tos-hero h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 0.5rem;
+        }
+        .tos-meta {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        .tos-body {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px 6rem;
+        }
+        .tos-body h2 {
+            font-size: 1.35rem;
+            margin-top: 2.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+        .tos-body h3 {
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        .tos-body p, .tos-body li {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        .tos-body ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .tos-body ul li {
+            margin-bottom: 0.4rem;
+        }
+        .tos-body a {
+            color: var(--accent);
+        }
+        .tos-body strong {
+            color: var(--text);
+        }
+        .tos-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: color var(--transition);
+        }
+        .tos-back:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="kingkiosk-icon.svg" alt="KingKiosk" class="logo-icon">
+                <span class="logo-text">KingKiosk</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html#features">Features</a>
+                <a href="index.html#platforms">Platforms</a>
+                <a href="index.html#widgets">Widgets</a>
+                <a href="index.html#pricing">Pricing</a>
+                <a href="https://ajarsm.github.io/kingkiosk/docs/" target="_blank">Documentation</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="tos-hero">
+        <div class="container">
+            <h1>Privacy Policy</h1>
+            <p class="tos-meta">Last Updated: March 27, 2026</p>
+        </div>
+    </div>
+
+    <div class="tos-body">
+        <a href="index.html" class="tos-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back to home
+        </a>
+
+        <p>KingKiosk is a programmable display runtime that turns screens into remotely controllable display surfaces. This policy explains what data KingKiosk collects, how it is used, and what control you have.</p>
+
+        <h2>Who We Are</h2>
+        <p>KingKiosk is developed by Kall Innovations LLC ("we", "us", "our"). For privacy questions, contact us at <a href="mailto:support@kallinnovations.com">support@kallinnovations.com</a>.</p>
+
+        <h2>Data We Collect</h2>
+
+        <h3>Information You Provide</h3>
+        <ul>
+            <li><strong>Device name</strong> — A name you choose for your display during setup. Stored locally on your device.</li>
+            <li><strong>MQTT broker credentials</strong> — The server address, username, and password for your MQTT broker. Stored in encrypted local storage on your device. We never see or store these credentials.</li>
+            <li><strong>API keys</strong> — If you use optional features like weather or AI services, any API keys you enter are stored in encrypted local storage. We do not have access to them.</li>
+        </ul>
+
+        <h3>Camera and Microphone</h3>
+        <p>KingKiosk can use your device's camera and microphone for the following features, all of which are optional and disabled by default:</p>
+        <ul>
+            <li><strong>Camera</strong> — Presence detection, face detection, object detection, facial recognition, intercom and video calling, motion detection, and camera snapshots.</li>
+            <li><strong>Microphone</strong> — Speech-to-text, intercom and video calling, and audio streaming to KingDSP (audio processing engine).</li>
+        </ul>
+        <p><strong>All camera and microphone processing happens on your device.</strong> Images, video, and audio are not sent to our servers. If you configure integrations (such as an MQTT broker, Home Assistant, or a Feature Server), media may be transmitted to the services you choose to connect to — but only to those services and only when the relevant feature is active.</p>
+
+        <h3>Facial Recognition Data</h3>
+        <p>If you use the facial recognition feature, face training data (mathematical representations of facial features, not photographs) is stored in encrypted local storage on your device. This data is never uploaded to our servers or shared with third parties. You can delete all stored face data at any time through the app's settings.</p>
+
+        <h3>Device Telemetry</h3>
+        <p>KingKiosk collects basic device information locally, including battery level, CPU and memory usage, platform type, brightness, and volume. This information is used for on-screen status displays and performance optimization. It is only transmitted to your own MQTT broker if you have configured one — it is never sent to us or to any third-party service.</p>
+        <p>If you enable the optional location feature, latitude and longitude may also be published to your MQTT broker. Location data is never sent to our servers.</p>
+
+        <h3>Crash Reports and Diagnostics</h3>
+        <p>KingKiosk includes Sentry for crash reporting. <strong>This feature is off by default.</strong> If you choose to turn it on in Settings, the following data may be sent to Sentry when an error occurs:</p>
+        <ul>
+            <li>Error messages and stack traces</li>
+            <li>Device platform and OS version</li>
+            <li>App environment (development or production)</li>
+        </ul>
+        <p>Before transmission, KingKiosk automatically strips API keys, tokens, passwords, and other sensitive values from error reports. No personally identifiable information is included. You can turn crash reporting on or off at any time in <strong>Settings &gt; General &gt; Crash Reports &amp; Diagnostics</strong>.</p>
+
+        <h3>Weather Data</h3>
+        <p>If you use the weather widget, your location (latitude and longitude) and your OpenWeatherMap API key are sent to the OpenWeatherMap service to retrieve weather data. This is a direct connection between your device and OpenWeatherMap — we are not involved in that exchange. OpenWeatherMap's own privacy policy governs their handling of that data.</p>
+
+        <h2>Payments</h2>
+        <p>All purchases are processed by Paddle.com Market Limited ("Paddle"), our Merchant of Record. When you purchase a license, Paddle collects your name, email address, and payment information directly. We do not see or store your payment details. Paddle's privacy policy governs how they handle your billing information.</p>
+
+        <h2>Data We Do Not Collect</h2>
+        <ul>
+            <li>We do not collect or store your MQTT messages or communication data.</li>
+            <li>We do not collect camera images, video, or audio.</li>
+            <li>We do not collect facial recognition data.</li>
+            <li>We do not collect your location.</li>
+            <li>We do not sell, rent, or share personal data with third parties.</li>
+            <li>We do not use advertising SDKs or ad-tracking of any kind.</li>
+        </ul>
+
+        <h2>MQTT Communications</h2>
+        <p>All MQTT communication occurs between your device and the broker you configure. We do not operate, intercept, or have access to your MQTT broker or the messages sent through it. If you connect to a public MQTT broker, be aware that any data you publish will be sent to that server.</p>
+
+        <h2>Third-Party Services</h2>
+        <p>KingKiosk may connect to the following third-party services depending on which features you enable. Each is optional and configured by you:</p>
+        <ul>
+            <li><strong>Your MQTT broker</strong> — For remote control and telemetry</li>
+            <li><strong>Home Assistant</strong> — For smart home integration and auto-discovery</li>
+            <li><strong>OpenWeatherMap</strong> — For weather widget data</li>
+            <li><strong>AI providers</strong> (Anthropic, OpenAI, Google, Ollama) — For voice and AI features, using API keys you provide</li>
+            <li><strong>Sentry</strong> — For crash reporting (opt-in only)</li>
+            <li><strong>Paddle</strong> — For payment processing</li>
+            <li><strong>Feature Server (KingKiosk Core)</strong> — Your self-hosted backend for WebRTC, remote browser, and TTS</li>
+        </ul>
+        <p>We are not responsible for the privacy practices of these third-party services. Their use is governed by their respective privacy policies.</p>
+
+        <h2>Data Storage and Security</h2>
+        <ul>
+            <li>Sensitive data (MQTT credentials, API keys, face embeddings) is stored using platform-native encrypted storage (Android EncryptedSharedPreferences, iOS Keychain, or equivalent).</li>
+            <li>No user data is stored on our servers. All app data lives on your device.</li>
+            <li>MQTT command signing (HMAC-SHA256) is available for verifying the authenticity of commands sent to your device.</li>
+        </ul>
+
+        <h2>Data Retention and Deletion</h2>
+        <p>All KingKiosk data is stored locally on your device. You can delete it at any time by:</p>
+        <ul>
+            <li>Clearing individual settings through the app</li>
+            <li>Deleting stored face data through the app's settings</li>
+            <li>Uninstalling the app, which removes all local data</li>
+        </ul>
+        <p>We do not retain any data on our servers, so there is nothing for us to delete on our end. For Paddle billing records, contact Paddle directly.</p>
+
+        <h2>Your Rights</h2>
+        <p>Depending on your jurisdiction, you may have the right to access, correct, or delete personal data. Since KingKiosk stores all data locally on your device, you already have full control. If you have questions or need assistance, contact us at <a href="mailto:support@kallinnovations.com">support@kallinnovations.com</a>.</p>
+
+        <h2>Changes to This Policy</h2>
+        <p>We may update this policy from time to time. Changes will be communicated through the app or on our website. Continued use of KingKiosk after changes constitutes acceptance of the updated policy.</p>
+
+        <h2>Contact</h2>
+        <p>For questions about this privacy policy, contact: <a href="mailto:support@kallinnovations.com">support@kallinnovations.com</a></p>
+
+        <p style="margin-top: 3rem; color: var(--text-dim); font-size: 0.9rem;">&copy; 2026 Kall Innovations LLC. All rights reserved.</p>
+    </div>
+
+    <!-- Minimal script for mobile nav toggle -->
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                navToggle.classList.toggle('active');
+            });
+        }
+    </script>
+</body>
+</html>
